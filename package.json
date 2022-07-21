@@ -44,7 +44,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "startOurServer": "nodemon server.js"
+    "startOurServer": "nodemon index.js"
   },
   "eslintConfig": {
     "extends": [
