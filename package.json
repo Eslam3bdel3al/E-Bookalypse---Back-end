@@ -43,9 +43,7 @@
   "main":"index.js",
   "scripts": {
     "start": "node index.js",
-    // "build": "node index.js",
-    // "test": "node index.js",
-    // "eject": "node index.js",
+
     "startOurServer": "nodemon index.js"
   },
   "eslintConfig": {
