@@ -15,11 +15,11 @@ const server = http.createServer(app)
 
 // mongoose connect 
 // mongoose.connect('mongodb://localhost:27017/BookStore')
-mongoose.connect(DATABASE)
-.then(()=>{
+// mongoose.connect(DATABASE)
+// .then(()=>{
     server.listen(PORT,()=>{
         console.log(`we are listening to ${HOST}:${PORT}/'`)
     })
-})
-.catch((err)=>{console.log(err)})
+// })
+// .catch((err)=>{console.log(err)})
 
