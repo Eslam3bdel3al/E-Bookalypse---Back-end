@@ -3,7 +3,7 @@ const { getAllBooks, getBookById, addBook, deleteBook, updateBook } = require('.
 
 const multer = require('multer');
 const  {body,param,query} = require('express-validator');
-const ValidationMW = require('../middlewares/ValidationMW');
+const validationMw = require("../middlewares/validationMw");
 const { imageHandlingMW } = require('../middlewares/ImageHandlineMW');
 const router= express.Router();
 
@@ -35,11 +35,11 @@ const router= express.Router();
 
 router.route('/api/books')
       .get(getAllBooks)
-      .post(upload.single('bookimage'),bookValidations,ValidationMW,bookData,imageHandlingMW,addBook)
+      .post(upload.single('bookimage'),bookValidations,validationMw,bookData,imageHandlingMW,addBook)
 
 router.route('/api/books/:bookId')
       .get(getBookById)
-      .put(upload.single('bookimage'),bookValidations,ValidationMW,bookData,imageHandlingMW,updateBook)
+      .put(upload.single('bookimage'),bookValidations,validationMw,bookData,imageHandlingMW,updateBook)
       .delete(deleteBook)
       
 

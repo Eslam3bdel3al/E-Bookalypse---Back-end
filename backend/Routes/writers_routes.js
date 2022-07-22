@@ -6,7 +6,7 @@ const router = express.Router();
 const multer = require('multer');
 
 const  {body,param,query} = require('express-validator');
-const ValidationMW = require("../middlewares/ValidationMW");
+const validationMw = require("../middlewares/validationMw");
 const { imageHandlingMW } = require("../middlewares/ImageHandlineMW");
 
 const upload = multer();
@@ -33,13 +33,13 @@ const writerPath = (req,res,next)=>{
 
 router.route('/api/writers')
       .get(writersController.getAllWriters)
-      .post(upload.single("writerimage"),writerValidation,ValidationMW,writerPath,imageHandlingMW,writersController.addWriters)
+      .post(upload.single("writerimage"),writerValidation,validationMw,writerPath,imageHandlingMW,writersController.addWriters)
 
 
 
 router.route('/api/writers/:writerId')
       .get(writersController.getWriterById)
-      .put(upload.single("writerimage"),writerValidation,ValidationMW,writerPath,imageHandlingMW,writersController.updateWriter)
+      .put(upload.single("writerimage"),writerValidation,validationMw,writerPath,imageHandlingMW,writersController.updateWriter)
       .delete(writersController.deleteWriter)
 
 
