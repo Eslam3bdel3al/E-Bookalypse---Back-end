@@ -40,10 +40,9 @@
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
   },
-  "main":"index.js",
+  "main": "index.js",
   "scripts": {
     "start": "node index.js",
-
     "startOurServer": "nodemon index.js"
   },
   "eslintConfig": {
