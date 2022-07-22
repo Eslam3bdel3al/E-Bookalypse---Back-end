@@ -58,7 +58,7 @@
   app.use(cartsRouters);
   app.use(wishListRouters);
   app.use(logsRouters)
-  app.get('/', (req, res) => {   res.send("WELCOME" + PORT ) })
+  app.get('/', (req, res) => {   res.send("WELCOME" + process.env.PORT  ) })
 
 
   //not found response 
