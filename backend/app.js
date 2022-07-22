@@ -58,7 +58,7 @@
   app.use(cartsRouters);
   app.use(wishListRouters);
   app.use(logsRouters)
-  app.get('/', (req, res) => {   res.send("WELCOME") })
+  // app.get('/', (req, res) => {   res.send("WELCOME") })
 
 
   //not found response 
