@@ -8,7 +8,7 @@ module.exports.getAllCategories = (req,res)=>{
     )
 }
 
-module.exports.addCategory = (req,res)=>{
+module.exports.addCategory = (req,res,next)=>{
     let newCat = new categoryModel({
         title:req.body.cattitle,
         icon:req.uploadedImage
