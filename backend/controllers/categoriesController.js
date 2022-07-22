@@ -13,10 +13,7 @@ module.exports.addCategory = (req,res)=>{
         title:req.body.cattitle,
         icon:req.uploadedImage
     })
-    newCat.save()
-    // console.log(req.body)
-    // console.log(req.body)
-    res.status(200).send("added successfully");
+    newCat.save().then((data)=> res.status(200).send("added successfully")).catch((err)=>next(err));   // console.log(req.body)
 
 }
 
