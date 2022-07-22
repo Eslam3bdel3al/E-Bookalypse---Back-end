@@ -22,5 +22,5 @@ app.get('/', (req, res) => {   res.send("WELCOME") })
         console.log(`we are listening to ${HOST}:${PORT}/'`)
     })
 // })
-.catch((err)=>{console.log(err)})
+// .catch((err)=>{console.log(err)})
 
