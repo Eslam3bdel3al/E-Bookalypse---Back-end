@@ -122,7 +122,6 @@ module.exports.deleteImageFromFirebase = (req,res,next)=>{
 }
 
 module.exports.updateFilesToFirebase = (req,res,next)=>{
-    console.log(req.body.oldIcon)
     if(req.files){
 
         const path = 'uploads/books/'
@@ -136,6 +135,17 @@ module.exports.updateFilesToFirebase = (req,res,next)=>{
                 const metadataPDF = {
                         contentType: pdf.mimetype,
                 };   
+                const deletePDF = ref(ourStorage,path+'/pdf/'+req.body.oldSrc);
+        
+                deleteObject(deletePDF).then(() => {
+                // File deleted successfully
+                console.log("successfully deleted")
+                }).catch((error) => {
+                // Uh-oh, an error occurred!
+                console.log(error)
+                
+                });
+
                 uploadString(uploadPdf, b64PDF, 'base64',metadataPDF).then((snapshot) => {
                            console.log('Uploaded a base64 string!');
                            next()
@@ -146,6 +156,52 @@ module.exports.updateFilesToFirebase = (req,res,next)=>{
             }
 
         }
+        if(req.files.bookimage !== undefined){
+                const poster = req.files.bookimage[0]; 
+
+                if(poster.mimetype === 'image/jpeg' || poster.mimetype === 'image/png' || poster.mimetype === 'image/jpg' ){
+                    console.log("right")
+                    let posterNewName =  Date.now() + "_Ebookalypse_" + poster.originalname;
+    
+                    req.uploadedImage = posterNewName ; 
+    
+                    const b64POSTER = Buffer.from(poster.buffer).toString('base64');  
+    
+                    const uploadPoster= ref(ourStorage,path+'poster/'+posterNewName);
+    
+                    const metadataPOSTER = {
+                        contentType: poster.mimetype,
+                    }; 
+                    if(req.body.oldImg !== './book.jpg'){
+
+                        const deleteImage = ref(ourStorage,path+'/poster/'+req.body.oldImg);
+                        
+                        deleteObject(deleteImage).then(() => {
+                        // File deleted successfully
+                        console.log("successfully deleted")
+                        }).catch((error) => {
+                        // Uh-oh, an error occurred!
+                        console.log(error)
+                        
+                        });
+                    }
+                    uploadString(uploadPoster, b64POSTER, 'base64',metadataPOSTER).then((snapshot) => {
+                        console.log('Uploaded a base64 string!');
+                        next()
+                    }).catch((err)=>(next(err)));
+        
+    
+    
+                }else{
+                    let err = new Error('IMG MUST BE JPG  , PNG ,JPEG ')
+    
+                    next(err)
+                    // console.log("PDF MUST BE PDF ")
+                }
+            }else{
+                next()
+            }
+        
         // if(myFile.mimetype === 'image/jpeg' || myFile.mimetype === 'image/png' || myFile.mimetype === 'image/jpg'){
         //    let  fileNewName = Date.now() + "_Ebookalypse_" + myFile.originalname;
         //    req.uploadedImage = fileNewName
