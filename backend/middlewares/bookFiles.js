@@ -121,7 +121,7 @@ module.exports.deleteImageFromFirebase = (req,res,next)=>{
 
 }
 
-module.exports.updateImageFromFirebase = (req,res,next)=>{
+module.exports.updateFilesToFirebase = (req,res,next)=>{
     console.log(req.body.oldIcon)
     if(req.files){
 

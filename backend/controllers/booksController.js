@@ -64,7 +64,7 @@ module.exports.addBook = (req,res)=>{
 
 module.exports.updateBook = (req,res)=>{
     // console.log(req.params.bookId)
-    console.log(req.body)
+    // console.log(req.body)
     // console.log(req.bookimage)
     
     // if(req.uploadedImage !== undefined){
