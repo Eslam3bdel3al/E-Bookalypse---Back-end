@@ -18,7 +18,7 @@ const bookSchema = mongoose.Schema({
     title:{ type: String, required: true, unique:true },
     description :{type: String, required: true},
     poster:{type:String,default: "./book.jpg"},
-    // sourse:{type:Buffer},
+    source:{type:String},
     date_release:{type: Date},     //markModified in controller
     lang: {type:String},
     n_pages:{type:Number},

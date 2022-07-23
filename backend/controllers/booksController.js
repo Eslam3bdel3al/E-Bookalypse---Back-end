@@ -29,17 +29,20 @@ module.exports.deleteBook = (req,res)=>{
 }
 
 module.exports.addBook = (req,res)=>{
+
     const book = new BookModel({
         title:req.body.title,
         description:req.body.description,
         poster:req.uploadedImage,
+        source:req.uploadedSrc,
         date_release:req.body.date,
         lang:req.body.lang,
         n_pages:req.body.pages,
         publisher:req.body.publisher,
         price:req.body.price,
         category:req.body.category,
-        writer:req.body.writer
+        writer:req.body.writer,
+
 
 
     })
