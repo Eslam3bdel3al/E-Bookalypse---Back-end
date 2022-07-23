@@ -81,6 +81,9 @@ module.exports.updateBook = (req,res)=>{
     if(req.uploadedSrc !== undefined){
         req.body.source = req.uploadedSrc
     }
+    if(req.uploadedImage !== undefined){
+        req.body.poster = req.uploadedImage
+    }
     BookModel.updateOne({_id:req.params.bookId},req.body,
     (err,docs)=>{
         if(err){

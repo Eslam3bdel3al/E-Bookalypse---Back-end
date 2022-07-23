@@ -148,13 +148,14 @@ module.exports.updateFilesToFirebase = (req,res,next)=>{
 
                 uploadString(uploadPdf, b64PDF, 'base64',metadataPDF).then((snapshot) => {
                            console.log('Uploaded a base64 string!');
-                           next()
                 }).catch((err)=>(next(err)));
             }else{
                 let err = new Error("Pdf Must be a PDF file");
                 next(err)
             }
 
+        }else{
+            next()
         }
         if(req.files.bookimage !== undefined){
                 const poster = req.files.bookimage[0]; 
@@ -202,39 +203,7 @@ module.exports.updateFilesToFirebase = (req,res,next)=>{
                 next()
             }
         
-        // if(myFile.mimetype === 'image/jpeg' || myFile.mimetype === 'image/png' || myFile.mimetype === 'image/jpg'){
-        //    let  fileNewName = Date.now() + "_Ebookalypse_" + myFile.originalname;
-        //    req.uploadedImage = fileNewName
-        //    const uploadsfile= ref(ourStorage,req.mypath+fileNewName);
-        //    const b64 = Buffer.from(req.file.buffer).toString('base64');  
-        //    const metadata = {
-        //     contentType: myFile.mimetype,
-        //   };            
-        //    uploadString(uploadsfile, b64, 'base64',metadata).then((snapshot) => {
-        //        console.log('Uploaded a base64 string!');
-        //        next()
-        //      }).catch((err)=>(next(err)));
-        // }else{
-        //     let err = new Error("Image Type Must Be JPG,PNG,JPEG")
-        //     next(err)
-        // }
-        // if(req.body.oldIcon !== 'noimage.png'){
-        //     const deleteImage = ref(ourStorage,req.mypath+req.body.oldIcon);
-        
-        //     // Delete the file
-        //     deleteObject(deleteImage).then(() => {
-        //     // File deleted successfully
-        //     console.log("successfully deleted")
-        //     }).catch((error) => {
-        //     // Uh-oh, an error occurred!
-        //     console.log(error)
-            
-        //     });
-    
-    
-    
-    
-        // }
+        next()
     }else{
         next()
     }
