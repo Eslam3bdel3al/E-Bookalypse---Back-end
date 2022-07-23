@@ -67,18 +67,20 @@ module.exports.updateBook = (req,res)=>{
     console.log(req.body)
     // console.log(req.bookimage)
     
-    if(req.uploadedImage !== undefined){
-        const myPath = "./public/uploads/books/";
+    // if(req.uploadedImage !== undefined){
+    //     const myPath = "./public/uploads/books/";
    
-            req.body.poster = req.uploadedImage
-        if(req.body.oldImg !== 'undefined'){
+    //         req.body.poster = req.uploadedImage
+    //     if(req.body.oldImg !== 'undefined'){
 
-            fs.unlinkSync(myPath+req.body.oldImg )
-        }
+    //         fs.unlinkSync(myPath+req.body.oldImg )
+    //     }
    
 
+    // }
+    if(req.uploadedSrc !== undefined){
+        req.body.source = req.uploadedSrc
     }
-    // console.log(req.body)
     BookModel.updateOne({_id:req.params.bookId},req.body,
     (err,docs)=>{
         if(err){
