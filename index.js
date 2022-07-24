@@ -15,7 +15,7 @@ const server = http.createServer(app)
 
 // mongoose connect 
 // mongoose.connect('mongodb://localhost:27017/BookStore')
-mongoose.connect(DATABASE)
+mongoose.connect('mongodb+srv://EBookalypse:rWCaMtf7016NIOPs@cluster0.jgx2q.mongodb.net/BookStore?retryWrites=true&w=majority')
 .then(()=>{
     server.listen(port,()=>{
         console.log(`we are listening to ${host}:${port}/'`)
