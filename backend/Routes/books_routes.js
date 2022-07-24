@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllBooks, getBookById, addBook, deleteBook, updateBook } = require('../controllers/booksController');
+const { getAllBooks, getBookById, addBooks, deleteBook, updateBook } = require('../controllers/booksController');
 
 const multer = require('multer');
 const  {body,param,query} = require('express-validator');

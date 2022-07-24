@@ -6,20 +6,21 @@ const role = require("../middlewares/checkRole");
 
 const router = express.Router();
 
-router.route("/api/orders/:userId")
+router.route("/api/user/orders/:userId")
         .get(authMW, role.userORAdmin, ordersController.getAllOrders)
-        .post(authMW, role.mustUser, ordersController.addOrder)
 
-router.route("/api/orders/one/:userId")    //orderId in query string
-        .get(authMW, role.userORAdmin, ordersController.getOneOrder)
-        .delete(authMW, role.mustUser, ordersController.deleteOrder)
+router.route("/api/user/order/:userId")    
+        .get(authMW, role.userORAdmin, ordersController.getOneOrder)   //orderId in query string
+        .delete(authMW, role.mustUser, ordersController.deleteOrder)   //orderId in query string
+        .post(authMW, role.mustUser, ordersController.addOrder)       
 
-router.route("/api/orders/addBook/:userId")
+
+router.route("/api/user/order/addBook/:userId")
         .put(authMW, role.mustUser, ordersController.addBookToOrder)
 
-router.route("/api/orders/removeBook/:userId")
+router.route("/api/user/order/removeBook/:userId")
         .put(authMW, role.mustUser, ordersController.removeBookFromOrder)
 
-router.route("/api/orders/changeState")
+router.route("/api/admin/order/changeState")
         .put(authMW, role.mustAdmin, ordersController.changeOrderState)
 module.exports = router; 

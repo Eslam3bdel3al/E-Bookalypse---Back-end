@@ -24,16 +24,17 @@ const userData = (req,res,next)=>{
          
       }
 
-router.route("/api/users/signUp")
+router.route("/api/user/signUp")
         .post(upload.single('userImage'),valArrays.userAddEdit, validationMw, userData,imageHandlingMW,usersController.userSignUp)
 
 
-router.route("/api/users")
-// authMW, role.mustAdmin, 
-        .get(usersController.getAllusers)    
+router.route("/api/admin/users")
+        .get(authMW, role.mustAdmin, usersController.getAllusers) 
+
+router.route("/api/admin/user")
         .put(authMW, role.mustAdmin, valArrays.userAddEdit, validationMw, usersController.updateUser)
 
-router.route("/api/users/:userId")                       
+router.route("/api/user/:userId")                       
         .get(authMW, usersController.getUserByUserName)                                                //userName as query string
         .put(authMW, role.mustUser, valArrays.userAddEdit, validationMw, usersController.updateUser)
         .delete(authMW, role.userORAdmin ,usersController.deleteUser)                                 //userName as query string

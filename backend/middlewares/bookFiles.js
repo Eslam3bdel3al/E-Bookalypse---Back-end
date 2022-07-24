@@ -135,7 +135,7 @@ module.exports.updateFilesToFirebase = (req,res,next)=>{
                 const metadataPDF = {
                         contentType: pdf.mimetype,
                 };   
-                const deletePDF = ref(ourStorage,path+'/pdf/'+req.body.oldSrc);
+                const deletePDF = ref(ourStorage,path+'pdf/'+req.body.oldSrc);
         
                 deleteObject(deletePDF).then(() => {
                 // File deleted successfully

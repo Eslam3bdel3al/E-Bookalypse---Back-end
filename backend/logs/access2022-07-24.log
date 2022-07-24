@@ -1,0 +1,3 @@
+{} [24/Jul/2022:18:15:43 +0000] GET / 304 20.638 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [24/Jul/2022:18:15:44 +0000] GET /favicon.ico 404 10.491 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [24/Jul/2022:18:15:49 +0000] GET / 304 2.391 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
