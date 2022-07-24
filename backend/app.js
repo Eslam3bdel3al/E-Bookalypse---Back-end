@@ -32,7 +32,7 @@
   const cartsRouters = require("./Routes/carts_routes");
   const wishListRouters = require("./Routes/wishLists_routes");
   const logsRouters = require("./Routes/logs_routes");
-
+  
   app.use((req,res,next)=>{
     // * : no matter which domain is dsending the request is allowed to access our resources
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -40,10 +40,12 @@
     res.setHeader('Access-Control-Allow-Headers','Origin, X-Requested-With,Content-Type, Accept')
     // the incoming METHODS
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,PUT,DELETE,OPTIONS')
-
+    
     next();
   })
-
+  
+  app.get('/', (req, res) => {   res.send("WELCOME" + process.env.PORT  ) })
+  
   app.use(express.json())
   app.use(express.urlencoded({extended:true}))
 
@@ -59,7 +61,6 @@
   app.use(cartsRouters);
   app.use(wishListRouters);
   app.use(logsRouters)
-  app.get('/', (req, res) => {   res.send("WELCOME" + process.env.PORT  ) })
 
 
   //not found response 
