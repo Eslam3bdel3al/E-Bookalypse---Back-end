@@ -125,7 +125,7 @@ module.exports.updateFilesToFirebase = (req,res,next)=>{
     if(req.files){
 
         const path = 'uploads/books/'
-        if( req.files.booksrc[0]){
+        if( req.files.booksrc !== undefined){
             const pdf = req.files.booksrc[0];
             if(pdf.mimetype === 'application/pdf'){
                 let  pdfNewName = Date.now() + "_Ebookalypse_" + pdf.originalname;
