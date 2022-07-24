@@ -154,8 +154,6 @@ module.exports.updateFilesToFirebase = (req,res,next)=>{
                 next(err)
             }
 
-        }else{
-            next()
         }
         if(req.files.bookimage !== undefined){
                 const poster = req.files.bookimage[0]; 
@@ -199,8 +197,6 @@ module.exports.updateFilesToFirebase = (req,res,next)=>{
                     next(err)
                     // console.log("PDF MUST BE PDF ")
                 }
-            }else{
-                next()
             }
         
         next()
