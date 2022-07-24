@@ -6,12 +6,13 @@ const role = require("../middlewares/checkRole");
 
 const router = express.Router();
 
-router.route("/api/carts/:userId")
-    .get(authMw, role.userORAdmin, cartsController.getAllItems)    
-    .post(authMw, role.mustUser, cartsController.addItem)
+router.route("/api/user/cartItems/:userId") 
+        .get(authMw, role.userORAdmin, cartsController.getAllItems) 
 
-router.route("/api/carts/one/:userId")      //cartItemId in query string
-        .get(authMw, role.userORAdmin, cartsController.getOneItem)
-        .delete(authMw, role.mustUser, cartsController.deleteItem)
+ router.route("/api/user/cartItem/:userId") 
+        .post(authMw, role.mustUser, cartsController.addItem)
+        .get(authMw, role.userORAdmin, cartsController.getOneItem)   //cartItemId in query string
+        .delete(authMw, role.mustUser, cartsController.deleteItem)   //cartItemId in query string
+
 
 module.exports = router; 

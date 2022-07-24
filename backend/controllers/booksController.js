@@ -44,19 +44,27 @@ module.exports.addBook = (req,res)=>{
 
     })
 
-    book.save();
-    // console.log(req.file)
-    // console.log("image"+req.uploadedImage)
+    book.save().then((data)=>{
+        res.status(200).send("added")
+    }).catch((err)=>{
+        console.log(err)
+    })
+   
 
-    // console.log(req.mypath)
-    // console.log(req.file)
+}
+
+//I've just used to add many books for the first time
+module.exports.addBooks = (req,res,next)=>{
+    BookModel.insertMany(req.body.books)
+            .then((data) => {
+                res.status(201).json({data: "added"})
+            })
+            .catch( (err) => {
+                console.log(err)
+                next(err)
+            })
 
     
-
-
-    res.send("ok")
-    // res.sendStatus(201).json({message:"book Added"});
-
 }
 
 module.exports.updateBook = (req,res)=>{

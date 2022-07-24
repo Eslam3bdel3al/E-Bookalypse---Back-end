@@ -6,12 +6,12 @@ const role = require("../middlewares/checkRole");
 
 const router = express.Router();
 
-router.route("/api/wishes/:userId")
+router.route("/api/user/wisheItems/:userId")
     .get(authMw, role.userORAdmin, wishListsController.getAllItems)    
-    .post(authMw, role.mustUser, wishListsController.addItem)
 
-router.route("/api/wishes/one/:userId")      //wishItemId in query string
-        .get(authMw, role.userORAdmin, wishListsController.getOneItem)
-        .delete(authMw, role.mustUser, wishListsController.deleteItem)
+router.route("/api/user/wisheItem/:userId")      
+        .post(authMw, role.mustUser, wishListsController.addItem)
+        .get(authMw, role.userORAdmin, wishListsController.getOneItem)    //wishItemId in query string
+        .delete(authMw, role.mustUser, wishListsController.deleteItem)    //wishItemId in query string
 
 module.exports = router; 

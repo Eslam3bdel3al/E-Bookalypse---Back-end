@@ -14,10 +14,10 @@ router.route("/api/reviews/user/:userId")              //get all reviews of the 
 router.route("/api/reviews/book/:bookId")              //get all reviews of the book
     .get(reviewsController.getAllBookReviews)
     
-router.route("/api/reviews/one/:reviewId")
+router.route("/api/review/:reviewId")
     .get(reviewsController.getOneReview)
 
-router.route("/api/reviews/:userId")             //reviewId in query string to delete only
+router.route("/api/user/review/:userId")             //reviewId in query string to delete only
          .delete(authMw, role.userORAdmin, reviewsController.deleteReview)
          .post(authMw, role.mustUser,valArrays.reviewAddEdit,validationMw, reviewsController.addReview)
          .put(authMw, role.mustUser,valArrays.reviewAddEdit,validationMw, reviewsController.updateReview)       //get reviewId from req body

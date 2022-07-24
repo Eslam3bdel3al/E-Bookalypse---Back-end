@@ -1,6 +1,8 @@
 const express = require("express");
 
-const writersController = require("../controllers/writersController")
+const writersController = require("../controllers/writersController");
+const authMw = require("../middlewares/authMw");
+const role = require("../middlewares/checkRole");
 
 const router = express.Router();
 const multer = require('multer');
@@ -33,14 +35,16 @@ const writerPath = (req,res,next)=>{
 
 router.route('/api/writers')
       .get(writersController.getAllWriters)
-      .post(upload.single("writerimage"),writerValidation,validationMw,writerPath,imageHandlingMW,writersController.addWriters)
 
+router.route('/api/admin/writer')
+      .post(authMw, role.mustAdmin, upload.single("writerimage"),writerValidation,validationMw,writerPath,imageHandlingMW,writersController.addWriters)
 
-
-router.route('/api/writers/:writerId')
+router.route('/api/writer/:writerId')
       .get(writersController.getWriterById)
-      .put(upload.single("writerimage"),writerValidation,validationMw,writerPath,imageHandlingMW,writersController.updateWriter)
-      .delete(writersController.deleteWriter)
+
+router.route('/api/admin/writer/:writerId')
+      .put(authMw, role.mustAdmin, upload.single("writerimage"),writerValidation,validationMw,writerPath,imageHandlingMW,writersController.updateWriter)
+      .delete(authMw, role.mustAdmin, writersController.deleteWriter)
 
 
 module.exports = router; 

@@ -10,11 +10,16 @@ const router = express.Router();
 
 router.route("/api/promotions")
     .get(promotionsController.getAllPromotions)
-    .post(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.addPromotion)
-    .put(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.updatePromotion)
+    
 
-router.route("/api/promotions/:title")
-        .get(promotionsController.getOnePromotion)
+router.route("/api/admin/promotion")
+        .post(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.addPromotion)
+        .put(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.updatePromotion)
+
+router.route("/api/promotion/:title")
+            .get(promotionsController.getOnePromotion)
+
+router.route("/api/admin/promotion/:title")
         .delete(authMe, role.mustAdmin, promotionsController.deletePromotion)
     
 module.exports = router; 

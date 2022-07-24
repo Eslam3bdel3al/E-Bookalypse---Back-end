@@ -7,6 +7,7 @@
   const app = express();
   let date = new Date()
   let logFile = `access${date.toISOString().split('T')[0]}.log`;
+  
   const accessLogStream  = rfs.createStream((logFile),{
     interval: '1d', // rotate daily
     path: path.join(__dirname, 'logs')

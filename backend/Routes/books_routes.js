@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllBooks, getBookById, addBook, deleteBook, updateBook } = require('../controllers/booksController');
+const { getAllBooks, getBookById, addBooks, deleteBook, updateBook } = require('../controllers/booksController');
 
 const multer = require('multer');
 const  {body,param,query} = require('express-validator');
@@ -35,7 +35,8 @@ const router= express.Router();
 
 router.route('/api/books')
       .get(getAllBooks)
-      .post(upload.single('bookimage'),bookValidations,validationMw,bookData,imageHandlingMW,addBook)
+      // .post(upload.single('bookimage'),bookValidations,validationMw,bookData,imageHandlingMW,addBooks)
+      .post(addBooks)
 
 router.route('/api/books/:bookId')
       .get(getBookById)
