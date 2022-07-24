@@ -36,7 +36,7 @@ const router= express.Router();
 
 router.route('/api/books')
       .get(getAllBooks)
-      .post(upload.fields([{name:"bookimage"},{name:"booksrc"}]),bookValidations,validationMw,bookData,addFilesToFirebase,addBook)
+      .post(upload.fields([{name:"bookimage"},{name:"booksrc"}]),bookValidations,validationMw,bookData,addFilesToFirebase,addBooks)
 
 router.route('/api/books/:bookId')
       .get(getBookById)
