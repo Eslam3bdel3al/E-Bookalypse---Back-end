@@ -45,17 +45,17 @@ module.exports.userSignUp = (req,res,next) => {
 
 module.exports.getUserByUserName = (req,res,next) => {
     User.findOne({userName:req.query.userName})
-    .then((data) => {
-        if(data == null){
-         next(new Error("user is not found"));
-        }else{
-            res.status(200).json(data);
-        }
+        .then((data) => {
+            if(data == null){
+            next(new Error("user is not found"));
+            }else{
+                res.status(200).json(data);
+            }
 
-    })
-    .catch((err) => {
-        next(err);
-    })
+        })
+        .catch((err) => {
+            next(err);
+        })
 }
 
 
@@ -90,16 +90,16 @@ module.exports.updateUser = (req,res,next) => {
 
 module.exports.deleteUser = (req,res,next) => {
     User.deleteOne({userName:req.query.userName})
-    .then((data) => {
-        if(data.deletedCount == 0){
-            next(new Error("user is not found"));
-        }else{
-            res.status(200).json(data);
-        }
-    })
-    .catch((err) => {
-        next(err);
-    })
+        .then((data) => {
+            if(data.deletedCount == 0){
+                next(new Error("user is not found"));
+            }else{
+                res.status(200).json(data);
+            }
+        })
+        .catch((err) => {
+            next(err);
+        })
 }
 
 

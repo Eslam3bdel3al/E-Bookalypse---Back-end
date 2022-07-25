@@ -3,52 +3,70 @@ const fs = require('fs');
 
 
 module.exports.getAllCategories = (req,res)=>{
-    categoryModel.find({}).then(
-       categories => res.status(200).send({categories})
-    )
+    categoryModel.find({})
+    .then(
+       categories => res.status(200).json({categories})
+    ).catch((err) => {
+        console.log(err)
+    })
 }
 
 module.exports.addCategory = (req,res,next)=>{
     let newCat = new categoryModel({
-        title:req.body.cattitle,
+        title:req.body.catTitle,
         icon:req.uploadedImage
     })
-    newCat.save().then((data)=> res.status(200).send("added successfully")).catch((err)=>next(err));   // console.log(req.body)
+    newCat.save()
+            .then((data)=> res.status(201).json({data: "added"}))
+            .catch((err)=>next(err));
 
 }
 
 module.exports.deleteCategory = (req,res)=>{
 
-
-    categoryModel.deleteOne({_id:req.params.catId}).then(category=>{
-        res.status(200).send("deleted successfully" + {category})
-    })
-
+    categoryModel.deleteOne({_id:req.params.catId})
+        .then((data) => {
+            if(data.deletedCount == 0){
+                next(new Error("category is not found"));
+            }else{
+                res.status(200).json(data);
+            }
+        })
+        .catch((err) => {
+            next(err);
+        })
 }
 
 module.exports.updateCategory = (req,res)=>{
-    // if(req.uploadedImage !== undefined){
-    //     const myPath = "./public/uploads/categories/";
-    //     if(req.body.oldIcon !== 'undefined'){
-    //         fs.unlinkSync(myPath+req.body.oldIcon)
-    //         // console.log(myPath+req.body.oldIcon)
-    //     }
-    //     // req.body.icon = req.uploadedImage
-
-    //     console.log(req.body.oldIcon)
-   
-
-    // }
-
+  
     categoryModel.updateOne({_id:req.params.catId},{
-        title:req.body.title,
+        title:req.body.catTitle,
         icon : req.uploadedImage
-    }).then((category)=>res.status(200).send("updated Successfully"))
-    // console.log(req.body)
-
-
+    }).then((data)=>{
+        if(data.matchedCount == 0){
+            next(new Error("category is not found"));
+        }else{
+            res.status(200).json(data);
+        }
+    }).catch((err) => {
+        next(err);
+    })
 }
-module.exports.getCategory = (req,res)=>{
-    categoryModel.findOne({_id:req.params.catId}).then((category)=>res.status(200).send({category}))
 
+
+
+
+module.exports.getCategory = (req,res)=>{
+    categoryModel.findOne({_id:req.params.catId})
+        .then((data) => {
+            if(data == null){
+            next(new Error("category is not found"));
+            }else{
+                res.status(200).json(data);
+            }
+
+        })
+        .catch((err) => {
+            next(err);
+        })
 }

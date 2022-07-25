@@ -75,3 +75,9 @@ module.exports.reviewAddEdit = [
   body("vote").isInt({ min: 0, max: 5 }).withMessage("review vote must be Int from 1 to 5")
               .notEmpty().withMessage("review vote is required"),
 ]
+
+module.exports.bookValidations = [
+  body("title").isString().withMessage("should be Letters only").notEmpty().withMessage("This Field is required"),
+  body("price").isNumeric().withMessage("Book Price Must Number").notEmpty().withMessage("This Field is required"),
+  body("description").isString().withMessage("you must have a book description").notEmpty().withMessage("This Field is required")]
+  

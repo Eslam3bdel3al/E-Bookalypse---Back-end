@@ -1,31 +1,44 @@
 //   models
-const { findOneAndUpdate } = require('../models/books');
 const BookModel = require('../models/books');
-const fs = require('fs');
 
 module.exports.getAllBooks = (req,res)=>{
     BookModel.find({}).populate({path:"category"}).populate({path:"writer"})
-      .then(book=>{
-          res.status(200).send({book})
-      })
-    //   res.send("aaa")
-    //   res.end()    
+        .then((data) => {
+            res.status(200).json(data)
+        })
+        .catch((err) => {
+            next(err)
+        })  
   }
 
 module.exports.getBookById = (req,res)=>{
     BookModel.findOne({_id:req.params.bookId}).populate({path:"category"}).populate({path:"writer"})
-    .then(book=>{
-        res.status(200).send({book})
-    })
+        .then((data) => {
+            if(data == null){
+            next(new Error("book is not found"));
+            }else{
+                res.status(200).json(data);
+            }
+
+        })
+        .catch((err) => {
+            next(err);
+        })
 }
 
 module.exports.deleteBook = (req,res)=>{
-    // console.log(req.params.bookId)
    
     BookModel.deleteOne({_id:req.params.bookId})
-    .then(book=>{
-        res.status(200).send({book})
-    })
+        .then((data) => {
+            if(data.deletedCount == 0){
+                next(new Error("book is not found"));
+            }else{
+                res.status(200).json(data);
+            }
+        })
+        .catch((err) => {
+            next(err);
+        })
 }
 
 module.exports.addBook = (req,res)=>{
@@ -41,19 +54,17 @@ module.exports.addBook = (req,res)=>{
         publisher:req.body.publisher,
         price:req.body.price,
         category:req.body.category,
-        writer:req.body.writer,
-
-
-
+        writer:req.body.writer
     })
 
-    book.save().then((data)=>{
-        res.status(200).send("added")
-    }).catch((err)=>{
-        console.log(err)
-    })
-   
-
+    book.save()
+        .then((data) => {
+            res.status(201).json({data: "added"})
+        })
+        .catch( (err) => {
+            console.log(err)
+            next(err)
+        })
 }
 
 //I've just used to add many books for the first time
@@ -70,40 +81,30 @@ module.exports.addBooks = (req,res,next)=>{
     
 }
 
-module.exports.updateBook = (req,res)=>{
-    // console.log(req.params.bookId)
-    // console.log(req.body)
-    // console.log(req.bookimage)
-    
-    // if(req.uploadedImage !== undefined){
-    //     const myPath = "./public/uploads/books/";
-   
-    //         req.body.poster = req.uploadedImage
-    //     if(req.body.oldImg !== 'undefined'){
-
-    //         fs.unlinkSync(myPath+req.body.oldImg )
-    //     }
-   
-
-    // }
-    // if(req.uploadedSrc !== undefined){
-    //     req.body.source = req.uploadedSrc
-    // }
-    // if(req.uploadedImage !== undefined){
-    //     req.body.poster = req.uploadedImage
-    // }
-    BookModel.updateOne({_id:req.params.bookId},req.body,
-    (err,docs)=>{
-        if(err){
-            console.log(err)
-        }else{
-            console.log("updated docs "+ docs)
-        }
-    }
-    
-    )
-    // console.log(req.body)
-    res.send("ok")
-
+module.exports.updateBook = (req,res,next)=>{
+ 
+    BookModel.updateOne({_id:req.params.bookId},{
+            $set:{
+                title:req.body.title,
+                description:req.body.description,
+                poster:req.uploadedImage,
+                source:req.uploadedSrc,
+                date_release:req.body.date,
+                lang:req.body.lang,
+                n_pages:req.body.pages,
+                publisher:req.body.publisher,
+                price:req.body.price,
+                category:req.body.category,
+                writer:req.body.writer
+            }
+        }).then((data) => {
+            if(data.matchedCount == 0){
+                next(new Error("book is not found"));
+            }else{
+                res.status(200).json(data);
+            }
+        }).catch((err) => {
+            next(err);
+        })
 }
 

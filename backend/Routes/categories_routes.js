@@ -1,6 +1,9 @@
 const express = require("express");
 
-const categoriesController = require("../controllers/categoriesController")
+const categoriesController = require("../controllers/categoriesController");
+const authMW = require("../middlewares/authMw");
+const role = require("../middlewares/checkRole");
+
 const { imageHandlingMW } = require('../middlewares/ImageHandlineMW');
 const { addImageToFirebase,updateImageFromFirebase,deleteImageFromFirebase } = require('../middlewares/imageFIREBASE');
 
@@ -23,13 +26,17 @@ const categoriesData = (req,res,next)=>{
 
 router.route('/api/categories')
       .get(categoriesController.getAllCategories)
-      .post(upload.single("catimage"),categoriesData,addImageToFirebase,categoriesController.addCategory)
 
-
-router.route('/api/categories/:catId')
-      .delete(categoriesData,deleteImageFromFirebase,categoriesController.deleteCategory)
-      .put(upload.single("catimage"),categoriesData,updateImageFromFirebase,categoriesController.updateCategory)
+router.route('/api/categorie/:catId')
       .get(categoriesController.getCategory)
+
+router.route('/api/admin/categorie')
+      .post(authMW,role.mustAdmin, upload.single("catimage"),categoriesData,addImageToFirebase,categoriesController.addCategory)
+
+
+router.route('/api/admin/categorie/:catId')
+      .delete(authMW,role.mustAdmin, categoriesData,deleteImageFromFirebase,categoriesController.deleteCategory)
+      .put(authMW,role.mustAdmin, upload.single("catimage"),categoriesData,updateImageFromFirebase,categoriesController.updateCategory)
 
 
 module.exports = router; 

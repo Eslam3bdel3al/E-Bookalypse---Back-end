@@ -1,24 +1,23 @@
 const express = require('express');
-const { getAllBooks, getBookById, addBooks, deleteBook, updateBook } = require('../controllers/booksController');
-
-const multer = require('multer');
 const  {body,param,query} = require('express-validator');
+const multer = require('multer');
+
+
+
+const booksController = require('../controllers/booksController');
+
+const authMW = require("../middlewares/authMw");
+const role = require("../middlewares/checkRole");
+
+const valArrays = require("../middlewares/ValArrays")
 const validationMw = require("../middlewares/validationMw");
+
 const { imageHandlingMW } = require('../middlewares/ImageHandlineMW');
 const { addFilesToFirebase, updateFilesToFirebase } = require('../middlewares/bookFiles');
+
 const router= express.Router();
 
-
-
-  const upload = multer();
-
-
-  const bookValidations = [
-    body("title").isString().withMessage("should be Letters only").notEmpty().withMessage("This Field is required"),
-    body("price").isNumeric().withMessage("Book Price Must Number").notEmpty().withMessage("This Field is required"),
-    body("description").isString().withMessage("you must have a book description").notEmpty().withMessage("This Field is required"),
-    
-  ]
+const upload = multer();
 
   const bookData = (req,res,next)=>{
     const {
@@ -35,13 +34,17 @@ const router= express.Router();
   }
 
 router.route('/api/books')
-      .get(getAllBooks)
-      .post(upload.fields([{name:"bookimage"},{name:"booksrc"}]),bookValidations,validationMw,bookData,addFilesToFirebase,addBooks)
+      .get(booksController.getAllBooks) 
 
-router.route('/api/books/:bookId')
-      .get(getBookById)
-      .put(upload.fields([{name:"bookimage"},{name:"booksrc"}]),bookValidations,validationMw,bookData,updateFilesToFirebase,updateBook)
-      .delete(deleteBook)
+router.route('/api/admin/book/:bookId')
+      .get(booksController.getBookById)
+
+router.route('/api/admin/book')
+      .post(authMW, role.mustAdmin, upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,addFilesToFirebase,booksController.addBook)
+
+router.route('/api/admin/books/:bookId')
+      .put(authMW, role.mustAdmin, upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,updateFilesToFirebase,booksController.updateBook)
+      .delete(authMW, role.mustAdmin, booksController.deleteBook)
       
 
 module.exports = router;
