@@ -24,8 +24,8 @@ const bookSchema = mongoose.Schema({
     n_pages:{type:Number},
     publisher:{type:String},
     price:{type:Number,required:true},
-    category:{type:[mongoose.ObjectId],ref:"categories",required:true},
-    writer:{type:[mongoose.ObjectId],ref:"writers",required:true},
+    category:{type:[mongoose.Types.ObjectId],ref:"categories",required:true},
+    writer:{type:[mongoose.Types.ObjectId],ref:"writers",required:true},
     promotion:{type:mongoose.ObjectId,ref:"promotion"},
     date_addition: {type:Date, required:true, default: Date.now}
 })
