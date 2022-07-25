@@ -2,12 +2,12 @@ const categoryModel = require("../models/categories")
 const fs = require('fs');
 
 
-module.exports.getAllCategories = (req,res)=>{
+module.exports.getAllCategories = (req,res,next)=>{
     categoryModel.find({})
     .then(
        categories => res.status(200).json({categories})
     ).catch((err) => {
-        console.log(err)
+        next(err)
     })
 }
 
@@ -22,7 +22,7 @@ module.exports.addCategory = (req,res,next)=>{
 
 }
 
-module.exports.deleteCategory = (req,res)=>{
+module.exports.deleteCategory = (req,res,next)=>{
 
     categoryModel.deleteOne({_id:req.params.catId})
         .then((data) => {
@@ -37,7 +37,7 @@ module.exports.deleteCategory = (req,res)=>{
         })
 }
 
-module.exports.updateCategory = (req,res)=>{
+module.exports.updateCategory = (req,res,next)=>{
   
     categoryModel.updateOne({_id:req.params.catId},{
         title:req.body.catTitle,
@@ -56,7 +56,7 @@ module.exports.updateCategory = (req,res)=>{
 
 
 
-module.exports.getCategory = (req,res)=>{
+module.exports.getCategory = (req,res,next)=>{
     categoryModel.findOne({_id:req.params.catId})
         .then((data) => {
             if(data == null){

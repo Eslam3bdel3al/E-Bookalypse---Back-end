@@ -1,7 +1,7 @@
 //   models
 const BookModel = require('../models/books');
 
-module.exports.getAllBooks = (req,res)=>{
+module.exports.getAllBooks = (req,res,next)=>{
     BookModel.find({}).populate({path:"category"}).populate({path:"writer"})
         .then((data) => {
             res.status(200).json(data)
@@ -11,7 +11,7 @@ module.exports.getAllBooks = (req,res)=>{
         })  
   }
 
-module.exports.getBookById = (req,res)=>{
+module.exports.getBookById = (req,res,next)=>{
     BookModel.findOne({_id:req.params.bookId}).populate({path:"category"}).populate({path:"writer"})
         .then((data) => {
             if(data == null){
@@ -26,7 +26,7 @@ module.exports.getBookById = (req,res)=>{
         })
 }
 
-module.exports.deleteBook = (req,res)=>{
+module.exports.deleteBook = (req,res,next)=>{
    
     BookModel.deleteOne({_id:req.params.bookId})
         .then((data) => {
@@ -41,7 +41,7 @@ module.exports.deleteBook = (req,res)=>{
         })
 }
 
-module.exports.addBook = (req,res)=>{
+module.exports.addBook = (req,res,next)=>{
 
     const book = new BookModel({
         title:req.body.title,
