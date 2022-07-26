@@ -1,10 +1,22 @@
 //   models
 const BookModel = require('../models/books');
 
-module.exports.getAllBooks = (req,res,next)=>{
+module.exports.getAllBooks = (req,res,next)=>{                              //query string page,limit
+    
+    let {page = 1, limit = 10} = req.query;
+
     BookModel.find({}).populate({path:"category"}).populate({path:"writer"})
+        .limit(limit).skip((page - 1)*limit)
         .then((data) => {
-            res.status(200).json(data)
+            BookModel.countDocuments().then((count)=>{
+                let returned = {
+                    n_results : count,
+                    n_pages : Math.ceil(count/limit),
+                    page,
+                    data
+                }
+                res.status(200).json(returned)
+            }).catch((err)=>{next(err)})
         })
         .catch((err) => {
             next(err)

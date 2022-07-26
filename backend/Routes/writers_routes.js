@@ -37,7 +37,8 @@ router.route('/api/writers')
       .get(writersController.getAllWriters)
 
 router.route('/api/admin/writer')
-      .post(authMw, role.mustAdmin, upload.single("writerimage"),writerValidation,validationMw,writerPath,imageHandlingMW,writersController.addWriters)
+      .post(authMw, role.mustAdmin, upload.single("writerimage"),writerValidation,validationMw,writerPath,imageHandlingMW,writersController.addWriter)
+      // .post(writersController.addWriters)
 
 router.route('/api/writer/:writerId')
       .get(writersController.getWriterById)
