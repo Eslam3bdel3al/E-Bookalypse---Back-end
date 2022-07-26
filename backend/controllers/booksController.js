@@ -42,7 +42,10 @@ module.exports.deleteBook = (req,res,next)=>{
 }
 
 module.exports.addBook = (req,res,next)=>{
-
+    const categories = JSON.parse(req.body.category)
+    const writers = JSON.parse(req.body.writer)
+    
+    // console.log(typeof req.body.category)
     const book = new BookModel({
         title:req.body.title,
         description:req.body.description,
@@ -53,8 +56,8 @@ module.exports.addBook = (req,res,next)=>{
         n_pages:req.body.pages,
         publisher:req.body.publisher,
         price:req.body.price,
-        category:req.body.category,
-        writer:req.body.writer
+        category:categories,
+        writer:writers
     })
 
     book.save()

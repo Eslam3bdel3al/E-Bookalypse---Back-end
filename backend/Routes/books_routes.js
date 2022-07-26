@@ -20,16 +20,11 @@ const router= express.Router();
 const upload = multer();
 
   const bookData = (req,res,next)=>{
-    const {
-      file
-     } = req
+      
 
-     if(file){
-      req.mypath = "./public/uploads/books/"
+      req.mypath = "/uploads/books/poster"
       next()
-     }else{
-      next()
-     }
+    
      
   }
 
@@ -41,7 +36,7 @@ router.route('/api/admin/book/:bookId')
 
 router.route('/api/admin/book')
       // .post(authMW, role.mustAdmin, upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,addFilesToFirebase,booksController.addBook)
-      .post( upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,addFilesToFirebase,booksController.addBook)
+      .post(upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,addFilesToFirebase,booksController.addBook)
 
 router.route('/api/admin/books/:bookId')
       // .put(authMW, role.mustAdmin, upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,updateFilesToFirebase,booksController.updateBook)
