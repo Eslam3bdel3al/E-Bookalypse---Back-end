@@ -1,7 +1,7 @@
 const writerModel = require("../models/writers");
 const fs = require("fs");
 
-modmodule.exports.getAllWriters = (req,res, next)=>{
+module.exports.getAllWriters = (req,res, next)=>{
 
     let {page = 1, limit = 10} = req.query;
 
