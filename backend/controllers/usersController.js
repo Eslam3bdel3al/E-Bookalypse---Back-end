@@ -73,7 +73,8 @@ module.exports.updateUser = (req,res,next) => {
                 userName:req.body.userName,
                 email:req.body.email,
                 phone:req.body.phone,
-                pass:hash,
+                pass:hash, 
+                image:req.uploadedImage
             }
         }).then((data)=>{
             if(data.matchedCount == 0){

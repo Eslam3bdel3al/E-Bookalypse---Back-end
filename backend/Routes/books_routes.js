@@ -13,7 +13,8 @@ const valArrays = require("../middlewares/ValArrays")
 const validationMw = require("../middlewares/validationMw");
 
 const { imageHandlingMW } = require('../middlewares/ImageHandlineMW');
-const { addFilesToFirebase, updateFilesToFirebase } = require('../middlewares/bookFiles');
+const { addFilesToFirebase, updateFilesToFirebase, deleteFilesFromFireBase } = require('../middlewares/bookFiles');
+const { deleteImageFromFirebase } = require('../middlewares/imageFIREBASE');
 
 const router= express.Router();
 
@@ -42,7 +43,7 @@ router.route('/api/admin/books/:bookId')
       // .put(authMW, role.mustAdmin, upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,updateFilesToFirebase,booksController.updateBook)
       .put(upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,updateFilesToFirebase,booksController.updateBook)
       // .delete(authMW, role.mustAdmin, booksController.deleteBook)
-      .delete(booksController.deleteBook)
+      .delete(deleteFilesFromFireBase,booksController.deleteBook)
       
 
 module.exports = router;

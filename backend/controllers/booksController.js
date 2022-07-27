@@ -27,7 +27,7 @@ module.exports.getBookById = (req,res,next)=>{
 }
 
 module.exports.deleteBook = (req,res,next)=>{
-   
+    // console.log(req.query)
     BookModel.deleteOne({_id:req.params.bookId})
         .then((data) => {
             if(data.deletedCount == 0){
@@ -85,7 +85,11 @@ module.exports.addBooks = (req,res,next)=>{
 }
 
 module.exports.updateBook = (req,res,next)=>{
- 
+    console.log(req.body)
+    console.log(req.files)
+    const categories = JSON.parse(req.body.category)
+    const writers = JSON.parse(req.body.writer)
+
     BookModel.updateOne({_id:req.params.bookId},{
             $set:{
                 title:req.body.title,
@@ -97,8 +101,8 @@ module.exports.updateBook = (req,res,next)=>{
                 n_pages:req.body.pages,
                 publisher:req.body.publisher,
                 price:req.body.price,
-                category:req.body.category,
-                writer:req.body.writer
+                category:categories,
+                writer:writers
             }
         }).then((data) => {
             if(data.matchedCount == 0){

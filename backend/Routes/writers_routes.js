@@ -10,6 +10,7 @@ const multer = require('multer');
 const  {body,param,query} = require('express-validator');
 const validationMw = require("../middlewares/validationMw");
 const { imageHandlingMW } = require("../middlewares/ImageHandlineMW");
+const { addImageToFirebase, deleteImageFromFirebase, updateImageFromFirebase } = require("../middlewares/imageFIREBASE");
 
 const upload = multer();
 
@@ -20,16 +21,8 @@ const writerValidation = [
 
 ]
 const writerPath = (req,res,next)=>{
-      const {
-        file
-       } = req
-  
-       if(file){
-        req.mypath = "./public/uploads/writers/"
-        next()
-       }else{
-        next()
-       }
+      req.mypath = "uploads/writers/"
+      next()
        
     }
 
@@ -37,14 +30,18 @@ router.route('/api/writers')
       .get(writersController.getAllWriters)
 
 router.route('/api/admin/writer')
-      .post(authMw, role.mustAdmin, upload.single("writerimage"),writerValidation,validationMw,writerPath,imageHandlingMW,writersController.addWriters)
+//     authMw, role.mustAdmin,
+      .post(upload.single("writerimage"),writerValidation,validationMw,writerPath,addImageToFirebase,writersController.addWriter)
 
 router.route('/api/writer/:writerId')
       .get(writersController.getWriterById)
 
 router.route('/api/admin/writer/:writerId')
-      .put(authMw, role.mustAdmin, upload.single("writerimage"),writerValidation,validationMw,writerPath,imageHandlingMW,writersController.updateWriter)
-      .delete(authMw, role.mustAdmin, writersController.deleteWriter)
+//     authMw, role.mustAdmin, 
+      .put(upload.single("writerimage"),writerValidation,validationMw,writerPath,updateImageFromFirebase,writersController.updateWriter)
+      
+      // authMw, role.mustAdmin,
+      .delete(writerPath,deleteImageFromFirebase, writersController.deleteWriter)
 
 
 module.exports = router; 

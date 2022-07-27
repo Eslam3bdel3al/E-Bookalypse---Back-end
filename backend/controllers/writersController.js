@@ -14,11 +14,12 @@ module.exports.getWriterById = (req,res)=>{
     })
 }
 
-module.exports.addWriter = (req,res)=>{
+module.exports.addWriter = (req,res,next)=>{
     // let newWriter = new writerModel(req.body)
     // newWriter.save()
     // console.log(req.file)
     // console.log(req.bookimage)
+
     let newWriter = new writerModel({
         name:req.body.name,
         date_birth:req.body.date_birth,
@@ -29,7 +30,11 @@ module.exports.addWriter = (req,res)=>{
         
     })
 
-    newWriter.save()
+    newWriter.save().then((data)=>{
+        res.status(201).json({data: "added"})
+    }).catch((err)=>{
+        next(err)
+    })
 }
 
 
@@ -80,7 +85,13 @@ module.exports.updateWriter = (req,res)=>{
 }
 
 module.exports.deleteWriter = (req,res)=>{
-    writerModel.deleteOne({_id:req.params.writerId}).then(writer=>{
-        res.status(200).send({writer})
+    writerModel.deleteOne({_id:req.params.writerId}).then((data) => {
+        if(data.deletedCount == 0){
+            next(new Error("book is not found"));
+        }else{
+            res.status(200).json(data);
+        }
+    }).catch((err) => {
+        next(err);
     })
 }
