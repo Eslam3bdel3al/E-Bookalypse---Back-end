@@ -1,0 +1,8 @@
+<<<<<<< HEAD
+=======
+{} [26/Jul/2022:22:39:46 +0000] GET /api/writers 200 311.355 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [26/Jul/2022:23:16:32 +0000] GET /api/writers 304 313.847 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [26/Jul/2022:23:16:44 +0000] GET /api/writers?page=2 200 269.484 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [26/Jul/2022:23:16:58 +0000] GET /api/writers?page=2&limit=20 200 383.604 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [26/Jul/2022:23:17:09 +0000] GET /api/writers?page=2&limit=10 200 261.859 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+>>>>>>> 0bbdc2b314947474f7aa0e3b1ce15b468b4e732c
