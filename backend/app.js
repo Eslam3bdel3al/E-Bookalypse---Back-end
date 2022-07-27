@@ -32,6 +32,7 @@
   const cartsRouters = require("./Routes/carts_routes");
   const wishListRouters = require("./Routes/wishLists_routes");
   const logsRouters = require("./Routes/logs_routes");
+  const searchRouters = require("./Routes/search_route")
   
   app.use((req,res,next)=>{
     // * : no matter which domain is dsending the request is allowed to access our resources
@@ -61,6 +62,7 @@
   app.use(cartsRouters);
   app.use(wishListRouters);
   app.use(logsRouters)
+  app.use(searchRouters)
 
 
   //not found response 
