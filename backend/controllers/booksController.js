@@ -64,18 +64,20 @@ module.exports.getAllBooks = (req,res,next)=>{                              //qu
             $project:{"reviews.book_id":0,"reviews.review_date":0,"reviews.user_id":0,"reviews._id":0,
                         "category.icon":0,"category._id":0,
                         "writer.image":0,"writer.date_addition":0,"writer._id":0}
+        },{
+            $facet:{
+                count:[{ $count: "count" }],
+                sample: [{$skip: (parseInt(page) - 1)*parseInt(limit) },{$limit: parseInt(limit)}]   //,
+            }
         }
-    ]).limit(limit).skip((page - 1)*limit)
-        .then((data) => {
-            BookModel.countDocuments().then((count)=>{
-                let returned = {
-                    n_results : count,
-                    n_pages : Math.ceil(count/limit),
-                    page,
-                    data
-                }
+    ]).then((data) => {
+            let returned = {
+                n_results : data[0].count[0].count,
+                n_pages : Math.ceil(data[0].count[0].count/parseInt(limit)),
+                page:parseInt(page),
+                data: data[0].sample
+            }
                 res.status(200).json(returned)
-            }).catch((err)=>{next(err)})
         })
         .catch((err) => {
             next(err)
