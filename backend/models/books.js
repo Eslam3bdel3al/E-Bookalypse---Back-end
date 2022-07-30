@@ -75,7 +75,7 @@ const bookSchema = mongoose.Schema({
     ],
     promotion: {
         type: mongoose.ObjectId,
-        ref: "promotion"
+        ref: "promotions"
     },
     date_addition: {
         type: Date,

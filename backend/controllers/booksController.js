@@ -64,24 +64,37 @@ module.exports.getAllBooks = (req,res,next)=>{                              //qu
             foreignField: 'book_id',
             as: 'reviews',
         }},
+        {$lookup:{
+            from:"promotions",
+            localField: 'promotion',
+            foreignField: '_id',
+            as: 'promotion',
+        }},
+        {$lookup:{
+            from:"orders",
+            localField: '_id',
+            foreignField: 'order_books',
+            as: 'orders',
+        }},
         {
             //first prjection to get votes count from reviews array outputed from prev lookup
             $project:{
                 "title":1,"description":1,"poster":1,"date_release":1,"lang":1,"n_pages":1,"publisher":1,"price":1,
-                "category.title":1,"category._id":1,"writer.name":1,"writer._id":1,
+                "category.title":1,"category._id":1,"writer.name":1,"writer._id":1,"promotion":1,
                 "ratesCount": { $size:"$reviews"},
                 "fivesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 5]}}}},
                 "foursCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 4]}}}},
                 "threesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 3]}}}},
                 "twosCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 2]}}}},
                 "onesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 1]}}}},
+                "sales":{$size:{$filter:{"input" : "$orders","as" : "obj","cond": { "$eq" : ["$$obj.state", "accepted"]}}}}
             } 
         },
         {
             //second projection to get calc rate
             $project:{
                 "title":1,"description":1,"poster":1,"date_release":1,"lang":1,"n_pages":1,"publisher":1,"price":1,
-                "category.title":1,"category._id":1,"writer.name":1,"writer._id":1,
+                "category.title":1,"category._id":1,"writer.name":1,"writer._id":1,"promotion":1,"sales":1,
                 "ratesCount":1,
                 "rate": {
                         $cond:    //can't devide by zero so check if ratesCount not equal zero
