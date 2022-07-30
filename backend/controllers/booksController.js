@@ -39,6 +39,8 @@ module.exports.getAllBooks = (req,res,next)=>{                              //qu
         } else if (priceSort == "htl"){
             sort["price"] = -1
         }
+    }else{
+        sort['_id'] = 1
     }
 
    
@@ -108,6 +110,7 @@ module.exports.getAllBooks = (req,res,next)=>{                              //qu
     ])
     .then((data) => {
         if(data[0].count.length == 0){
+            console.log(data[0])
             next(new Error("no results"));
         }else{
         let returned = {
