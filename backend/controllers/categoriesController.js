@@ -19,6 +19,7 @@ module.exports.addCategory = (req,res,next)=>{
     newCat.save()
             .then((data)=> res.status(201).json({data: "added"}))
             .catch((err)=>next(err));
+    // console.log(req.body)
 
 }
 

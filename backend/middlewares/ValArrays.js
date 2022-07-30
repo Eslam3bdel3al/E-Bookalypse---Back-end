@@ -81,3 +81,7 @@ module.exports.bookValidations = [
   body("price").isNumeric().withMessage("Book Price Must Number").notEmpty().withMessage("This Field is required"),
   body("description").isString().withMessage("you must have a book description").notEmpty().withMessage("This Field is required")]
   
+
+  module.exports.categoryValidations = [
+    body("title").isString().withMessage("should be Letters only").notEmpty().withMessage("This Field is required"),
+  ]    
