@@ -13,7 +13,8 @@ router.route("/api/promotions")
     
 
 router.route("/api/admin/promotion")
-        .post(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.addPromotion)
+        // .post(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.addPromotion)
+        .post(promotionsController.addPromotion)
         .put(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.updatePromotion)
 
 router.route("/api/promotion/:title")
