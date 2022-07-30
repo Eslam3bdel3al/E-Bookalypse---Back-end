@@ -34,11 +34,14 @@ module.exports.getAllBooks = (req,res,next)=>{                              //qu
     }
 
     if(priceSort){
+    
         if (priceSort == "lth"){
             sort["price"] = 1
         } else if (priceSort == "htl"){
             sort["price"] = -1
         }
+    }else{
+        sort["_id"]=1
     }
 
    
