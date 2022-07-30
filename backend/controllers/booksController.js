@@ -3,45 +3,45 @@ const mongoose = require("mongoose")
 const BookModel = require('../models/books');
 const reviews = require ("../models/reviews")
 
-// module.exports.getAllBooks = (req,res,next)=>{                              //query string page,limit
-    
-//     let {page = 1, limit = 10} = req.query;
-
-//     BookModel.countDocuments().then((count)=>{
-
-//         BookModel.find({}).populate({path:"category"}).populate({path:"writer"})
-//             .limit(limit).skip((page - 1)*limit)
-//             .then( async (booksData) => {
-                
-//                await booksData.forEach( (book)=>{
-//                     reviews.find({book_id: book._id}).then((data)=>{
-//                         console.log(data)
-//                         book.reviews = data;
-//                         console.log(book)
-//                     }).catch((err)=>{next(err)})
-//                 });
-
-
-//                 return booksData;
-
-//             }).then((booksData)=>{
-//                 let returned = {
-//                     n_results : count,
-//                     n_pages : Math.ceil(count/limit),
-//                     page,
-//                     data:booksData
-//                 }
-//                 res.status(200).json(returned)
-
-//             }).catch((err) => { next(err)})        //books find
-
-//     }).catch((err)=>{next(err)})      // total count of books in db
-
-// }
 
 module.exports.getAllBooks = (req,res,next)=>{                              //query string page,limit
     
-    let {page = 1, limit = 10} = req.query;
+    //destructing query string
+    let {page = 1, limit = 10, category, rate , priceMin, priceMax , priceSort} = req.query;
+
+    // to handle filtering an objects to be set in the aggregate function below
+    let match = {};
+    let sort = {};
+
+    if (category){
+        if(typeof(category) == "string"){
+            match["category.title"] = category
+        } else {
+            match["category.title"] = {$in:category}
+        }
+    }
+
+    if (rate){
+        match["rate"] = {$gte:parseInt(rate)}
+    }
+
+    if(priceMin && priceMax){
+        match["price"] = {$gte:parseInt(priceMin),$lte:parseInt(priceMax)}
+    } else if (priceMin) {
+        match["price"] = {$gte:parseInt(priceMin)}
+    } else if (priceMax){
+        match["price"] = {$lte:parseInt(priceMax)}
+    }
+
+    if(priceSort){
+        if (priceSort == "lth"){
+            sort["price"] = 1
+        } else if (priceSort == "htl"){
+            sort["price"] = -1
+        }
+    }
+
+   
 
     BookModel.aggregate([
         {$lookup:{
@@ -60,30 +60,71 @@ module.exports.getAllBooks = (req,res,next)=>{                              //qu
             localField: '_id',
             foreignField: 'book_id',
             as: 'reviews',
-        }},{
-            $project:{"reviews.book_id":0,"reviews.review_date":0,"reviews.user_id":0,"reviews._id":0,
-                        "category.icon":0,"category._id":0,
-                        "writer.image":0,"writer.date_addition":0,"writer._id":0}
+        }},
+        {
+            //first prjection to get votes count from reviews array outputed from prev lookup
+            $project:{
+                "title":1,"description":1,"poster":1,"date_release":1,"lang":1,"n_pages":1,"publisher":1,"price":1,
+                "category.title":1,"category._id":1,"writer.name":1,"writer._id":1,
+                "ratesCount": { $size:"$reviews"},
+                "fivesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 5]}}}},
+                "foursCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 4]}}}},
+                "threesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 3]}}}},
+                "twosCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 2]}}}},
+                "onesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 1]}}}},
+            } 
+        },
+        {
+            //second projection to get calc rate
+            $project:{
+                "title":1,"description":1,"poster":1,"date_release":1,"lang":1,"n_pages":1,"publisher":1,"price":1,
+                "category.title":1,"category._id":1,"writer.name":1,"writer._id":1,
+                "ratesCount":1,
+                "rate": {
+                        $cond:    //can't devide by zero so check if ratesCount not equal zero
+                            [
+                                { "$eq" : ["$ratesCount", 0]},
+                                0,
+                                {$divide:[{$add:[{$multiply:["$fivesCount",5]},{$multiply:["$foursCount",4]},
+                                                {$multiply:["$threesCount",3]},{$multiply:["$twosCount",2]},"$onesCount"]},
+                                                "$ratesCount"]}
+                            ]
+                        }
+            } 
+        },
+        {
+            // $match:{"category.title":{$in:["kids"]},"rate":{$gte:2}}
+            $match: match
+        },
+        {
+            $sort: sort
+        },
+        {
+            $facet:{
+                count:[{ $count: "count" }],
+                sample: [{$skip: (parseInt(page) - 1)*parseInt(limit) },{$limit: parseInt(limit)}]   //,
+            }
         }
-    ]).limit(limit).skip((page - 1)*limit)
-        .then((data) => {
-            BookModel.countDocuments().then((count)=>{
-                let returned = {
-                    n_results : count,
-                    n_pages : Math.ceil(count/limit),
-                    page,
-                    data
-                }
-                res.status(200).json(returned)
-            }).catch((err)=>{next(err)})
-        })
-        .catch((err) => {
-            next(err)
-        })  
+    ])
+    .then((data) => {
+        if(data[0].count.length == 0){
+            next(new Error("no results"));
+        }else{
+        let returned = {
+            n_results : data[0].count[0].count,
+            n_pages : Math.ceil(data[0].count[0].count/parseInt(limit)),
+            page:parseInt(page),
+            data: data[0].sample
+        }
+        res.status(200).json(returned)
+        }
+    })
+    .catch((err) => {
+        next(err)
+    })  
   }
 
 module.exports.getBookById = (req,res,next)=>{
-    // BookModel.findOne({_id:req.params.bookId}).populate({path:"category"}).populate({path:"writer"})
     BookModel.aggregate([
         {
             $match:{_id:mongoose.Types.ObjectId(req.params.bookId)}

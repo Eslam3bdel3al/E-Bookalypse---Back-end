@@ -7,7 +7,7 @@ const router = express.Router();
 
 
 router.route('/api/search/:key')
-      .get(searchController.navSearch)
+      .get(searchController.toSearch)
 
 
 module.exports = router; 

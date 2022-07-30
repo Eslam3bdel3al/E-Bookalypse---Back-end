@@ -15,7 +15,7 @@ const server = http.createServer(app)
 
 // mongoose connect 
 // mongoose.connect('mongodb://localhost:27017/BookStore')
-mongoose.connect(DATABASE)
+mongoose.connect('mongodb://localhost:27017/BookStore')
 .then(()=>{
     server.listen(port,()=>{
         console.log(`we are listening to ${host}:${port}/'`)

@@ -3,7 +3,20 @@ const bcrypt  = require("bcrypt");
 const saltRounds = 10;
 
 module.exports.getAllusers = (req,res,next) => {
-    User.find({})
+    // User.find({})
+    User.aggregate([
+        {
+            $lookup:{
+                from:"reviews",
+                localField: '_id',
+                foreignField: 'book_id',
+                as: 'reviews',
+            }
+        },
+        {
+            $project:{"reviews.book_id":0,"reviews.review_date":0,"reviews.user_id":0,"reviews._id":0,}
+        }
+    ])
         .then((data) => {
             res.status(200).json(data)
         })

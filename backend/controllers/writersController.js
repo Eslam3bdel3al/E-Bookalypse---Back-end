@@ -5,18 +5,37 @@ module.exports.getAllWriters = (req,res, next)=>{
 
     let {page = 1, limit = 10} = req.query;
 
-    writerModel.find({})
-    .limit(limit).skip((page - 1)*limit)
-    .then((data) => {
-        writerModel.countDocuments().then((count)=>{
-            let returned = {
-                n_results : count,
-                n_pages : Math.ceil(count/limit),
-                page,
-                data
+    // writerModel.find({})
+    writerModel.aggregate([
+        {
+            $lookup:{
+                from:"books",
+                localField: '_id',
+                foreignField: 'writer',
+                as: 'books',
             }
+        },
+        {
+            $project:{"books._id":0,"books.category":0, "books.description":0,"books.poster":0,
+                    "books.source":0, "books.date_release":0, "books.lang":0,"books.n_pages":0,
+                    "books.publisher":0, "books.price":0, "books.writer":0, "books.promotion":0,
+                    "books.date_addition":0}
+        },{
+            $facet:{
+                count:[{ $count: "count" }],
+                sample: [{$skip: (parseInt(page) - 1)*parseInt(limit) },{$limit: parseInt(limit)}]   //,
+            }
+        }
+    ])
+    .then((data) => {
+        let returned = {
+            n_results : data[0].count[0].count,
+            n_pages : Math.ceil(data[0].count[0].count/parseInt(limit)),
+            page:parseInt(page),
+            data: data[0].sample
+        }
             res.status(200).json(returned)
-        }).catch((err)=>{next(err)})})
+    })
     .catch((err)=>{
         next(err)
     })
@@ -26,7 +45,7 @@ module.exports.getAllWriters = (req,res, next)=>{
 module.exports.getWriterById = (req,res, next)=>{
     writerModel.findOne({_id:req.params.writerId})
     .then((data) => {
-        if(data == null){
+        if(data.length == 0){
         next(new Error("writer is not found"));
         }else{
             res.status(200).json(data);
