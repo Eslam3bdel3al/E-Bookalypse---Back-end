@@ -41,11 +41,16 @@ const users = require ("../models/users");
 
 module.exports.toSearch = (req,res,next)=>{
 
-    let {page = 1, limit = 10, searchIn = "books", category, rate , priceMin, priceMax , priceSort} = req.query;
+    let {key ,page = 1, limit = 10, searchIn = "books", category, rate , priceMin, priceMax , priceSort} = req.query;
     
     // to handle filtering an objects to be set in the aggregate function below
     let match = {};
     let sort = {};
+
+    if(key){
+        match["title"]= {$regex:key,$options:"i"};
+    }
+    
 
     if (category){
         if(typeof(category) == "string"){
@@ -81,7 +86,7 @@ module.exports.toSearch = (req,res,next)=>{
     if(searchIn == "books"){
         books.aggregate([
             {
-                $match:{title:{$regex:req.params.key,$options:"i"}}
+                $match:match                                 //{title:{$regex:key,$options:"i"}}
             },
             {$lookup:{
                 from:"categories",
