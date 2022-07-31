@@ -12,3 +12,6 @@
 {} [31/Jul/2022:09:31:32 +0000] GET /api/search?key=se 200 135.063 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
 {} [31/Jul/2022:09:36:47 +0000] GET /api/books 304 195.922 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
 {} [31/Jul/2022:09:37:34 +0000] GET /api/books 304 218.288 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [31/Jul/2022:12:54:34 +0000] GET /api/search 404 15.723 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [31/Jul/2022:12:54:40 +0000] GET /api/search/ 404 11.795 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [31/Jul/2022:12:54:43 +0000] GET /api/search/S 500 7.142 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"

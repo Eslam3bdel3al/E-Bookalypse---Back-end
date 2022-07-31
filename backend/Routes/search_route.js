@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 
-router.route('/api/search')
+router.route('/api/search/:key')
       .get(searchController.toSearch)
 
 
