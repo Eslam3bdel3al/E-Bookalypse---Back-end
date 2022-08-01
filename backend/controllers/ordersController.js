@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-const order = require("../models/orders")
+const order = require("../models/orders");
+const book = require("../models/books");
 
 module.exports.getAllOrders = (req,res,next) => {
     order.find({user_id: mongoose.Types.ObjectId(req.params.userId)})
@@ -22,6 +23,14 @@ module.exports.addOrder = (req,res,next) => {
         order_books:  req.body.booksArray 
     })
     object.save()
+        .then((data)=>{
+            data.order_books.map(async (itm)=>{
+
+                await book.updateOne({_id: mongoose.Types.ObjectId(itm)},{
+                    $addToSet:{orders:data._id}  
+                })
+            })
+        })
         .then((data) => {
             res.status(201).json({data:"added"})
         })
@@ -46,13 +55,20 @@ module.exports.getOneOrder = (req,res,next) => {
 }
 
 module.exports.deleteOrder = (req,res,next) => {
-    order.deleteOne({_id:mongoose.Types.ObjectId(req.query.orderId)})
-    .then((data) => {
-        if(data.deletedCount == 0){
+    order.findOneAndDelete({_id:mongoose.Types.ObjectId(req.query.orderId)})
+    .then((data)=>{
+        if(data == null){
             next(new Error("there is no such order for that user"));
-        }else{
-            res.status(200).json({data:"deleted"});
-        }
+        } else {
+        data.order_books.map(async (itm)=>{
+            await book.updateOne({_id: mongoose.Types.ObjectId(itm)},{
+                $pull:{orders:data._id}  
+            })
+        })
+    }
+    })
+    .then((data) => {
+        res.status(200).json({data:"deleted"});
     })
     .catch((err) => {
         next(err)
@@ -60,17 +76,24 @@ module.exports.deleteOrder = (req,res,next) => {
        
 }
 
-module.exports.addBookToOrder = (req,res,next) => {                        //the body {orderId,book [object]}
+module.exports.addBookToOrder = (req,res,next) => {                        //the body {orderId,bookId}
     order.updateOne({_id: mongoose.Types.ObjectId(req.body.orderId)},{
         
-        $addToSet:{order_books:req.body.book}
+        $addToSet:{order_books:req.body.bookId}
         
-    }).then((data)=>{
+    })
+    .then(async (data)=>{
         if(data.matchedCount == 0){
             next(new Error("order is not found"));
         }else{
-            res.status(200).json(data);
+            await book.updateOne({_id: mongoose.Types.ObjectId(req.body.bookId)},{
+             $addToSet:{orders:req.body.orderId}  
+        })
         }
+        return data
+    })
+    .then((data)=>{
+       res.status(200).json(data);
     }).catch((err) => {
         next(err);
     })
@@ -79,16 +102,21 @@ module.exports.addBookToOrder = (req,res,next) => {                        //the
 module.exports.removeBookFromOrder = (req,res,next) => {                   //the body {orderId,book [object]}
     order.updateOne({_id: mongoose.Types.ObjectId(req.body.orderId)},{
         
-        $pull:{order_books:req.body.book}
+        $pull:{order_books:req.body.bookId}
         
-    }).then((data)=>{
+    })
+    .then(async (data)=>{
         if(data.matchedCount == 0){
             next(new Error("order is not found"));
+        }else{
+            await book.updateOne({_id: mongoose.Types.ObjectId(req.body.bookId)},{
+            $pull:{orders:req.body.orderId}  
+        })
         }
-        else
-        {
-            res.status(200).json(data);
-        }
+        return data
+    })
+    .then((data)=>{
+        res.status(200).json(data);
     }).catch((err) => {
         next(err);
     })

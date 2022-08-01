@@ -4,7 +4,7 @@ const BookModel = require('../models/books');
 const reviews = require ("../models/reviews")
 
 
-module.exports.getAllBooks = (req,res,next)=>{                              //query string page,limit
+module.exports.getAllBooks = async (req,res,next)=>{                              //query string page,limit
     
     //destructing query string
     let {page = 1, limit = 10, category, rate , priceMin, priceMax , priceSort} = req.query;
@@ -46,94 +46,96 @@ module.exports.getAllBooks = (req,res,next)=>{                              //qu
 
    
 
-    BookModel.aggregate([
-        {$lookup:{
-            from:"categories",
-            localField: 'category',
-            foreignField: '_id',
-            as: 'category',
-        }},{$lookup:{
-            from:"writers",
-            localField: 'writer',
-            foreignField: '_id',
-            as: 'writer',
-        }},
-        {$lookup:{
-            from:"reviews",
-            localField: '_id',
-            foreignField: 'book_id',
-            as: 'reviews',
-        }},
-        {$lookup:{
-            from:"promotions",
-            localField: 'promotion',
-            foreignField: '_id',
-            as: 'promotion',
-        }},
-        {$lookup:{
-            from:"orders",
-            localField: '_id',
-            foreignField: 'order_books',
-            as: 'orders',
-        }},
-        {
-            //first prjection to get votes count from reviews array outputed from prev lookup
-            $project:{
-                "title":1,"description":1,"poster":1,"date_release":1,"lang":1,"n_pages":1,"publisher":1,"price":1,
-                "category.title":1,"category._id":1,"writer.name":1,"writer._id":1,"promotion":1,
-                "ratesCount": { $size:"$reviews"},
-                "fivesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 5]}}}},
-                "foursCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 4]}}}},
-                "threesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 3]}}}},
-                "twosCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 2]}}}},
-                "onesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 1]}}}},
-                "sales":{$size:{$filter:{"input" : "$orders","as" : "obj","cond": { "$eq" : ["$$obj.state", "accepted"]}}}}
-            } 
-        },
-        {
-            //second projection to get calc rate
-            $project:{
-                "title":1,"description":1,"poster":1,"date_release":1,"lang":1,"n_pages":1,"publisher":1,"price":1,
-                "category.title":1,"category._id":1,"writer.name":1,"writer._id":1,"promotion":1,"sales":1,
-                "ratesCount":1,
-                "rate": {
-                        $cond:    //can't devide by zero so check if ratesCount not equal zero
-                            [
-                                { "$eq" : ["$ratesCount", 0]},
-                                0,
-                                {$divide:[{$add:[{$multiply:["$fivesCount",5]},{$multiply:["$foursCount",4]},
-                                                {$multiply:["$threesCount",3]},{$multiply:["$twosCount",2]},"$onesCount"]},
-                                                "$ratesCount"]}
-                            ]
-                        }
-            } 
-        },
-        {
-            // $match:{"category.title":{$in:["kids"]},"rate":{$gte:2}}
+    // BookModel.aggregate([
+    //     {$lookup:{
+    //         from:"categories",
+    //         localField: 'category',
+    //         foreignField: '_id',
+    //         as: 'category',
+    //     }},{$lookup:{
+    //         from:"writers",
+    //         localField: 'writer',
+    //         foreignField: '_id',
+    //         as: 'writer',
+    //     }},
+    //     {$lookup:{
+    //         from:"reviews",
+    //         localField: '_id',
+    //         foreignField: 'book_id',
+    //         as: 'reviews',
+    //     }},
+    //     {$lookup:{
+    //         from:"promotions",
+    //         localField: 'promotion',
+    //         foreignField: '_id',
+    //         as: 'promotion',
+    //     }},
+    //     {$lookup:{
+    //         from:"orders",
+    //         localField: '_id',
+    //         foreignField: 'order_books',
+    //         as: 'orders',
+    //     }},
+    //     {
+    //         //first prjection to get votes count from reviews array outputed from prev lookup
+    //         $project:{
+    //             "title":1,"description":1,"poster":1,"date_release":1,"lang":1,"n_pages":1,"publisher":1,"price":1,
+    //             "category.title":1,"category._id":1,"writer.name":1,"writer._id":1,"promotion":1,
+    //             "ratesCount": { $size:"$reviews"},
+    //             "fivesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 5]}}}},
+    //             "foursCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 4]}}}},
+    //             "threesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 3]}}}},
+    //             "twosCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 2]}}}},
+    //             "onesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 1]}}}},
+    //             "sales":{$size:{$filter:{"input" : "$orders","as" : "obj","cond": { "$eq" : ["$$obj.state", "accepted"]}}}}
+    //         } 
+    //     },
+    //     {
+    //         //second projection to get calc rate
+    //         $project:{
+    //             "title":1,"description":1,"poster":1,"date_release":1,"lang":1,"n_pages":1,"publisher":1,"price":1,
+    //             "category.title":1,"category._id":1,"writer.name":1,"writer._id":1,"promotion":1,"sales":1,
+    //             "ratesCount":1,
+    //             "rate": {
+    //                     $cond:    //can't devide by zero so check if ratesCount not equal zero
+    //                         [
+    //                             { "$eq" : ["$ratesCount", 0]},
+    //                             0,
+    //                             {$divide:[{$add:[{$multiply:["$fivesCount",5]},{$multiply:["$foursCount",4]},
+    //                                             {$multiply:["$threesCount",3]},{$multiply:["$twosCount",2]},"$onesCount"]},
+    //                                             "$ratesCount"]}
+    //                         ]
+    //                     }
+    //         } 
+    //     },
+    //     {
+    //         // $match:{"category.title":{$in:["kids"]},"rate":{$gte:2}}
             
-            $match: match
-        },
-        {
-            $sort: sort
-        },
-        {
-            $facet:{
-                count:[{ $count: "count" }],
-                sample: [{$skip: (parseInt(page) - 1)*parseInt(limit) },{$limit: parseInt(limit)}]   //,
-            }
-        }
-    ])
+    //         $match: match
+    //     },
+    //     {
+    //         $sort: sort
+    //     },
+    //     {
+    //         $facet:{
+    //             count:[{ $count: "count" }],
+    //             sample: [{$skip: (parseInt(page) - 1)*parseInt(limit) },{$limit: parseInt(limit)}]   //,
+    //         }
+    //     }
+    // ])
+    BookModel.find({}).populate("category",["_id","title"]).populate("writer",["_id","name"])
+    .populate("reviews",["_id","vote"]).populate("orders",["_id","state"])
+    .populate("promotion").select({"sales":{$filter:{"input" : "$orders","as" : "obj","cond": { "$eq" : ["$$obj.state", "accepted"]}}}})
+    .skip((parseInt(page) - 1)*parseInt(limit)).limit(parseInt(limit))
     .then((data) => {
-        if(data[0].count.length == 0){
+        if(data.length == 0){
             next(new Error("no results"));
         }else{
-        let returned = {
-            n_results : data[0].count[0].count,
-            n_pages : Math.ceil(data[0].count[0].count/parseInt(limit)),
-            page:parseInt(page),
-            data: data[0].sample
-        }
-        res.status(200).json(returned)
+            let returned = {
+                page:parseInt(page),
+                data
+            }
+            res.status(200).json(returned)
         }
     })
     .catch((err) => {

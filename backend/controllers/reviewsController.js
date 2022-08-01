@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-const review = require("../models/reviews")
+const review = require("../models/reviews");
+const book = require("../models/books")
 
 
 module.exports.getAllUserReviews = (req,res,next) => {
@@ -54,6 +55,11 @@ module.exports.addReview = (req,res,next) => {
         vote: req.body.vote,
     })
     object.save()
+        .then(async (data)=>{
+            await book.updateOne({_id: mongoose.Types.ObjectId(req.body.bookId)},{
+                $addToSet:{reviews:data._id}  
+            })
+        })
         .then((data) => {
             res.status(201).json({data:"added"})
         })
@@ -82,13 +88,20 @@ module.exports.updateReview = (req,res,next) => {           //body {reviewId,com
 
 
 module.exports.deleteReview = (req,res,next) => {
-    review.deleteOne({_id:mongoose.Types.ObjectId(req.query.reviewId)})
-    .then((data) => {
-        if(data.deletedCount == 0){
+    review.findOneAndDelete({_id:mongoose.Types.ObjectId(req.query.reviewId)})
+    .then(async (data)=>{
+        if(data == null){
             next(new Error("review dosn't exist"));
         }else{
-            res.status(200).json({data:"deleted"});
+        await book.updateOne({_id: mongoose.Types.ObjectId(data.book_id)},{
+            $pull:{reviews:data._id}  
+        })
         }
+    })
+    .then((data) => {
+       
+        res.status(200).json({data:"deleted"});
+        
     })
     .catch((err) => {
         next(err)
