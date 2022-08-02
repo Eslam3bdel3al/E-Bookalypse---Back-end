@@ -41,10 +41,11 @@ router.route('/api/admin/book')
       // .post(booksController.addBooks)
 
 router.route('/api/admin/books/:bookId')
-      // .put(authMW, role.mustAdmin, upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,updateFilesToFirebase,booksController.updateBook)
-      .put(upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,updateFilesToFirebase,booksController.updateBook)
+      .put(authMW, role.mustAdmin, upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,updateFilesToFirebase,booksController.updateBook)
       // .delete(authMW, role.mustAdmin, booksController.deleteBook)
       .delete(deleteFilesFromFireBase,booksController.deleteBook)
-      
+
+// router.route('/api/admin/books')
+//       .put(booksController.updatePoster)
 
 module.exports = router;
