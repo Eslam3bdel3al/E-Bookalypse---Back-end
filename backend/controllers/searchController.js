@@ -41,33 +41,56 @@ const users = require ("../models/users");
 
 module.exports.toSearch = (req,res,next)=>{
 
-    let {page = 1, limit = 10, searchIn = "books", category, rate , priceMin, priceMax , priceSort} = req.query;
+    let {key = "", page = 1, limit = 6, searchIn = "Books", category, rate , priceMin, priceMax , priceSort} = req.query;
     
     // to handle filtering an objects to be set in the aggregate function below
-    let match = {};
+    let searchMatch = {};
+    let filterMatch = {};
     let sort = {};
 
+   
     
+    if (searchIn == "books") {
+        searchMatch["title"] = {$regex:key,$options:"i"}
+    } 
+
+    if (searchIn == "writers") {
+        searchMatch["writer.name"] = {$regex:key,$options:"i"}
+    } 
+
+    if (searchIn == "promotions") {
+        searchMatch["promotion.title"] = {$regex:key,$options:"i"}
+    } 
     
+
+
+    if(page <= 0 ){
+        page = 1
+    }
+
+    if(limit <= 0){
+        limit = 1
+    } 
 
     if (category){
         if(typeof(category) == "string"){
-            match["category.title"] = category
+            filterMatch["category.title"] = category
+            console.log(filterMatch)
         } else {
-            match["category.title"] = {$in:category}
+            filterMatch["category.title"] = {$in:category}
         }
     }
 
     if (rate){
-        match["rate"] = {$gte:parseInt(rate)}
+        filterMatch["rate"] = {$gte:parseInt(rate)}
     }
 
     if(priceMin && priceMax){
-        match["price"] = {$gte:parseInt(priceMin),$lte:parseInt(priceMax)}
+        filterMatch["price"] = {$gte:parseInt(priceMin),$lte:parseInt(priceMax)}
     } else if (priceMin) {
-        match["price"] = {$gte:parseInt(priceMin)}
+        filterMatch["price"] = {$gte:parseInt(priceMin)}
     } else if (priceMax){
-        match["price"] = {$lte:parseInt(priceMax)}
+        filterMatch["price"] = {$lte:parseInt(priceMax)}
     }
 
     if(priceSort){
@@ -81,11 +104,29 @@ module.exports.toSearch = (req,res,next)=>{
         sort["_id"]=1
     }
 
-    if(searchIn == "books"){
-        books.aggregate([
+    if (searchIn == "users") {
+        users.aggregate([
             {
-                $match:{title:{$regex:req.params.key,$options:"i"}}
+                $match:{userName:{$regex:key,$options:"i"}}
+            },{
+                $skip: (parseInt(page) - 1)*parseInt(limit)  //,
             },
+            {
+                $limit: parseInt(limit)
+            }
+        ]).then((data)=>{
+            let returned = {
+                page:parseInt(page),
+                data
+            }
+            res.status(200).json(returned)
+        })
+        .catch((err) => {next(err)})
+    } else {
+        books.aggregate([
+            // {
+            //     $match:{"writer.name":{$regex:key,$options:"i"}}
+            // },
             {$lookup:{
                 from:"categories",
                 localField: 'category',
@@ -148,110 +189,81 @@ module.exports.toSearch = (req,res,next)=>{
                 } 
             },
             {
+                $match:  searchMatch                       //{"writer.name":{$regex:key,$options:"i"}}
+            },
+            {
                 // $match:{"category.title":{$in:["kids"]},"rate":{$gte:2}}
-                $match: match
+                $match: filterMatch
             },
             {
                 $sort: sort
             },
             {
-            $facet:{
-                count:[{ $count: "count" }],
-                sample: [{$skip: (parseInt(page) - 1)*parseInt(limit) },{$limit: parseInt(limit)}]   //,
-            }
+                $skip: (parseInt(page) - 1)*parseInt(limit)  //,
+            },
+            {
+                $limit: parseInt(limit)
             }
         ]).then((data)=>{
-            if(data[0].count.length == 0){
-                next(new Error("no search results"));
-            }else{
             let returned = {
-                n_results : data[0].count[0].count,
-                n_pages : Math.ceil(data[0].count[0].count/parseInt(limit)),
                 page:parseInt(page),
-                data: data[0].sample
+                data
             }
             res.status(200).json(returned)
-            }
         }
-        )
-        .catch((err) => {next(err)})
-
-
-        
-    } else if (searchIn == "writers") {
-        writers.aggregate([
-            {
-                $match:{name:{$regex:req.params.key,$options:"i"}}
-            },{
-            $facet:{
-                count:[{ $count: "count" }],
-                sample: [{$skip: (parseInt(page) - 1)*parseInt(limit) },{$limit: parseInt(limit)}]   //,
-            }
-            }
-        ]).then((data)=>{
-            if(data[0].count.length == 0){
-                next(new Error("no search results"));
-            }else{
-            let returned = {
-                n_results : data[0].count[0].count,
-                n_pages : Math.ceil(data[0].count[0].count/parseInt(limit)),
-                page:parseInt(page),
-                data: data[0].sample
-            }
-            res.status(200).json(returned)
-            }
-        })
-        .catch((err) => {next(err)})
-    } else if (searchIn == "promotions") {
-        promotions.aggregate([
-            {
-                $match:{title:{$regex:req.params.key,$options:"i"}}
-            },{
-            $facet:{
-                count:[{ $count: "count" }],
-                sample: [{$skip: (parseInt(page) - 1)*parseInt(limit) },{$limit: parseInt(limit)}]   //,
-            }
-            }
-        ]).then((data)=>{
-            if(data[0].count.length == 0){
-                next(new Error("no search results"));
-            }else{
-            let returned = {
-                n_results : data[0].count[0].count,
-                n_pages : Math.ceil(data[0].count[0].count/parseInt(limit)),
-                page:parseInt(page),
-                data: data[0].sample
-            }
-            res.status(200).json(returned)
-            }
-        }
-        )
-        .catch((err) => {next(err)})
-    } else if (searchIn == "users") {
-        users.aggregate([
-            {
-                $match:{userName:{$regex:req.params.key,$options:"i"}}
-            },{
-            $facet:{
-                count:[{ $count: "count" }],
-                sample: [{$skip: (parseInt(page) - 1)*parseInt(limit) },{$limit: parseInt(limit)}]   
-            }
-            }
-        ]).then((data)=>{
-            if(data[0].count.length == 0){
-                next(new Error("no search results"));
-            }else{
-            let returned = {
-                n_results : data[0].count[0].count,
-                n_pages : Math.ceil(data[0].count[0].count/parseInt(limit)),
-                page:parseInt(page),
-                data: data[0].sample
-            }
-            res.status(200).json(returned)
-            }
-        })
-        .catch((err) => {next(err)})
+        ).catch((err) => {next(err)})
     }
+    // else if (searchIn == "writers") {
+    //     writers.aggregate([
+    //         {
+    //             $match:{name:{$regex:key,$options:"i"}}
+    //         },{
+    //         $facet:{
+    //             count:[{ $count: "count" }],
+    //             sample: [{$skip: (parseInt(page) - 1)*parseInt(limit) },{$limit: parseInt(limit)}]   //,
+    //         }
+    //         }
+    //     ]).then((data)=>{
+    //         if(data[0].count.length == 0){
+    //             next(new Error("no search results"));
+    //         }else{
+    //         let returned = {
+    //             n_results : data[0].count[0].count,
+    //             n_pages : Math.ceil(data[0].count[0].count/parseInt(limit)),
+    //             page:parseInt(page),
+    //             data: data[0].sample
+    //         }
+    //         res.status(200).json(returned)
+    //         }
+    //     })
+    //     .catch((err) => {next(err)})
+    // } else if (searchIn == "promotions") {
+    //     promotions.aggregate([
+    //         {
+    //             $match:{title:{$regex:key,$options:"i"}}
+    //         },{
+    //         $facet:{
+    //             count:[{ $count: "count" }],
+    //             sample: [{$skip: (parseInt(page) - 1)*parseInt(limit) },{$limit: parseInt(limit)}]   //,
+    //         }
+    //         }
+    //     ]).then((data)=>{
+    //         if(data[0].count.length == 0){
+    //             next(new Error("no search results"));
+    //         }else{
+    //         let returned = {
+    //             n_results : data[0].count[0].count,
+    //             n_pages : Math.ceil(data[0].count[0].count/parseInt(limit)),
+    //             page:parseInt(page),
+    //             data: data[0].sample
+    //         }
+    //         res.status(200).json(returned)
+    //         }
+    //     }
+    //     )
+    //     .catch((err) => {next(err)})
+    // }
+    // 
         
 };
 

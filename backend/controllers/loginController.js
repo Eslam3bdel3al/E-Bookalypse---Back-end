@@ -17,7 +17,6 @@ module.exports.toLogin = (req,res,next) => {
             if(result){
                 let token  = jwt.sign({
                     id:data._id,
-                    userName:data.userName,
                     role:data.role
                 },
                 "ourLogSecret",

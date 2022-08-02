@@ -7,7 +7,6 @@ module.exports = (req,res,next)=>{
         let decodedToken = jwt.verify(token,"ourLogSecret");
         req.role = decodedToken.role;
         req.id = decodedToken.id;
-        req.userName = decodedToken.userName;
         next()
     }
     catch(error){
