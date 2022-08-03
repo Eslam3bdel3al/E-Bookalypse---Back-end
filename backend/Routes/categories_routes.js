@@ -32,7 +32,7 @@ router.route('/api/categorie/:catId')
 
 router.route('/api/admin/categorie')
 // authMW,role.mustAdmin
-      .post( upload.single("catimage"),categoriesData,addImageToFirebase,categoriesController.addCategory)
+      .post( authMW,role.mustAdmin, upload.single("catimage"),categoriesData,addImageToFirebase,categoriesController.addCategory)
 
 ,
 router.route('/api/admin/categorie/:catId')
