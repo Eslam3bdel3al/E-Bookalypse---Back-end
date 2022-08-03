@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-const order = require("../models/orders")
+const order = require("../models/orders");
+const book = require("../models/books");
 
 module.exports.getAllOrders = (req,res,next) => {
     order.find({user_id: mongoose.Types.ObjectId(req.params.userId)})
@@ -46,26 +47,26 @@ module.exports.getOneOrder = (req,res,next) => {
 }
 
 module.exports.deleteOrder = (req,res,next) => {
-    order.deleteOne({_id:mongoose.Types.ObjectId(req.query.orderId)})
+    order.findOneAndDelete({_id:mongoose.Types.ObjectId(req.query.orderId)})
     .then((data) => {
-        if(data.deletedCount == 0){
+        if(data == null){
             next(new Error("there is no such order for that user"));
-        }else{
-            res.status(200).json({data:"deleted"});
+        } else {
+        res.status(200).json({data:"deleted"});
         }
     })
     .catch((err) => {
         next(err)
-    })
-       
+    })  
 }
 
-module.exports.addBookToOrder = (req,res,next) => {                        //the body {orderId,book [object]}
+module.exports.addBookToOrder = (req,res,next) => {                        //the body {orderId,bookId}
     order.updateOne({_id: mongoose.Types.ObjectId(req.body.orderId)},{
         
-        $addToSet:{order_books:req.body.book}
+        $addToSet:{order_books:req.body.bookId}
         
-    }).then((data)=>{
+    })
+    .then((data)=>{
         if(data.matchedCount == 0){
             next(new Error("order is not found"));
         }else{
@@ -79,14 +80,13 @@ module.exports.addBookToOrder = (req,res,next) => {                        //the
 module.exports.removeBookFromOrder = (req,res,next) => {                   //the body {orderId,book [object]}
     order.updateOne({_id: mongoose.Types.ObjectId(req.body.orderId)},{
         
-        $pull:{order_books:req.body.book}
+        $pull:{order_books:req.body.bookId}
         
-    }).then((data)=>{
+    })
+    .then((data)=>{
         if(data.matchedCount == 0){
             next(new Error("order is not found"));
-        }
-        else
-        {
+        }else{
             res.status(200).json(data);
         }
     }).catch((err) => {

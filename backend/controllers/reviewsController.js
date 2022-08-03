@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-const review = require("../models/reviews")
+const review = require("../models/reviews");
+const book = require("../models/books")
 
 
 module.exports.getAllUserReviews = (req,res,next) => {
@@ -82,12 +83,12 @@ module.exports.updateReview = (req,res,next) => {           //body {reviewId,com
 
 
 module.exports.deleteReview = (req,res,next) => {
-    review.deleteOne({_id:mongoose.Types.ObjectId(req.query.reviewId)})
+    review.findOneAndDelete({_id:mongoose.Types.ObjectId(req.query.reviewId)})
     .then((data) => {
-        if(data.deletedCount == 0){
+        if(data == null){
             next(new Error("review dosn't exist"));
         }else{
-            res.status(200).json({data:"deleted"});
+        res.status(200).json({data:"deleted"});
         }
     })
     .catch((err) => {

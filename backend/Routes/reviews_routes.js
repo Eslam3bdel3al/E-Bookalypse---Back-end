@@ -18,8 +18,10 @@ router.route("/api/review/:reviewId")
     .get(reviewsController.getOneReview)
 
 router.route("/api/user/review/:userId")             //reviewId in query string to delete only
-         .delete(authMw, role.userORAdmin, reviewsController.deleteReview)
-         .post(authMw, role.mustUser,valArrays.reviewAddEdit,validationMw, reviewsController.addReview)
+        //  .delete(authMw, role.userORAdmin, reviewsController.deleteReview)
+         .delete(reviewsController.deleteReview)
+        //  .post(authMw, role.mustUser,valArrays.reviewAddEdit,validationMw, reviewsController.addReview)
+         .post(valArrays.reviewAddEdit,validationMw, reviewsController.addReview)
          .put(authMw, role.mustUser,valArrays.reviewAddEdit,validationMw, reviewsController.updateReview)       //get reviewId from req body
         
 

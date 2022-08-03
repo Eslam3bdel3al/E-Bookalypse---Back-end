@@ -38,7 +38,7 @@ const bookSchema = mongoose.Schema({
     },
     poster: {
         type: String,
-        default: "./book.jpg"
+        default: "book.png"
     },
     source: {
         type: String
@@ -59,24 +59,34 @@ const bookSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    category: [
+    category: 
         {
-            type: mongoose.Types.ObjectId,
+            type: [mongoose.Types.ObjectId],
             ref: "categories",
             required: true
-        }
-    ],
-    writer: [
+        },
+    writer: 
         {
-            type: mongoose.Types.ObjectId,
+            type: [mongoose.Types.ObjectId],
             ref: "writers",
             required: true
-        }
-    ],
+        },
     promotion: {
-        type: mongoose.ObjectId,
+        type: mongoose.Types.ObjectId,
         ref: "promotions"
     },
+    // reviews: 
+    //     {
+    //         type: [mongoose.Types.ObjectId],
+    //         ref: "reviews"
+    //     }
+    // ,
+    // orders: 
+    //     {
+    //         type: [mongoose.Types.ObjectId],
+    //         ref: "orders"
+    //     }
+    // ,
     date_addition: {
         type: Date,
         required: true,

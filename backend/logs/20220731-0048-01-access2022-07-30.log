@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 {} [30/Jul/2022:00:22:21 +0000] GET /api/books?page=2&priceSort=lth 200 1058.226 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
 {} [30/Jul/2022:00:23:06 +0000] GET /api/books?page=2&priceSort=htl 200 334.094 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
 {} [30/Jul/2022:00:23:26 +0000] GET /api/books?page=2&priceSort=lth 304 429.448 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
@@ -50,5 +48,18 @@
 {} [30/Jul/2022:15:14:01 +0000] GET /api/books 200 247.990 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
 {} [30/Jul/2022:15:16:39 +0000] GET /api/books 304 231.165 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
 {} [30/Jul/2022:15:17:02 +0000] GET /api/search/Smile 200 227.249 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
-=======
->>>>>>> 8a5afa45e7292e9f7488a061c8b33a985a790746
+{} [30/Jul/2022:17:36:27 +0000] GET /api/search/Smile 200 171.445 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [30/Jul/2022:17:36:51 +0000] GET /api/search/S?page=2 200 256.700 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [30/Jul/2022:17:36:56 +0000] GET /api/search/S 200 212.538 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [30/Jul/2022:17:37:17 +0000] GET /api/search/S?searchIn=books 200 193.667 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [30/Jul/2022:17:37:24 +0000] GET /api/search/S?searchIn=writers 200 143.854 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [30/Jul/2022:17:38:04 +0000] GET /api/search/S?searchIn=promotions 200 124.916 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [30/Jul/2022:17:38:17 +0000] GET /api/search/S?searchIn=users 200 125.261 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [30/Jul/2022:17:41:23 +0000] GET /api/search/S 304 1184.575 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [30/Jul/2022:17:41:31 +0000] GET /api/search/S?rate=2 200 474.505 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [30/Jul/2022:17:41:50 +0000] GET /api/search/S?priceSort=htl 200 240.044 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [30/Jul/2022:17:41:59 +0000] GET /api/search/S?priceSort=lth 200 717.512 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [30/Jul/2022:17:42:13 +0000] GET /api/search/S?priceMin=15 200 213.338 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [30/Jul/2022:17:42:31 +0000] GET /api/search/S?category=kids 200 1151.014 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+- [30/Jul/2022:20:52:57 +0000] GET / 200 18.508 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+{} [30/Jul/2022:20:54:23 +0000] GET /api/books 200 312.729 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"

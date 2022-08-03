@@ -4,14 +4,22 @@ const BookModel = require('../models/books');
 const reviews = require ("../models/reviews")
 
 
-module.exports.getAllBooks = (req,res,next)=>{                              //query string page,limit
+module.exports.getAllBooks = async (req,res,next)=>{                              //query string page,limit
     
     //destructing query string
-    let {page = 1, limit = 10, category, rate , priceMin, priceMax , priceSort} = req.query;
+    let {page = 1, limit = 6, category, rate , priceMin, priceMax , priceSort} = req.query;
 
     // to handle filtering an objects to be set in the aggregate function below
     let match = {};
     let sort = {};
+
+    if(page <= 0 ){
+        page = 1
+    }
+
+    if(limit <= 0){
+        limit = 1
+    } 
 
     if (category){
         if(typeof(category) == "string"){
@@ -34,7 +42,6 @@ module.exports.getAllBooks = (req,res,next)=>{                              //qu
     }
 
     if(priceSort){
-    
         if (priceSort == "lth"){
             sort["price"] = 1
         } else if (priceSort == "htl"){
@@ -111,31 +118,27 @@ module.exports.getAllBooks = (req,res,next)=>{                              //qu
         },
         {
             // $match:{"category.title":{$in:["kids"]},"rate":{$gte:2}}
+            
             $match: match
         },
         {
             $sort: sort
         },
+        { 
+            $skip: (parseInt(page) - 1)*parseInt(limit)
+        },
         {
-            $facet:{
-                count:[{ $count: "count" }],
-                sample: [{$skip: (parseInt(page) - 1)*parseInt(limit) },{$limit: parseInt(limit)}]   //,
-            }
-        }
+            $limit: parseInt(limit)
+        }   
     ])
     .then((data) => {
-        if(data[0].count.length == 0){
-            console.log(data[0])
-            next(new Error("no results"));
-        }else{
-        let returned = {
-            n_results : data[0].count[0].count,
-            n_pages : Math.ceil(data[0].count[0].count/parseInt(limit)),
-            page:parseInt(page),
-            data: data[0].sample
-        }
-        res.status(200).json(returned)
-        }
+
+
+            let returned = {
+                page:parseInt(page),
+                data
+            }
+            res.status(200).json(returned)
     })
     .catch((err) => {
         next(err)
@@ -270,3 +273,20 @@ module.exports.updateBook = (req,res,next)=>{
         })
 }
 
+//used to update all posters 
+module.exports.updatePoster = (req,res,next)=>{
+   
+    BookModel.updateMany({},{
+            $set:{
+                poster:"book.png",
+            }
+        }).then((data) => {
+            if(data.matchedCount == 0){
+                next(new Error("book is not found"));
+            }else{
+                res.status(200).json(data);
+            }
+        }).catch((err) => {
+            next(err);
+        })
+}
