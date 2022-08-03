@@ -38,7 +38,7 @@
     // * : no matter which domain is dsending the request is allowed to access our resources
     res.setHeader('Access-Control-Allow-Origin', '*');
     // the incoming request may have these headers
-    res.setHeader('Access-Control-Allow-Headers','Origin, X-Requested-With,Content-Type, Accept')
+    res.setHeader('Access-Control-Allow-Headers','Origin, X-Requested-With,Content-Type, Accept , Authorization')
     // the incoming METHODS
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,PUT,DELETE,OPTIONS')
     

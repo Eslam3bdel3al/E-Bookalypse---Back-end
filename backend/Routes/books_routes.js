@@ -37,14 +37,14 @@ router.route('/api/admin/book/:bookId')
 
 router.route('/api/admin/book')
 // authMW, role.mustAdmin,       
-      .post(upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,addFilesToFirebase,booksController.addBook)
+      .post(authMW, role.mustAdmin,upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,addFilesToFirebase,booksController.addBook)
       // .post(booksController.addBooks)
 
 router.route('/api/admin/books/:bookId')
 // authMW, role.mustAdmin, 
-      .put(upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,updateFilesToFirebase,booksController.updateBook)
+      .put(authMW, role.mustAdmin,upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,updateFilesToFirebase,booksController.updateBook)
       // .delete(authMW, role.mustAdmin, booksController.deleteBook)
-      .delete(deleteFilesFromFireBase,booksController.deleteBook)
+      .delete(authMW, role.mustAdmin,deleteFilesFromFireBase,booksController.deleteBook)
 
 // router.route('/api/admin/books')
 //       .put(booksController.updatePoster)

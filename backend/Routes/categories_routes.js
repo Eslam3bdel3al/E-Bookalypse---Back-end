@@ -37,7 +37,7 @@ router.route('/api/admin/categorie')
 ,
 router.route('/api/admin/categorie/:catId')
       // authMW,role.mustAdmin,
-      .delete( categoriesData,deleteImageFromFirebase,categoriesController.deleteCategory)
-      .put( upload.single("catimage"),categoriesData,updateImageFromFirebase,categoriesController.updateCategory)
+      .delete( authMW,role.mustAdmin,categoriesData,deleteImageFromFirebase,categoriesController.deleteCategory)
+      .put( authMW,role.mustAdmin,upload.single("catimage"),categoriesData,updateImageFromFirebase,categoriesController.updateCategory)
 
 module.exports = router; 

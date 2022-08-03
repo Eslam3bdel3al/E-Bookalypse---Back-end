@@ -31,17 +31,17 @@ router.route('/api/writers')
 
 router.route('/api/admin/writer')
 //     authMw, role.mustAdmin,
-      .post(upload.single("writerimage"),writerValidation,validationMw,writerPath,addImageToFirebase,writersController.addWriter)
+      .post(authMw, role.mustAdmin,upload.single("writerimage"),writerValidation,validationMw,writerPath,addImageToFirebase,writersController.addWriter)
 
 router.route('/api/writer/:writerId')
       .get(writersController.getWriterById)
 
 router.route('/api/admin/writer/:writerId')
 //     authMw, role.mustAdmin, 
-      .put(upload.single("writerimage"),writerValidation,validationMw,writerPath,updateImageFromFirebase,writersController.updateWriter)
+      .put(authMw, role.mustAdmin, upload.single("writerimage"),writerValidation,validationMw,writerPath,updateImageFromFirebase,writersController.updateWriter)
       
       // authMw, role.mustAdmin,
-      .delete(writerPath,deleteImageFromFirebase, writersController.deleteWriter)
+      .delete(authMw, role.mustAdmin, writerPath,deleteImageFromFirebase, writersController.deleteWriter)
 
 
 module.exports = router; 
