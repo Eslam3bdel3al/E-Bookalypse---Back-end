@@ -15,7 +15,7 @@ router.route("/api/promotions")
 router.route("/api/admin/promotion")
         .post(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.addPromotion)
 
-router.route("/api/admin/promotion")
+router.route("/api/admin/promotion/:promotionId")
         .put(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.updatePromotion)
 
 router.route("/api/promotion/:promotionId")

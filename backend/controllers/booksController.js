@@ -48,6 +48,7 @@ module.exports.getAllBooks = async (req,res,next)=>{                            
             sort["price"] = -1
         }
     }else{
+
         sort["_id"]=1
     }
 
@@ -132,6 +133,7 @@ module.exports.getAllBooks = async (req,res,next)=>{                            
     ])
     .then((data) => {
 
+
             let returned = {
                 page:parseInt(page),
                 data
@@ -212,6 +214,7 @@ module.exports.addBook = (req,res,next)=>{
         n_pages:req.body.pages,
         publisher:req.body.publisher,
         price:req.body.price,
+        promotion:req.body.promotion,
         category:categories,
         writer:writers
     })
