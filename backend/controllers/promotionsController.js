@@ -46,6 +46,7 @@ module.exports.getOnePromotion = (req,res,next) => {
 };
 
 module.exports.updatePromotion = (req,res,next) => {
+    console.log(req.body)
     Promotion.updateOne({_id:req.params.promotionId},{
         $set:{
             title: req.body.title,
