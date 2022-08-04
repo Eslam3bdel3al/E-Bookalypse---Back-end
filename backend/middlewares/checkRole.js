@@ -20,7 +20,7 @@ module.exports.mustAdmin = (req,res,next) => {
 }
 
 module.exports.mustUser = (req,res,next) => {
-    if(req.role == "regUser" && req.userId == req.params.userId){
+    if(req.role == "regUser"){                                 //&& req.id == req.params.userId
         next()
     }else {
         let error = new Error("Not Authorized");
@@ -32,7 +32,7 @@ module.exports.mustUser = (req,res,next) => {
 module.exports.userORAdmin = (req,res,next) => {
     if(req.role == "admin" || req.role == "rootAdmin"){
         next()
-    }else if(req.role == "regUser" && req.userId == req.params.userId){
+    }else if(req.role == "regUser"){                     //&& req.id == req.params.userId
         next()
     }else {
         let error = new Error("Not Authorized");

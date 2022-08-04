@@ -104,12 +104,14 @@ module.exports.toSearch = (req,res,next)=>{
         sort["_id"]=1
     }
 
+
+    
     if (searchIn == "users") {
         users.aggregate([
             {
                 $match:{userName:{$regex:key,$options:"i"}}
             },{
-                $skip: (parseInt(page) - 1)*parseInt(limit)  //,
+                $skip: (parseInt(page) - 1)*parseInt(limit)  
             },
             {
                 $limit: parseInt(limit)
@@ -122,7 +124,37 @@ module.exports.toSearch = (req,res,next)=>{
             res.status(200).json(returned)
         })
         .catch((err) => {next(err)})
-    } else {
+
+
+
+
+
+    } else if (searchIn == "writersNames") {
+            writers.aggregate([
+                {
+                    $match:{name:{$regex:key,$options:"i"}}
+                },
+                {
+                    $project:{name:1}
+                },
+                {
+                    $skip: (parseInt(page) - 1)*parseInt(limit)  
+                },
+                {
+                    $limit: parseInt(limit)
+                }
+            ]).then((data)=>{
+                
+                let returned = {
+                    page:parseInt(page),
+                    data
+                }
+                res.status(200).json(returned)
+            })
+            .catch((err) => {next(err)})
+        }else {
+
+
         books.aggregate([
             // {
             //     $match:{"writer.name":{$regex:key,$options:"i"}}

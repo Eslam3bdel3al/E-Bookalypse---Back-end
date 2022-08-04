@@ -4,7 +4,14 @@ const order = require("../models/orders");
 const book = require("../models/books");
 
 module.exports.getAllOrders = (req,res,next) => {
-    order.find({user_id: mongoose.Types.ObjectId(req.params.userId)})
+    let theId;
+    if(req.role == "user"){
+        theId = req.userId;
+    }else{
+        theId = req.params.userId;
+    }
+
+    order.find({user_id: mongoose.Types.ObjectId(theId)})
         .then((data) => {
             if(data == null){
                 next(new Error("this user has no orders yet"))
@@ -18,8 +25,9 @@ module.exports.getAllOrders = (req,res,next) => {
 };
 
 module.exports.addOrder = (req,res,next) => {
+   
     let object = new order ({
-        user_id: mongoose.Types.ObjectId(req.params.userId),
+        user_id: mongoose.Types.ObjectId(req.userId),
         order_books:  req.body.booksArray 
     })
     object.save()
@@ -33,7 +41,7 @@ module.exports.addOrder = (req,res,next) => {
 
 
 module.exports.getOneOrder = (req,res,next) => {
-    order.findOne({_id:mongoose.Types.ObjectId(req.query.orderId)})
+    order.findOne({_id:mongoose.Types.ObjectId(req.params.orderId)})
     .then((data) => {
         if(data == null){
             next( new Error("there is no such order for that user"))
@@ -47,7 +55,7 @@ module.exports.getOneOrder = (req,res,next) => {
 }
 
 module.exports.deleteOrder = (req,res,next) => {
-    order.findOneAndDelete({_id:mongoose.Types.ObjectId(req.query.orderId)})
+    order.findOneAndDelete({_id:mongoose.Types.ObjectId(req.params.orderId)})
     .then((data) => {
         if(data == null){
             next(new Error("there is no such order for that user"));

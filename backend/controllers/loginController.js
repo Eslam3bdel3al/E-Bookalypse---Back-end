@@ -21,7 +21,7 @@ module.exports.toLogin = (req,res,next) => {
                 },
                 "ourLogSecret",
                 {expiresIn:"24h"});
-                res.status(200).json({token,msg:"loged in"});
+                res.status(200).json({token,role:data.role,msg:"loged in"});
             } else {
                 let error = new Error("email or password is incorrect");
                 error.status = 401;

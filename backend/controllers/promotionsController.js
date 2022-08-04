@@ -32,7 +32,7 @@ module.exports.addPromotion = (req,res,next) => {
 
 module.exports.getOnePromotion = (req,res,next) => {
 
-    Promotion.findOne({title: decodeURI(req.params.title)})
+    Promotion.findOne({_id:req.params.promotionId})
     .then((data) => {
         if(data == null){
             next( new Error("Promotion not exists"))
@@ -46,7 +46,7 @@ module.exports.getOnePromotion = (req,res,next) => {
 };
 
 module.exports.updatePromotion = (req,res,next) => {
-    Promotion.updateOne({title:req.body.title},{
+    Promotion.updateOne({_id:req.params.promotionId},{
         $set:{
             title: req.body.title,
             description: req.body.description,
@@ -66,7 +66,7 @@ module.exports.updatePromotion = (req,res,next) => {
 };
 
 module.exports.deletePromotion = (req,res,next) => {
-    Promotion.deleteOne({title:decodeURI(req.params.title)})
+    Promotion.deleteOne({_id:req.params.promotionId})
     .then((data) => {
         if(data.deletedCount == 0){
             next(new Error("promotion is not found"));

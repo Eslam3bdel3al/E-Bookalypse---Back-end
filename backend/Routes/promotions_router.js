@@ -13,14 +13,15 @@ router.route("/api/promotions")
     
 
 router.route("/api/admin/promotion")
-        // .post(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.addPromotion)
-        .post(promotionsController.addPromotion)
+        .post(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.addPromotion)
+
+router.route("/api/admin/promotion")
         .put(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.updatePromotion)
 
-router.route("/api/promotion/:title")
-            .get(promotionsController.getOnePromotion)
+router.route("/api/promotion/:promotionId")
+        .get(promotionsController.getOnePromotion)
 
-router.route("/api/admin/promotion/:title")
+router.route("/api/admin/promotion/:promotionId")
         .delete(authMe, role.mustAdmin, promotionsController.deletePromotion)
     
 module.exports = router; 

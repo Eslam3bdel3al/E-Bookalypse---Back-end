@@ -3,7 +3,13 @@ const mongoose = require("mongoose");
 const cart = require("../models/carts")
 
 module.exports.getAllItems = (req,res,next) => {
-    cart.find({user_id: mongoose.Types.ObjectId(req.params.userId)})
+    let theId;
+    if(req.role == "user"){
+        theId = req.userId;
+    }else{
+        theId = req.params.userId;
+    }
+    cart.find({user_id: mongoose.Types.ObjectId(theId)}).populate("books")
         .then((data) => {
             if(data == null){
                 next(new Error("No items in user's cart"))
@@ -18,7 +24,7 @@ module.exports.getAllItems = (req,res,next) => {
 
 module.exports.addItem = (req,res,next) => {
     let object = new cart ({
-        user_id: mongoose.Types.ObjectId(req.params.userId),
+        user_id: mongoose.Types.ObjectId(req.userId),
         book: mongoose.Types.ObjectId(req.body.bookId)
     })
     object.save()
@@ -32,7 +38,7 @@ module.exports.addItem = (req,res,next) => {
 
 
 module.exports.getOneItem = (req,res,next) => {
-    cart.findOne({_id:mongoose.Types.ObjectId(req.query.cartItemId)})
+    cart.findOne({_id:mongoose.Types.ObjectId(req.params.cartItemId)}).populate("books")
     .then((data) => {
         if(data == null){
             next( new Error("book dosn't exists in the cart"))
@@ -46,7 +52,7 @@ module.exports.getOneItem = (req,res,next) => {
 }
 
 module.exports.deleteItem = (req,res,next) => {
-    cart.deleteOne({_id:mongoose.Types.ObjectId(req.query.cartItemId)})
+    cart.deleteOne({_id:mongoose.Types.ObjectId(req.params.cartItemId)})
     .then((data) => {
         if(data.deletedCount == 0){
             next(new Error("book dosn't exists in the cart"));

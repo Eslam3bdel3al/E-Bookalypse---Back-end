@@ -19,25 +19,29 @@ const userData = (req,res,next)=>{
       }
 
 router.route("/api/user/signUp")
-        .post(upload.single('userImage'),valArrays.userAddEdit, validationMw, userData,addImageToFirebase,usersController.userSignUp)
+        .post(upload.single('userImage'),valArrays.userAdd, validationMw, userData,addImageToFirebase,usersController.userSignUp)
 
 
 router.route("/api/admin/users")
-// authMW, role.mustAdmin,
-        .get(usersController.getAllusers) 
+        .get(authMW, role.mustAdmin,usersController.getAllusers) 
 
-router.route("/api/admin/user")
-        .put(authMW, role.mustAdmin, valArrays.userAddEdit, validationMw, usersController.updateUser)
+// router.route("/api/admin/user")
+//         .put(authMW, role.mustAdmin, valArrays.userAdd, validationMw, usersController.updateUser)
 
-router.route("/api/user/:userId")                       
-        .get(authMW, usersController.getUserByUserName)                                                //userName as query string
-        // authMW, role.mustUser,
-        .put( upload.single('userImage'),valArrays.userAddEdit, validationMw,userData,updateImageFromFirebase, usersController.updateUser)
-        // authMW, role.userORAdmin ,
-        .delete(userData,deleteImageFromFirebase, usersController.deleteUser)                                 //userName as query string
+router.route("/api/user/:userId?")                       
+        .get(authMW,role.userORAdmin, usersController.getUserById)                                               
+        .delete(authMW, role.userORAdmin,userData,deleteImageFromFirebase, usersController.deleteUser)
+
+router.route("/api/user") 
+        .put(authMW, role.mustUser,upload.single('userImage'),valArrays.userEdit, validationMw,userData,updateImageFromFirebase, usersController.updateUser)
+
+
+router.route("/api/user/pass")
+        .put(authMW, role.mustUser, valArrays.userChagePass, validationMw, usersController.changePass)      //body {currentPass,newPass}
 
 router.route("/api/admin/changeRole")
         .put(authMW, role.mustRootAdmin,valArrays.userRole, validationMw, usersController.updateRole)
+
 
 
 module.exports = router;

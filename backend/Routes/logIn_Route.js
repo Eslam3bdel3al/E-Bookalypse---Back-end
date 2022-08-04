@@ -7,6 +7,6 @@ const role = require("../middlewares/checkRole");
 
 const router = express.Router();
 
-router.post("/login",authMW, role.mustAdmin, loginController.toLogin);
+router.post("/login", loginController.toLogin);
 
 module.exports = router

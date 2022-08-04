@@ -3,7 +3,13 @@ const mongoose = require("mongoose");
 const wishList = require("../models/wishLists");
 
 module.exports.getAllItems = (req,res,next) => {
-    wishList.find({user_id: mongoose.Types.ObjectId(req.params.userId)})
+    let theId;
+    if(req.role == "user"){
+        theId = req.userId;
+    }else{
+        theId = req.params.userId;
+    }
+    wishList.find({user_id: mongoose.Types.ObjectId(theId)}).populate("books")
         .then((data) => {
             if(data == null){
                 next(new Error("No items in user's wish list"))
@@ -18,7 +24,7 @@ module.exports.getAllItems = (req,res,next) => {
 
 module.exports.addItem = (req,res,next) => {
     let object = new wishList ({
-        user_id: mongoose.Types.ObjectId(req.params.userId),
+        user_id: mongoose.Types.ObjectId(req.userId),
         book: mongoose.Types.ObjectId(req.body.bookId)
     })
     object.save()
@@ -32,7 +38,7 @@ module.exports.addItem = (req,res,next) => {
 
 
 module.exports.getOneItem = (req,res,next) => {
-    wishList.findOne({_id:mongoose.Types.ObjectId(req.query.wishItemId)})
+    wishList.findOne({_id:mongoose.Types.ObjectId(req.params.wishItemId)})
     .then((data) => {
         if(data == null){
             next( new Error("book dosn't exists in the wish list"))
@@ -46,7 +52,7 @@ module.exports.getOneItem = (req,res,next) => {
 }
 
 module.exports.deleteItem = (req,res,next) => {
-    wishList.deleteOne({_id:mongoose.Types.ObjectId(req.query.wishItemId)})
+    wishList.deleteOne({_id:mongoose.Types.ObjectId(req.params.wishItemId)})
     .then((data) => {
         if(data.deletedCount == 0){
             next(new Error("book dosn't exists in the wish list"));

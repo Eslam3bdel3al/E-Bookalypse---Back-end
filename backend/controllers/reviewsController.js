@@ -5,7 +5,13 @@ const book = require("../models/books")
 
 
 module.exports.getAllUserReviews = (req,res,next) => {
-    review.find({user_id: mongoose.Types.ObjectId(req.params.userId)})
+    let theId;
+    if(req.role == "user"){
+        theId = req.userId;
+    }else{
+        theId = req.params.userId;
+    }
+    review.find({user_id: mongoose.Types.ObjectId(theId)})
         .then((data) => {
             if(data == null){
                 next(new Error("this user hasn't made any reviews yet"))
@@ -49,7 +55,7 @@ module.exports.getOneReview = (req,res,next) => {
 
 module.exports.addReview = (req,res,next) => {
     let object = new review ({
-        user_id: mongoose.Types.ObjectId(req.params.userId),
+        user_id: mongoose.Types.ObjectId(req.userId),
         book_id: mongoose.Types.ObjectId(req.body.bookId),
         comment: req.body.comment,
         vote: req.body.vote,
@@ -83,7 +89,7 @@ module.exports.updateReview = (req,res,next) => {           //body {reviewId,com
 
 
 module.exports.deleteReview = (req,res,next) => {
-    review.findOneAndDelete({_id:mongoose.Types.ObjectId(req.query.reviewId)})
+    review.findOneAndDelete({_id:mongoose.Types.ObjectId(req.params.reviewId)})
     .then((data) => {
         if(data == null){
             next(new Error("review dosn't exist"));

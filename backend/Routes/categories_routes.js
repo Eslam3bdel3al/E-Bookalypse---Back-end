@@ -31,13 +31,11 @@ router.route('/api/categorie/:catId')
       .get(categoriesController.getCategory)
 
 router.route('/api/admin/categorie')
-// authMW,role.mustAdmin
-      .post( upload.single("catimage"),categoriesData,addImageToFirebase,categoriesController.addCategory)
+      .post(authMW,role.mustAdmin, upload.single("catimage"),categoriesData,addImageToFirebase,categoriesController.addCategory)
 
 ,
 router.route('/api/admin/categorie/:catId')
-      // authMW,role.mustAdmin,
-      .delete( categoriesData,deleteImageFromFirebase,categoriesController.deleteCategory)
-      .put( upload.single("catimage"),categoriesData,updateImageFromFirebase,categoriesController.updateCategory)
+      .delete(authMW,role.mustAdmin, categoriesData,deleteImageFromFirebase,categoriesController.deleteCategory)
+      .put(authMW,role.mustAdmin, upload.single("catimage"),categoriesData,updateImageFromFirebase,categoriesController.updateCategory)
 
 module.exports = router; 
