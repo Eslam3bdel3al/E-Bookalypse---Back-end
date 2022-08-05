@@ -1,4 +1,6 @@
-const User = require("../models/users")
+const User = require("../models/users");
+
+const jwt = require("jsonwebtoken");
 const bcrypt  = require("bcrypt");
 const saltRounds = 10;
 
@@ -99,7 +101,7 @@ module.exports.getUserById = (req,res,next) => {
 
 
 module.exports.updateUser = (req,res,next) => {
-        User.updateOne({userId: req.userId},{
+        User.updateOne({_id: req.userId},{
             $set:{
                 fName:req.body.fName,
                 lName:req.body.lName,
@@ -156,6 +158,27 @@ module.exports.changePass = (req,res,next) => {
     }) 
 }
 
+module.exports.forgetChangePass = (req,res,next) => {
+    bcrypt.hash(req.body.pass, saltRounds,(err,hash)=>{
+        if(err){
+            next(err)
+        }
+        User.updateOne({_id: req.userId},{
+            $set:{
+                pass:hash, 
+            }
+        }).then((data)=>{
+            if(data.matchedCount == 0){
+                next(new Error("user is not found"));
+            }else{
+                res.status(200).json(data);
+            }
+        }).catch((err) => {
+            next(err);
+        })
+    })
+}
+
 
 module.exports.deleteUser = (req,res,next) => {
     let theId;
@@ -193,4 +216,36 @@ module.exports.updateRole = (req,res,next) => {           //body {userName,role}
         }).catch((err) => {
             next(err);
         })
-}
+};
+
+
+module.exports.forgetSendMail = (req,res,next) => {
+    User.findOne({email:req.body.email})
+    .then((data) =>{
+        if(!data){
+            let error = new Error("email doesn't exist");
+            error.status = 401;
+            throw error;
+        }
+
+        let token  = jwt.sign({
+            id:data._id,
+        },
+        "ourLogSecret",
+        {expiresIn:"1h"});
+        return {token,userId:data._id};
+    })
+    .then((token) => {
+        res.status(201).json({token ,data: "mail sent"})
+        let base_url= "http://localhost:5000/"
+        transporter.sendMail({
+            to: req.body.email,
+            from: "abdelalleslam@gmail.com",
+            subject: "signed up successfully!",
+            html:`<a href='${base_url}resetPass/${token}'>Click here to change password</a>`
+        }).catch((err)=> {console.log(err)})
+    })
+    .catch((err) => {
+        next(err)
+    })
+};
