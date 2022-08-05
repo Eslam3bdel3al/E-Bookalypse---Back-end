@@ -244,11 +244,19 @@ module.exports.addBooks = (req,res,next)=>{
 }
 
 module.exports.updateBook = (req,res,next)=>{
-    console.log(req.body)
-    console.log(req.files)
+    // console.log(req.body)
+    // console.log(req.files)
     const categories = JSON.parse(req.body.category)
     const writers = JSON.parse(req.body.writer)
-
+    console.log(req.body.promotion)
+    if(typeof req.body.pages == 'string'){
+        req.body.pages = 0
+        // parseInt(req.body.pages)
+    }
+    if(req.body.promotion == 'None'){
+        req.body.promotion = null
+    }
+    console.log( req.body.pages)
     BookModel.updateOne({_id:req.params.bookId},{
             $set:{
                 title:req.body.title,
@@ -261,7 +269,8 @@ module.exports.updateBook = (req,res,next)=>{
                 publisher:req.body.publisher,
                 price:req.body.price,
                 category:categories,
-                writer:writers
+                writer:writers,
+                promotion:req.body.promotion
             }
         }).then((data) => {
             if(data.matchedCount == 0){
