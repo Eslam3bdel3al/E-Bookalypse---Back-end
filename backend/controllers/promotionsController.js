@@ -22,9 +22,9 @@ module.exports.getAllPromotions = (req,res,next) => {
         data.forEach((promo)=>{
             let collectionPrice = 0
             let collectionFinalPrice = 0;
-            
+
             promo.books.forEach((book)=>{
-                    book.finalPrice = book.price*promo.discount_rate;
+                    book.finalPrice = (1-promo.discount_rate)*book.price;
                     collectionPrice+= book.price;
                     collectionFinalPrice+= book.finalPrice;
             })
