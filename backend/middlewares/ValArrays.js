@@ -40,7 +40,7 @@ module.exports.userAdd =  [
                                     .notEmpty().withMessage("user name is required"),
 
                     body("email").isEmail().withMessage("email ia not valid")               
-                                  .notEmpty().withMessage("user name is required"),
+                                  .notEmpty().withMessage("email is required"),
 
                     body("phone").isString().withMessage("phone must be a string") 
                                 .matches(/^010[0-9]{8}$|011[0-9]{8}$|012[0-9]{8}$|015[0-9]{8}$/).withMessage("phone is not valid")        
@@ -87,7 +87,7 @@ module.exports.userEdit =  [
                     .notEmpty().withMessage("user name is required"),
 
     body("email").isEmail().withMessage("email ia not valid")               
-                  .notEmpty().withMessage("user name is required"),
+                  .notEmpty().withMessage("email is required"),
 
     body("phone").isString().withMessage("phone must be a string") 
                 .matches(/^010[0-9]{8}$|011[0-9]{8}$|012[0-9]{8}$|015[0-9]{8}$/).withMessage("phone is not valid")        
@@ -101,7 +101,7 @@ module.exports.userChagePass = [
 
     body("newPass").isString().withMessage("password must be a string")
                 .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).withMessage("password is not valid")        
-                .notEmpty().withMessage("password is required"),
+                .notEmpty().withMessage("password is required")
 ]
                 
 module.exports.userRole = [
@@ -136,4 +136,14 @@ module.exports.bookValidations = [
 
   module.exports.categoryValidations = [
     body("title").isString().withMessage("should be Letters only").notEmpty().withMessage("This Field is required"),
-  ]    
+  ]  
+  
+  module.exports.forgetSendMail = [
+    body("email").isEmail().withMessage("email ia not valid").notEmpty().withMessage("email is required")
+  ]
+
+  module.exports.forgetPassChange = [
+    body("pass").isString().withMessage("password must be a string")
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).withMessage("password is not valid")        
+    .notEmpty().withMessage("password is required")
+  ]

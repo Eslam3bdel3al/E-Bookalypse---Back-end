@@ -3,8 +3,35 @@ const Promotion = require("../models/promotions")
 
 
 module.exports.getAllPromotions = (req,res,next) => {
-    Promotion.find({})
+    Promotion.aggregate([
+        {
+            $lookup:{
+                from:"books",
+                localField: '_id',
+                foreignField: 'promotion',
+                as: 'books',
+            }
+        },
+        {
+            $project:{"books.description":0,"books.source":0,"books.date_release":0,"books.n_pages":0,
+                    "books.publisher":0,"books.category":0,"books.writer":0,"books.date_addition":0,
+                    "books.promotion":0}
+        }
+    ])
     .then((data)=>{
+        data.forEach((promo)=>{
+            let collectionPrice = 0
+            let collectionFinalPrice = 0;
+
+            promo.books.forEach((book)=>{
+                    book.finalPrice = (1-promo.discount_rate)*book.price;
+                    collectionPrice+= book.price;
+                    collectionFinalPrice+= book.finalPrice;
+            })
+
+            promo.collectionPrice = collectionPrice;
+            promo.collectionFinalPrice = collectionFinalPrice;
+        })
         res.status(200).json(data)
     })
     .catch((err) => {

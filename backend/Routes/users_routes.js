@@ -33,15 +33,19 @@ router.route("/api/user/:userId?")
         .delete(authMW, role.userORAdmin,userData,deleteImageFromFirebase, usersController.deleteUser)
 
 router.route("/api/user") 
-        .put(authMW, role.mustUser,upload.single('userImage'),valArrays.userEdit, validationMw,userData,updateImageFromFirebase, usersController.updateUser)
+        .put(authMW,upload.single('userImage'),valArrays.userEdit, validationMw,userData,updateImageFromFirebase, usersController.updateUser)
 
 
 router.route("/api/user/pass")
-        .put(authMW, role.mustUser, valArrays.userChagePass, validationMw, usersController.changePass)      //body {currentPass,newPass}
+        .put(authMW, valArrays.userChagePass, validationMw, usersController.changePass)      //body {currentPass,newPass}
 
 router.route("/api/admin/changeRole")
         .put(authMW, role.mustRootAdmin,valArrays.userRole, validationMw, usersController.updateRole)
 
+router.route("/api/forgetPassMail")
+      .post(valArrays.forgetSendMail, validationMw,usersController.forgetSendMail)
 
+router.route("/api/forgetPassChange")
+        .patch(authMW,valArrays.forgetPassChange, validationMw, usersController.forgetChangePass)
 
 module.exports = router;
