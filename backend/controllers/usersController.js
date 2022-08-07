@@ -84,7 +84,12 @@ module.exports.getUserById = (req,res,next) => {
     if(req.role == "regUser"){
         theId = req.userId;
     }else{
-        theId = req.params.userId;
+        if(req.params.userId){
+            
+            theId = req.params.userId;
+        }else{
+            theId=req.userId
+        }
     }
     User.findOne({_id: mongoose.Types.ObjectId(theId)})
         .then((data) => {

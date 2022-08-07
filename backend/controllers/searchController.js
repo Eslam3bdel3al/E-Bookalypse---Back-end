@@ -50,8 +50,9 @@ module.exports.toSearch = (req,res,next)=>{
 
    
     
-    if (searchIn == "books") {
+    if (searchIn == "Books") {
         searchMatch["title"] = {$regex:key,$options:"i"}
+        console.log(searchMatch["title"] )
     } 
 
     if (searchIn == "writers") {
