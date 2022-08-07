@@ -1,5 +1,25 @@
 const mongoose = require('mongoose');
 
+const cartEmbedded = mongoose.Schema({
+   totalPrice: {
+      type: Number,
+      required: true,
+      default:0
+   },
+   bookItems: {type:[mongoose.ObjectId],default:[],ref:"books"},
+   collectionItems: {type:[mongoose.ObjectId],default:[],ref:"collections"}
+})
+
+const wishListEmbedded = mongoose.Schema({
+   totalPrice: {
+      type: Number,
+      required: true,
+      default:0
+   },
+   bookItems: {type:[mongoose.ObjectId],default:[],ref:"books"},
+   collectionItems: {type:[mongoose.ObjectId],default:[],ref:"collections"}
+})
+
 const userSchema = mongoose.Schema({
    fName:{type: String, required: true, match:/^[a-zA-z]+$/},
    lName:{type: String, required: true, match:/^[a-zA-z]+$/},
@@ -14,6 +34,8 @@ const userSchema = mongoose.Schema({
    email:{type: String, required: true, unique:true},
    phone:{type: String, required: true, unique:true, match:/^010[0-9]{8}$|011[0-9]{8}$|012[0-9]{8}$|015[0-9]{8}$/},
    pass:{type: String, required: true},
+   cart:{type:cartEmbedded},
+   wishList:{type:wishListEmbedded},
    role: {type:String, required: true, enum:["rootAdmin", "admin", "regUser"], default: "regUser"},
    date_joined: {type:Date, required:true, default: Date.now}
 })

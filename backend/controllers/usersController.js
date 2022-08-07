@@ -1,5 +1,6 @@
 const User = require("../models/users");
 
+const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt  = require("bcrypt");
 const saltRounds = 10;
@@ -80,12 +81,12 @@ module.exports.userSignUp = (req,res,next) => {
 
 module.exports.getUserById = (req,res,next) => {
     let theId;
-    if(req.role == "user"){
+    if(req.role == "regUser"){
         theId = req.userId;
     }else{
         theId = req.params.userId;
     }
-    User.findOne({_id:theId})
+    User.findOne({_id: mongoose.Types.ObjectId(theId)})
         .then((data) => {
             if(data == null){
                 next(new Error("user is not found"));
@@ -182,12 +183,12 @@ module.exports.forgetChangePass = (req,res,next) => {
 
 module.exports.deleteUser = (req,res,next) => {
     let theId;
-    if(req.role == "user"){
+    if(req.role == "regUser"){
         theId = req.userId;
     }else{
         theId = req.params.userId;
     }
-    User.deleteOne({_id:theId})
+    User.deleteOne({_id:mongoose.Types.ObjectId(theId)})
         .then((data) => {
             if(data.deletedCount == 0){
                 next(new Error("user is not found"));

@@ -4,53 +4,52 @@ const {body,param,query} = require("express-validator")
 
 // these are the validation conditions for adding new user  // lma ndeeef validation el ui of regx nege ndefo hna kman
 
-module.exports.userAdd =  [
-                    
-                    body("fName").isAlpha().withMessage("first name can contain only letters ")
-                                .isLength({ min: 3, max:20 })
-                                .notEmpty().withMessage("first name is required"),
+module.exports.userAdd =  [                   
+body("fName").isAlpha().withMessage("first name can contain only letters ")
+.isLength({ min: 3, max:20 })
+.notEmpty().withMessage("first name is required"),
 
-                    body("lName").isAlpha().withMessage("last name can contain only letters ")
-                                .isLength({ min: 3, max:20 })
-                                .notEmpty().withMessage("last name is required"),
+body("lName").isAlpha().withMessage("last name can contain only letters ")
+.isLength({ min: 3, max:20 })
+.notEmpty().withMessage("last name is required"),
 
-                    body("date_birth").isDate().withMessage("Date of birth is not valid")
-                                    .isBefore(new Date("01-01-2007").toDateString()).withMessage("Not allowed")
-                                    .notEmpty().withMessage("Date of birth is required"),
+body("date_birth").isDate().withMessage("Date of birth is not valid")
+.isBefore(new Date("01-01-2007").toDateString()).withMessage("Not allowed")
+.notEmpty().withMessage("Date of birth is required"),
 
-                    body("gender").isAlpha().withMessage("gender can contain only letters")
-                                .isIn(["male","female"])
-                                .notEmpty().withMessage("gender is required"),
+body("gender").isAlpha().withMessage("gender can contain only letters")
+.isIn(["male","female"])
+.notEmpty().withMessage("gender is required"),
 
-                    body("street").isString().withMessage("street must be a string")
-                                .isLength({ min: 3, max:20 })
-                                .notEmpty().withMessage("street is required"),
+body("street").isString().withMessage("street must be a string")
+.isLength({ min: 3, max:20 })
+.notEmpty().withMessage("street is required"),
 
-                    body("city").isString().withMessage("city must be a string")
-                                .isLength({ min: 3, max:20 })
-                                .notEmpty().withMessage("city is required"),
+body("city").isString().withMessage("city must be a string")
+.isLength({ min: 3, max:20 })
+.notEmpty().withMessage("city is required"),
 
-                    body("governorate").isString().withMessage("governorate must be a string")
-                                    .isLength({ min: 3, max:20 })
-                                    .notEmpty().withMessage("governorate is required"),
+body("governorate").isString().withMessage("governorate must be a string")
+.isLength({ min: 3, max:20 })
+.notEmpty().withMessage("governorate is required"),
 
-                    body("userName").isString().withMessage("user name must be a string")    
-                                    .isLength({ min: 3, max:20 })
-                                    .matches(/^[_a-zA-Z0-9]+$/).withMessage("user name is not valid")
-                                    .notEmpty().withMessage("user name is required"),
+body("userName").isString().withMessage("user name must be a string")    
+.isLength({ min: 3, max:20 })
+.matches(/^[_a-zA-Z0-9]+$/).withMessage("user name is not valid")
+.notEmpty().withMessage("user name is required"),
 
-                    body("email").isEmail().withMessage("email ia not valid")               
-                                  .notEmpty().withMessage("email is required"),
+body("email").isEmail().withMessage("email ia not valid")               
+.notEmpty().withMessage("email is required"),
 
-                    body("phone").isString().withMessage("phone must be a string") 
-                                .matches(/^010[0-9]{8}$|011[0-9]{8}$|012[0-9]{8}$|015[0-9]{8}$/).withMessage("phone is not valid")        
-                                .notEmpty().withMessage("phone is required"),
+body("phone").isString().withMessage("phone must be a string") 
+.matches(/^010[0-9]{8}$|011[0-9]{8}$|012[0-9]{8}$|015[0-9]{8}$/).withMessage("phone is not valid")        
+.notEmpty().withMessage("phone is required"),
 
-                    body("pass").isString().withMessage("password must be a string")
-                                .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).withMessage("password is not valid")        
-                                  .notEmpty().withMessage("password is required"),
+body("pass").isString().withMessage("password must be a string")
+.matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).withMessage("password is not valid")        
+.notEmpty().withMessage("password is required"),
 
-                ];
+];
 
 module.exports.userEdit =  [   
     body("fName").isAlpha().withMessage("first name can contain only letters ")
@@ -107,11 +106,10 @@ module.exports.userChagePass = [
 module.exports.userRole = [
                           body("role").isAlpha().withMessage("role contain only letters")
                           .isIn(["rootAdmin", "admin", "regUser"])
-                        ];
+];
 
 
 module.exports.promotionAddEdit = [
-
   body("title").isString().withMessage("title must be a string").notEmpty().withMessage("promption title is required"),
   body("description").isString().withMessage("title must be a string"),
   body("discountRate").isFloat({ min: 0, max: 1 }).withMessage("promption discountRate must be float")
@@ -120,6 +118,19 @@ module.exports.promotionAddEdit = [
                     .notEmpty().withMessage("start date is required"),
   body("endDate").isDate().withMessage("end date is not valid")
                   .notEmpty().withMessage("end date is required")
+]
+
+module.exports.collectioAddEdit = [
+  body("title").isString().withMessage("title must be a string").notEmpty().withMessage("collection title is required"),
+  body("description").isString().withMessage("title must be a string"),
+  body("collectionPrice").isFloat().withMessage("collection price must be float")
+                      .notEmpty().withMessage("collection price is required"),
+  body("collectionBooks").isArray({min:3}).withMessage("minimum three books inthe collection")
+                        .notEmpty().withMessage("collection books are required"),
+  // body("startDate").isDate().withMessage("start date is not valid")
+  //                   .notEmpty().withMessage("start date is required"),
+  // body("endDate").isDate().withMessage("end date is not valid")
+  //                 .notEmpty().withMessage("end date is required")
 ]
 
 module.exports.reviewAddEdit = [
@@ -131,19 +142,24 @@ module.exports.reviewAddEdit = [
 module.exports.bookValidations = [
   body("title").isString().withMessage("should be Letters only").notEmpty().withMessage("This Field is required"),
   body("price").isNumeric().withMessage("Book Price Must Number").notEmpty().withMessage("This Field is required"),
-  body("description").isString().withMessage("you must have a book description").notEmpty().withMessage("This Field is required")]
+  body("description").isString().withMessage("you must have a book description").notEmpty().withMessage("This Field is required")
+]
   
 
-  module.exports.categoryValidations = [
+module.exports.categoryValidations = [
     body("title").isString().withMessage("should be Letters only").notEmpty().withMessage("This Field is required"),
-  ]  
+]  
   
-  module.exports.forgetSendMail = [
+module.exports.forgetSendMail = [
     body("email").isEmail().withMessage("email ia not valid").notEmpty().withMessage("email is required")
-  ]
+]
 
-  module.exports.forgetPassChange = [
+module.exports.forgetPassChange = [
     body("pass").isString().withMessage("password must be a string")
     .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).withMessage("password is not valid")        
     .notEmpty().withMessage("password is required")
-  ]
+]
+
+module.exports.cartItems = [
+  body("entryFialPrice").isNumeric().withMessage("Price Must Number").notEmpty().withMessage("This Field is required"),
+]

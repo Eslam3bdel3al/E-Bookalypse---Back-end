@@ -1,19 +1,20 @@
 const express = require("express");
 
 const wishListsController = require("../controllers/wishListsController");
+const valArrays = require("../middlewares/ValArrays")
+const validationMw = require("../middlewares/validationMw");
 const authMw = require("../middlewares/authMw");
 const role = require("../middlewares/checkRole");
 
 const router = express.Router();
 
-router.route("/api/user/wisheItems/:userId?")
-    .get(authMw, role.userORAdmin, wishListsController.getAllItems)    
+router.route("/api/wish/wishItems")
+    .get(authMw, role.mustUser, wishListsController.getwishList)    
 
-router.route("/api/user/wisheItem")      
-        .post(authMw, role.mustUser, wishListsController.addItem)
+router.route("/api/user/addWishItem")      
+        .put(authMw, role.mustUser,valArrays.cartItems,validationMw, wishListsController.addItems)
 
-router.route("/api/user/wisheItem/:wishItemId")      
-        .get(authMw, role.userORAdmin, wishListsController.getOneItem)    
-        .delete(authMw, role.mustUser, wishListsController.deleteItem)    
+router.route("/api/user/removewishItem")      
+        .put(authMw, role.mustUser,valArrays.cartItems,validationMw, wishListsController.deleteItems)    
 
 module.exports = router; 

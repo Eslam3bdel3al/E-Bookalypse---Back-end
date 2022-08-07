@@ -19,19 +19,19 @@ module.exports.getAllPromotions = (req,res,next) => {
         }
     ])
     .then((data)=>{
-        data.forEach((promo)=>{
-            let collectionPrice = 0
-            let collectionFinalPrice = 0;
+        // data.forEach((promo)=>{
+        //     let collectionPrice = 0
+        //     let collectionFinalPrice = 0;
 
-            promo.books.forEach((book)=>{
-                    book.finalPrice = (1-promo.discount_rate)*book.price;
-                    collectionPrice+= book.price;
-                    collectionFinalPrice+= book.finalPrice;
-            })
+        //     promo.books.forEach((book)=>{
+        //             book.finalPrice = (1-promo.discount_rate)*book.price;
+        //             collectionPrice+= book.price;
+        //             collectionFinalPrice+= book.finalPrice;
+        //     })
 
-            promo.collectionPrice = collectionPrice;
-            promo.collectionFinalPrice = collectionFinalPrice;
-        })
+        //     promo.collectionPrice = collectionPrice;
+        //     promo.collectionFinalPrice = collectionFinalPrice;
+        // })
         res.status(200).json(data)
     })
     .catch((err) => {
@@ -84,7 +84,7 @@ module.exports.updatePromotion = (req,res,next) => {
         }
     }).then((data) => {
         if(data.matchedCount == 0){
-            next(new Error("user is not found"));
+            throw new Error("promotion is not found");
         }else{
             res.status(200).json(data);
         }

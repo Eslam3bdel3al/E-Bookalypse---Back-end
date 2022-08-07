@@ -6,7 +6,7 @@ const role = require("../middlewares/checkRole");
 
 const router = express.Router();
 
-router.route("/api/user/orders/:userId?")
+router.route("/api/orders/:userId?")
         .get(authMW, role.userORAdmin, ordersController.getAllOrders)
 
 router.route("/api/user/order")      
@@ -17,10 +17,10 @@ router.route("/api/user/order/:orderId")
         .delete(authMW, role.mustUser, ordersController.deleteOrder)   
         
 router.route("/api/user/order/addBook")
-        .put(authMW, role.mustUser, ordersController.addBookToOrder)
+        .put(authMW, role.mustUser, ordersController.addBooksToOrder)
 
 router.route("/api/user/order/removeBook")
-        .put(authMW, role.mustUser, ordersController.removeBookFromOrder)
+        .put(authMW, role.mustUser, ordersController.removeBooksFromOrder)
 
 router.route("/api/admin/order/changeState")
         .put(authMW, role.mustAdmin, ordersController.changeOrderState)

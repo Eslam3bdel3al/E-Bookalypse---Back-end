@@ -10,6 +10,7 @@ module.exports.mustRootAdmin = (req,res,next) => {
 
 
 module.exports.mustAdmin = (req,res,next) => {
+
     if(req.role == "admin" || req.role == "rootAdmin"){
         next()
     }else{

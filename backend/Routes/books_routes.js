@@ -1,5 +1,4 @@
 const express = require('express');
-const  {body,param,query} = require('express-validator');
 const multer = require('multer');
 
 
@@ -12,9 +11,7 @@ const role = require("../middlewares/checkRole");
 const valArrays = require("../middlewares/ValArrays")
 const validationMw = require("../middlewares/validationMw");
 
-const { imageHandlingMW } = require('../middlewares/ImageHandlineMW');
 const { addFilesToFirebase, updateFilesToFirebase, deleteFilesFromFireBase } = require('../middlewares/bookFiles');
-const { deleteImageFromFirebase } = require('../middlewares/imageFIREBASE');
 
 const router= express.Router();
 

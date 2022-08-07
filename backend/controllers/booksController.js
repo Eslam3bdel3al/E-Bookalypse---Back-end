@@ -7,7 +7,7 @@ const reviews = require ("../models/reviews")
 module.exports.getAllBooks = async (req,res,next)=>{                              //query string page,limit
     
     //destructing query string
-    let {page = 1, limit = 6, category, rate , priceMin, priceMax , priceSort} = req.query;
+    let {page = 1, limit = 6, category, rate , priceMin, priceMax , priceSort, lang = "en"} = req.query;
 
     // to handle filtering an objects to be set in the aggregate function below
     let match = {};
@@ -39,6 +39,16 @@ module.exports.getAllBooks = async (req,res,next)=>{                            
         match["price"] = {$gte:parseInt(priceMin)}
     } else if (priceMax){
         match["price"] = {$lte:parseInt(priceMax)}
+    }
+
+    if (lang){
+        if (lang == "en")
+        {
+            match["lang"] = "english"
+        } else if (lang == "ar")
+        {
+            match["lang"] = "عربي"
+        }
     }
 
     if(priceSort){

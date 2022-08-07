@@ -6,7 +6,7 @@ const book = require("../models/books")
 
 module.exports.getAllUserReviews = (req,res,next) => {
     let theId;
-    if(req.role == "user"){
+    if(req.role == "regUser"){
         theId = req.userId;
     }else{
         theId = req.params.userId;
