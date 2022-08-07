@@ -86,7 +86,7 @@ module.exports.updateImageFromFirebase = (req,res,next)=>{
             let err = new Error("Image Type Must Be JPG,PNG,JPEG")
             next(err)
         }
-        if(req.body.oldIcon !== 'noimage.png'){
+        if(req.body.oldIcon !== 'noimage.png' && req.body.oldIcon !== 'user.png'){
             const deleteImage = ref(ourStorage,req.mypath+req.body.oldIcon);
         
             // Delete the file

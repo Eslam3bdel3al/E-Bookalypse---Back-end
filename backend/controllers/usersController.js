@@ -80,10 +80,15 @@ module.exports.userSignUp = (req,res,next) => {
 
 module.exports.getUserById = (req,res,next) => {
     let theId;
-    if(req.role == "user"){
+    if(req.role == "regUser"){
         theId = req.userId;
     }else{
-        theId = req.params.userId;
+        if(req.params.userId){
+            
+            theId = req.params.userId;
+        }else{
+            theId=req.userId
+        }
     }
     User.findOne({_id:theId})
         .then((data) => {

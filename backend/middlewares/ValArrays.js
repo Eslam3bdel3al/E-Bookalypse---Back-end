@@ -95,13 +95,13 @@ module.exports.userEdit =  [
 ];
 
 module.exports.userChagePass = [
-    body("currentPass").isString().withMessage("password must be a string")
-                .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).withMessage("password is not valid")        
-                .notEmpty().withMessage("password is required"),
+    body("currentPass").isString().withMessage("Old password must be a string")
+                .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).withMessage("Old password is not valid")        
+                .notEmpty().withMessage("Old password is required"),
 
-    body("newPass").isString().withMessage("password must be a string")
-                .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).withMessage("password is not valid")        
-                .notEmpty().withMessage("password is required")
+    body("newPass").isString().withMessage("new password must be a string")
+                .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/).withMessage("new password is not valid")        
+                .notEmpty().withMessage("new password is required")
 ]
                 
 module.exports.userRole = [
