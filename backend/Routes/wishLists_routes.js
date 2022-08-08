@@ -8,13 +8,13 @@ const role = require("../middlewares/checkRole");
 
 const router = express.Router();
 
-router.route("/api/wish/wishItems")
+router.route("/wish-list")
     .get(authMw, role.mustUser, wishListsController.getwishList)    
 
-router.route("/api/user/addWishItem")      
+router.route("/wish-addition")      
         .put(authMw, role.mustUser,valArrays.cartItems,validationMw, wishListsController.addItems)
 
-router.route("/api/user/removewishItem")      
+router.route("/wish-removal")      
         .put(authMw, role.mustUser,valArrays.cartItems,validationMw, wishListsController.deleteItems)    
 
 module.exports = router; 

@@ -70,15 +70,15 @@ module.exports.addReview = (req,res,next) => {
 };
 
 
-module.exports.updateReview = (req,res,next) => {           //body {reviewId,comment,vote}
-    review.updateOne({_id: req.body.reviewId},{
+module.exports.updateReview = (req,res,next) => {           //body {comment,vote}
+    review.updateOne({_id: req.params.reviewId},{
         $set:{
             comment: req.body.comment,
             vote: req.body.vote,
         }
     }).then((data)=>{
         if(data.matchedCount == 0){
-            next(new Error("review is not found"));
+            throw new Error("review is not found");
         }else{
             res.status(200).json(data);
         }

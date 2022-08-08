@@ -1162,3 +1162,7 @@
 {} [07/Aug/2022:07:19:19 +0000] GET /api/books/?&category=scientific%20researches&category=kids&priceMin=&priceMax=&priceSort= 200 136.911 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.134 Safari/537.36 Edg/103.0.1264.77"
 {} [07/Aug/2022:07:19:52 +0000] GET /api/books/?& 304 176.573 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.134 Safari/537.36 Edg/103.0.1264.77"
 {} [07/Aug/2022:07:19:54 +0000] GET /api/promotions 304 112.052 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.134 Safari/537.36 Edg/103.0.1264.77"
+{} [07/Aug/2022:22:41:46 +0000] GET /api/books 304 4374.746 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+{} [07/Aug/2022:22:41:53 +0000] GET /api/books 304 183.943 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+{} [07/Aug/2022:22:42:02 +0000] GET /books 404 6.549 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+{} [07/Aug/2022:22:42:11 +0000] GET /api/books 304 185.280 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"

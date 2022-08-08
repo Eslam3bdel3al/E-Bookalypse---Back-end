@@ -8,20 +8,16 @@ const validationMw = require("../middlewares/validationMw");
 
 const router = express.Router();
 
-router.route("/api/collections")
+router.route("/collections")
     .get(collectionsController.getAllCollections)
     
 
-router.route("/api/admin/collection")
+router.route("/collection")
         .post(authMe, role.mustAdmin,valArrays.collectioAddEdit,validationMw, collectionsController.addCollection)
 
-router.route("/api/admin/collection/:collectionId")
-        .put(authMe, role.mustAdmin,valArrays.collectioAddEdit,validationMw, collectionsController.updateCollection)
-
-router.route("/api/collection/:collectionId")
+router.route("/collection/:collectionId")
         .get(collectionsController.getOneCollection)
-
-router.route("/api/admin/collection/:collectionId")
+        .put(authMe, role.mustAdmin,valArrays.collectioAddEdit,validationMw, collectionsController.updateCollection)
         .delete(authMe, role.mustAdmin, collectionsController.deleteCollection)
     
 module.exports = router; 

@@ -6,7 +6,7 @@ const role = require("../middlewares/checkRole");
 
 const router = express.Router();
 
-router.route("/api/admin/logs/:date")
+router.route("/logs/:date")
     .get(authMw, role.mustAdmin, logsController.getAllLogs)    
 
 module.exports = router; 

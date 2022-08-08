@@ -6,22 +6,22 @@ const role = require("../middlewares/checkRole");
 
 const router = express.Router();
 
-router.route("/api/orders/:userId?")
+router.route("/orders/:userId?")
         .get(authMW, role.userORAdmin, ordersController.getAllOrders)
 
-router.route("/api/user/order")      
+router.route("/order")      
         .post(authMW, role.mustUser, ordersController.addOrder) 
 
-router.route("/api/user/order/:orderId")    
+router.route("/order/:orderId")    
         .get(authMW, role.userORAdmin, ordersController.getOneOrder) 
         .delete(authMW, role.mustUser, ordersController.deleteOrder)   
         
-router.route("/api/user/order/addBook")
+router.route("/order/add-book")
         .put(authMW, role.mustUser, ordersController.addBooksToOrder)
 
-router.route("/api/user/order/removeBook")
+router.route("/order/remove-book")
         .put(authMW, role.mustUser, ordersController.removeBooksFromOrder)
 
-router.route("/api/admin/order/changeState")
+router.route("/order/change-state")
         .put(authMW, role.mustAdmin, ordersController.changeOrderState)
 module.exports = router; 

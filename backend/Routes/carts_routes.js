@@ -8,13 +8,13 @@ const role = require("../middlewares/checkRole");
 
 const router = express.Router();
 
-router.route("/api/cart/cartItems") 
+router.route("/cart") 
         .get(authMw,role.mustUser, cartsController.getCart) 
 
- router.route("/api/user/addCartItem") 
+ router.route("/cart-addition") 
         .put(authMw, role.mustUser,valArrays.cartItems,validationMw, cartsController.addItems)
         
-router.route("/api/user/removeCartItem") 
+router.route("/cart-removal") 
         .put(authMw, role.mustUser,valArrays.cartItems,validationMw, cartsController.deleteItems)   
 
 // router.route("/api/user/cartItem/:cartItemId") 

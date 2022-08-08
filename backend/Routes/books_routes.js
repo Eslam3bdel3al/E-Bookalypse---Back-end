@@ -26,20 +26,18 @@ const upload = multer();
      
   }
 
-router.route('/api/books')
+router.route('/books')
       .get(booksController.getAllBooks) 
 
-router.route('/api/admin/book/:bookId')
+router.route('/book/:bookId')
       .get(booksController.getBookById)
-
-router.route('/api/admin/book')       
-      .post(authMW, role.mustAdmin,upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,addFilesToFirebase,booksController.addBook)
-      // .post(booksController.addBooks)
-
-router.route('/api/admin/books/:bookId')
       .put(authMW, role.mustAdmin, upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,updateFilesToFirebase,booksController.updateBook)
       .delete(authMW, role.mustAdmin,deleteFilesFromFireBase,booksController.deleteBook)
 
+router.route('/book')       
+      .post(authMW, role.mustAdmin,upload.fields([{name:"bookimage"},{name:"booksrc"}]),valArrays.bookValidations,validationMw,bookData,addFilesToFirebase,booksController.addBook)
+      // .post(booksController.addBooks)
+    
 // router.route('/api/admin/books')
 //       .put(booksController.updatePoster)
 

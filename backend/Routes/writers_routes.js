@@ -26,18 +26,18 @@ const writerPath = (req,res,next)=>{
        
     }
 
-router.route('/api/writers')
+router.route('/writers')
       .get(writersController.getAllWriters)
 
-router.route('/api/admin/writer')    
+router.route('/writer')    
       .post(authMw, role.mustAdmin,upload.single("writerimage"),writerValidation,validationMw,writerPath,addImageToFirebase,writersController.addWriter)
 
-router.route('/api/writer/:writerId')
+router.route('/writer/:writerId')
       .get(writersController.getWriterById)
-
-router.route('/api/admin/writer/:writerId')
       .put(authMw, role.mustAdmin,upload.single("writerimage"),writerValidation,validationMw,writerPath,updateImageFromFirebase,writersController.updateWriter)
       .delete(authMw, role.mustAdmin,writerPath,deleteImageFromFirebase, writersController.deleteWriter)
+
+     
 
 
 module.exports = router; 

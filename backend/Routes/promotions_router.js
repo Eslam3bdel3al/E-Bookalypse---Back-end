@@ -8,20 +8,16 @@ const validationMw = require("../middlewares/validationMw");
 
 const router = express.Router();
 
-router.route("/api/promotions")
+router.route("/promotions")
     .get(promotionsController.getAllPromotions)
     
 
-router.route("/api/admin/promotion")
+router.route("/promotion")
         .post(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.addPromotion)
 
-router.route("/api/admin/promotion/:promotionId")
-        .put(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.updatePromotion)
-
-router.route("/api/promotion/:promotionId")
+router.route("/promotion/:promotionId")
         .get(promotionsController.getOnePromotion)
-
-router.route("/api/admin/promotion/:promotionId")
+        .put(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.updatePromotion)
         .delete(authMe, role.mustAdmin, promotionsController.deletePromotion)
     
 module.exports = router; 
