@@ -4,6 +4,7 @@ const {body,param,query} = require("express-validator")
 
 // these are the validation conditions for adding new user  // lma ndeeef validation el ui of regx nege ndefo hna kman
 
+
 module.exports.userAdd =  [                   
 body("fName").isAlpha().withMessage("first name can contain only letters ")
 .isLength({ min: 3, max:20 })

@@ -32,24 +32,34 @@ module.exports.addItems = (req,res,next) => {
         
     })
     .then(async (data)=>{
-        console.log(data)
-        bookIds.forEach((book)=>{
-            if (data.wishList.bookItems.includes(book)){
-                throw new Error("a book is already exist");
+
+        let price;
+        if(data.wishList){
+            if(bookIds){
+                bookIds.forEach((book)=>{
+                    if (data.wishList.bookItems.includes(book)){
+                        throw new Error("a book is already exist");
+                    }
+                })
             }
-        })
-
-        collectionIds.forEach((coll)=>{
-            if (data.wishList.collectionItems.includes(coll)){
-                throw new Error("a collection is already exist");
+        
+            if(collectionIds){
+                collectionIds.forEach((coll)=>{
+                    if (data.wishList.collectionItems.includes(coll)){
+                        throw new Error("a collection is already exist");
+                    }
+                })
             }
-        })
 
-        let price = data.wishList.totalPrice + entryFialPrice;
+            price = data.wishList.totalPrice + entryFialPrice;
 
-        if(data.wishList.bookItems.length == 0 && data.wishList.collectionItems.length == 0){              //a chance to reset the totalPrice to narrow miscalc window
+            if(data.wishList.bookItems.length == 0 &&  data.wishList.collectionItems.length == 0){              //a chance to reset the totalPrice to narrow miscalc window
+                price = entryFialPrice;
+            }
+        } else {
             price = entryFialPrice;
         }
+ 
 
         return await user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},
         {
@@ -90,24 +100,33 @@ module.exports.deleteItems = (req,res,next) => {
         
     })
     .then(async (data)=>{
-        
-        bookIds.forEach((book)=>{
-            if (!data.wishList.bookItems.includes(book)){
-                throw new Error("a book is not exist");
+        let price;
+        if(data.wishList){
+            if (bookIds){
+                bookIds.forEach((book)=>{
+                    if (!data.wishList.bookItems.includes(book)){
+                        throw new Error("a book is not exist");
+                    }
+                })
             }
-        })
 
-        collectionIds.forEach((coll)=>{
-            if (!data.wishList.collectionItems.includes(coll)){
-                throw new Error("a collection is not exist");
+            if(collectionIds){
+                collectionIds.forEach((coll)=>{
+                    if (!data.wishList.collectionItems.includes(coll)){
+                        throw new Error("a collection is not exist");
+                    }
+                })
             }
-        })
 
-        let price = data.wishList.totalPrice - entryFialPrice;
-        return await user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},
-        {
-            $set:{"wishList.totalPrice":price} 
-        },{upsert:true})
+            price = data.wishList.totalPrice - entryFialPrice;
+
+            return await user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},
+            {
+                $set:{"wishList.totalPrice":price} 
+            },{upsert:true})
+        } else {
+            throw new Error("user has no wishList yet");
+        }
 
     })
     .then((data)=>{
