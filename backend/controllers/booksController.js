@@ -159,7 +159,12 @@ module.exports.getBookById = (req,res,next)=>{
     BookModel.aggregate([
         {
             $match:{_id:mongoose.Types.ObjectId(req.params.bookId)}
-        },
+        },{$lookup:{
+            from:"promotions",
+            localField: 'promotion',
+            foreignField: '_id',
+            as: 'promotion',
+        }},
         {$lookup:{
             from:"categories",
             localField: 'category',

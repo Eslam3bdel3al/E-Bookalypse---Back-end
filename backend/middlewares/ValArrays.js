@@ -161,6 +161,6 @@ module.exports.forgetPassChange = [
     .notEmpty().withMessage("password is required")
 ]
 
-module.exports.cartItems = [
-  body("entryFialPrice").isNumeric().withMessage("Price Must Number").notEmpty().withMessage("This Field is required"),
-]
+// module.exports.cartItems = [
+//   body("entryFialPrice").isNumeric().withMessage("Price Must Number").notEmpty().withMessage("This Field is required"),
+// ]

@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const jwt = require("jsonwebtoken");
 const bcrypt  = require("bcrypt");
 
@@ -19,7 +21,7 @@ module.exports.toLogin = (req,res,next) => {
                     id:data._id,
                     role:data.role
                 },
-                "ourLogSecret",
+                process.env.TOKEN_SECRET,
                 {expiresIn:"24h"});
                 res.status(200).json({token,role:data.role,msg:"loged in"});
             } else {

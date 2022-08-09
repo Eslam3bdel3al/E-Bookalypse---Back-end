@@ -12,10 +12,10 @@ router.route("/cart")
         .get(authMw,role.mustUser, cartsController.getCart) 
 
  router.route("/cart-addition") 
-        .put(authMw, role.mustUser,valArrays.cartItems,validationMw, cartsController.addItems)
+        .put(authMw, role.mustUser, cartsController.addItems)
         
 router.route("/cart-removal") 
-        .put(authMw, role.mustUser,valArrays.cartItems,validationMw, cartsController.deleteItems)   
+        .put(authMw, role.mustUser, cartsController.deleteItems)   
 
 // router.route("/api/user/cartItem/:cartItemId") 
 //         .get(authMw, role.userORAdmin, cartsController.getOneItem)   

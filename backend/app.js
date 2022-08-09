@@ -26,7 +26,6 @@
   const categoriesRouters = require("./Routes/categories_routes");
   const writersRouters = require("./Routes/writers_routes");
   const promotionsRouters = require("./Routes/promotions_router");
-  // const autherizationsRouter = require("./Routes/autherizations_routes");
   const ordersRouters = require("./Routes/orders_routes");
   const reviewsRouters = require("./Routes/reviews_routes");
   const cartsRouters = require("./Routes/carts_routes");
@@ -47,7 +46,7 @@
     next();
   })
   
-  app.get('/', (req, res) => {   res.send("WELCOME" + process.env.PORT  ) })
+  app.get('/', (req, res) => {   res.send("WELCOME " + process.env.PORT  ) })
   
   app.use(express.json())
   app.use(express.urlencoded({extended:true}))
@@ -58,7 +57,6 @@
   app.use(categoriesRouters);
   app.use(writersRouters);
   app.use(promotionsRouters);
-  // app.use(autherizationsRouter);
   app.use(ordersRouters);
   app.use(reviewsRouters);
   app.use(cartsRouters);

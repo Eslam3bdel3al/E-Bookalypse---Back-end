@@ -1,21 +1,21 @@
 const mongoose = require('mongoose');
 
 const cartEmbedded = mongoose.Schema({
-   totalPrice: {
-      type: Number,
-      required: true,
-      default:0
-   },
+   // totalPrice: {
+   //    type: Number,
+   //    required: true,
+   //    default:0
+   // },
    bookItems: {type:[mongoose.ObjectId],default:[],ref:"books"},
    collectionItems: {type:[mongoose.ObjectId],default:[],ref:"collections"}
 })
 
 const wishListEmbedded = mongoose.Schema({
-   totalPrice: {
-      type: Number,
-      required: true,
-      default:0
-   },
+   // totalPrice: {
+   //    type: Number,
+   //    required: true,
+   //    default:0
+   // },
    bookItems: {type:[mongoose.ObjectId],default:[],ref:"books"},
    collectionItems: {type:[mongoose.ObjectId],default:[],ref:"collections"}
 })

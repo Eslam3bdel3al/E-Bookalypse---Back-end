@@ -3,10 +3,35 @@ const mongoose = require("mongoose");
 const user = require("../models/users");
 
 module.exports.getwishList = (req,res,next) => {
-    user.find({_id: mongoose.Types.ObjectId(req.userId)},{wishList:1}).populate({path:"wishList.bookItems",populate:{path:'promotion'}})
+    user.findOne({_id: mongoose.Types.ObjectId(req.userId)},{wishList:1}).populate({path:"wishList.bookItems",populate:{path:'promotion'}})
     .populate("wishList.collectionItems")
     .then((data) => {
-        res.status(200).json(data)
+        console.log(data)
+        let price=0;
+
+        if(data.wishList){
+            data.wishList.collectionItems.forEach((coll)=>{
+                price+=coll.collectionPrice
+            })
+        
+
+            data.wishList.bookItems.forEach((book)=>{
+                if(book.promotion){
+                    let now = new Date();
+                    let sDate = new Date(book.promotion.start_date);
+                    let eDate = new Date(book.promotion.end_date);
+                    if (eDate > now && now > sDate){
+                        price+= (1-book.promotion.discount_rate)*book.price
+                    }
+                }else {
+                    price+=book.price
+                }
+            })
+        } else {
+            throw new Error("you have no wishList yet")
+        }
+        
+        res.status(200).json({wishList:data.wishList,finalPrice:price})
     })
     .catch((err) => {
         next(err);
@@ -14,7 +39,7 @@ module.exports.getwishList = (req,res,next) => {
 };
 
 module.exports.addItems = (req,res,next) => {                       
-    const {bookIds,collectionIds,entryFialPrice} = req.body;
+    const {bookIds,collectionIds} = req.body;
 
     let theAdd = {};
 
@@ -31,9 +56,8 @@ module.exports.addItems = (req,res,next) => {
         $addToSet:theAdd
         
     })
-    .then(async (data)=>{
+    .then((data)=>{
 
-        let price;
         if(data.wishList){
             if(bookIds){
                 bookIds.forEach((book)=>{
@@ -50,39 +74,18 @@ module.exports.addItems = (req,res,next) => {
                     }
                 })
             }
-
-            price = data.wishList.totalPrice + entryFialPrice;
-
-            if(data.wishList.bookItems.length == 0 &&  data.wishList.collectionItems.length == 0){              //a chance to reset the totalPrice to narrow miscalc window
-                price = entryFialPrice;
-            }
-        } else {
-            price = entryFialPrice;
         }
- 
-
-        return await user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},
-        {
-            $set:{"wishList.totalPrice":price} 
-        },{upsert:true})
-
-    })
-    .then((data)=>{
-        if(data.matchedCount == 0){
-            throw new Error("not updated");
-        }else{
-            res.status(200).json(data);
-        }
+        res.status(200).json("added");
     })
     .catch((err) => {
-        next(err);
-    })
+            next(err);
+        })
 };
 
 
 module.exports.deleteItems = (req,res,next) => {
 
-    const {bookIds,collectionIds,entryFialPrice} = req.body;
+    const {bookIds,collectionIds} = req.body;
 
     let theRemove = {};
 
@@ -99,8 +102,8 @@ module.exports.deleteItems = (req,res,next) => {
         $pull:theRemove
         
     })
-    .then(async (data)=>{
-        let price;
+    .then((data)=>{
+
         if(data.wishList){
             if (bookIds){
                 bookIds.forEach((book)=>{
@@ -118,23 +121,11 @@ module.exports.deleteItems = (req,res,next) => {
                 })
             }
 
-            price = data.wishList.totalPrice - entryFialPrice;
-
-            return await user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},
-            {
-                $set:{"wishList.totalPrice":price} 
-            },{upsert:true})
         } else {
             throw new Error("user has no wishList yet");
         }
 
-    })
-    .then((data)=>{
-        if(data.matchedCount == 0){
-            throw new Error("not updated");
-        }else{
-            res.status(200).json(data);
-        }
+        res.status(200).json("removed");
     })
     .catch((err) => {
         next(err);

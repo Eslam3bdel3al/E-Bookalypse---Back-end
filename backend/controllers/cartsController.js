@@ -26,7 +26,32 @@ module.exports.getCart = (req,res,next) => {
   user.findOne({_id: mongoose.Types.ObjectId(req.userId)},{cart:1}).populate({path:"cart.bookItems",populate:{path:'promotion'}})
   .populate("cart.collectionItems")
         .then((data) => {
-            res.status(200).json(data)
+
+            let price=0;
+
+            if(data.cart){
+                data.cart.collectionItems.forEach((coll)=>{
+                    price+=coll.collectionPrice
+                })
+            
+
+                data.cart.bookItems.forEach((book)=>{
+                    if(book.promotion){
+                        let now = new Date();
+                        let sDate = new Date(book.promotion.start_date);
+                        let eDate = new Date(book.promotion.end_date);
+                        if (eDate > now && now > sDate){
+                            price+= (1-book.promotion.discount_rate)*book.price
+                        }
+                    }else {
+                        price+=book.price
+                    }
+                })
+            } else {
+                throw new Error("you have no cart yet")
+            }
+            
+            res.status(200).json({cart:data.cart,finalPrice:price})
         })
         .catch((err) => {
             next(err);
@@ -49,7 +74,7 @@ module.exports.getCart = (req,res,next) => {
 // };
 
 module.exports.addItems = (req,res,next) => {                       
-    const {bookIds,collectionIds,entryFialPrice} = req.body;
+    const {bookIds,collectionIds} = req.body;
 
     let theAdd = {};
 
@@ -61,14 +86,14 @@ module.exports.addItems = (req,res,next) => {
         theAdd["cart.collectionItems"] = { $each: collectionIds }
     }
 
+    
     user.findOneAndUpdate({_id: mongoose.Types.ObjectId(req.userId)},{
         
         $addToSet:theAdd
         
     })
-    .then(async (data)=>{
+    .then((data)=>{
 
-        let price;
         if(data.cart){
             if(bookIds){
                 bookIds.forEach((book)=>{
@@ -85,33 +110,12 @@ module.exports.addItems = (req,res,next) => {
                     }
                 })
             }
-
-            price = data.cart.totalPrice + entryFialPrice;
-
-            if(data.cart.bookItems.length == 0 &&  data.cart.collectionItems.length == 0){              //a chance to reset the totalPrice to narrow miscalc window
-                price = entryFialPrice;
-            }
-        } else {
-            price = entryFialPrice;
         }
- 
-
-        return await user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},
-        {
-            $set:{"cart.totalPrice":price} 
-        },{upsert:true})
-
-    })
-    .then((data)=>{
-        if(data.matchedCount == 0){
-            throw new Error("not updated");
-        }else{
-            res.status(200).json(data);
-        }
+        res.status(200).json("added");
     })
     .catch((err) => {
-        next(err);
-    })
+            next(err);
+        })
 };
 
 
@@ -146,7 +150,7 @@ module.exports.addItems = (req,res,next) => {
 
 module.exports.deleteItems = (req,res,next) => {
 
-    const {bookIds,collectionIds,entryFialPrice} = req.body;
+    const {bookIds,collectionIds} = req.body;
 
     let theRemove = {};
 
@@ -158,13 +162,14 @@ module.exports.deleteItems = (req,res,next) => {
         theRemove["cart.collectionItems"] = { $in:collectionIds }
     }
 
+
     user.findOneAndUpdate({_id: mongoose.Types.ObjectId(req.userId)},{
         
         $pull:theRemove
         
     })
-    .then(async (data)=>{
-        let price;
+    .then((data)=>{
+
         if(data.cart){
             if (bookIds){
                 bookIds.forEach((book)=>{
@@ -182,23 +187,11 @@ module.exports.deleteItems = (req,res,next) => {
                 })
             }
 
-            price = data.cart.totalPrice - entryFialPrice;
-
-            return await user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},
-            {
-                $set:{"cart.totalPrice":price} 
-            },{upsert:true})
         } else {
             throw new Error("user has no cart yet");
         }
 
-    })
-    .then((data)=>{
-        if(data.matchedCount == 0){
-            throw new Error("not updated");
-        }else{
-            res.status(200).json(data);
-        }
+        res.status(200).json("removed");
     })
     .catch((err) => {
         next(err);

@@ -1,19 +1,22 @@
-const User = require("../models/users");
+require("dotenv").config();
 
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt  = require("bcrypt");
-const saltRounds = 10;
+const saltRounds = process.env.SALT_ROUND;
 
 const nodemailer = require("nodemailer");
 const sgTransport = require('nodemailer-sendgrid-transport');
+const port = process.env.PORT || 8000;
+const host = process.env.HOST || 'localhost';
 
 const transporter = nodemailer.createTransport(sgTransport({
     auth:{
-        api_key:"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"
+        api_key: process.env.TRANSPORTER_API_KEY
     }
 }));
 
+const User = require("../models/users");
 
 module.exports.getAllusers = (req,res,next) => {
     // User.find({})
@@ -237,13 +240,13 @@ module.exports.forgetSendMail = (req,res,next) => {
         let token  = jwt.sign({
             id:data._id,
         },
-        "ourLogSecret",
+        process.env.TOKEN_SECRET,
         {expiresIn:"1h"});
         return {token,userId:data._id};
     })
     .then((token) => {
         res.status(201).json({token ,data: "mail sent"})
-        let base_url= "http://localhost:5000/"
+        let base_url= `http://${host}:${port}/`
         transporter.sendMail({
             to: req.body.email,
             from: "abdelalleslam@gmail.com",

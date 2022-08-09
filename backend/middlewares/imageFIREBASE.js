@@ -1,15 +1,16 @@
+require("dotenv").config();
 
 const { initializeApp } = require('firebase/app');
 const {getStorage ,uploadString, ref,deleteObject} = require('firebase/storage');
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBOuVim2ABTswgW1yG_BE6OKTN1yY0Q_Ps",
-    authDomain: "e-bookalypse.firebaseapp.com",
-    projectId: "e-bookalypse",
-    storageBucket: "e-bookalypse.appspot.com",
-    messagingSenderId: "929048486935",
-    appId: "1:929048486935:web:44f1d45b73a273b3886852",
-    measurementId: "G-Q56VX7NGC8"
+    apiKey: process.env.FB_APIKEY,
+    authDomain: process.env.FB_AUTHDOMIN,
+    projectId: process.env.FB_PROJECTID,
+    storageBucket: process.env.FB_STORAGE_BUCKET,
+    messagingSenderId: process.env.FB_MESSAGE_SENDID,
+    appId: process.env.FB_APPID,
+    measurementId: process.env.FB_MEASUREMENT_ID
   };
   
   // Initialize Firebase
