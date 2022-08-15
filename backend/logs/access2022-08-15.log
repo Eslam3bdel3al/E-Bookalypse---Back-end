@@ -1,0 +1,4 @@
+"visitor" [15/Aug/2022:07:27:41 +0000] GET / 304 16.588 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+"visitor" [15/Aug/2022:07:27:42 +0000] GET /favicon.ico 404 9.056 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+"visitor" [15/Aug/2022:07:30:24 +0000] GET /books 304 762.675 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+"visitor" [15/Aug/2022:10:34:50 +0000] GET /books 304 1866.236 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"

@@ -1,43 +1,34 @@
 const express = require("express");
+const multer = require('multer');
 
 const writersController = require("../controllers/writersController");
 const authMw = require("../middlewares/authMw");
 const role = require("../middlewares/checkRole");
-
-const router = express.Router();
-const multer = require('multer');
-
-const  {body,param,query} = require('express-validator');
+const writerVal = require("../middlewares/validation/writer.val");
 const validationMw = require("../middlewares/validationMw");
+
 const { imageHandlingMW } = require("../middlewares/ImageHandlineMW");
 const { addImageToFirebase, deleteImageFromFirebase, updateImageFromFirebase } = require("../middlewares/imageFIREBASE");
 
+const router = express.Router();
+
 const upload = multer();
 
-
-const writerValidation = [
-      body("name").isString().withMessage("should be Letters only").notEmpty().withMessage("This Field is required"),
-      body("gender").isString().withMessage("should be Letters only").notEmpty().withMessage("This Field is required"),
-
-]
-const writerPath = (req,res,next)=>{
-      req.mypath = "uploads/writers/"
-      next()
-       
-    }
+const writerPath = (req,res,next)=>
+      {
+            req.mypath = "uploads/writers/"
+            next()
+      }
 
 router.route('/writers')
       .get(writersController.getAllWriters)
 
 router.route('/writer')    
-      .post(authMw, role.mustAdmin,upload.single("writerimage"),writerValidation,validationMw,writerPath,addImageToFirebase,writersController.addWriter)
+      .post(authMw, role.mustAdmin,upload.single("writerimage"),writerVal.writerAdd,validationMw,writerPath,addImageToFirebase,writersController.addWriter)
 
 router.route('/writer/:writerId')
-      .get(writersController.getWriterById)
-      .put(authMw, role.mustAdmin,upload.single("writerimage"),writerValidation,validationMw,writerPath,updateImageFromFirebase,writersController.updateWriter)
-      .delete(authMw, role.mustAdmin,writerPath,deleteImageFromFirebase, writersController.deleteWriter)
-
-     
-
+      .get(writerVal.writerParam,validationMw, writersController.getWriterById)
+      .put(authMw, role.mustAdmin,upload.single("writerimage"),writerVal.writerUpdate,validationMw,writerPath,updateImageFromFirebase,writersController.updateWriter)
+      .delete(authMw, role.mustAdmin, writerVal.writerParam, validationMw, writerPath, deleteImageFromFirebase, writersController.deleteWriter)
 
 module.exports = router; 

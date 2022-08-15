@@ -22,6 +22,8 @@ module.exports.getwishList = (req,res,next) => {
                     let eDate = new Date(book.promotion.end_date);
                     if (eDate > now && now > sDate){
                         price+= (1-book.promotion.discount_rate)*book.price
+                    }else{
+                        price+=book.price
                     }
                 }else {
                     price+=book.price
@@ -43,43 +45,51 @@ module.exports.addItems = (req,res,next) => {
 
     let theAdd = {};
 
-    if (bookIds){
-        theAdd["wishList.bookItems"] = { $each: bookIds }
-    }
+    if(bookIds||collectionIds){
 
-    if (collectionIds){
-        theAdd["wishList.collectionItems"] = { $each: collectionIds }
-    }
-
-    user.findOneAndUpdate({_id: mongoose.Types.ObjectId(req.userId)},{
-        
-        $addToSet:theAdd
-        
-    })
-    .then((data)=>{
-
-        if(data.wishList){
-            if(bookIds){
-                bookIds.forEach((book)=>{
-                    if (data.wishList.bookItems.includes(book)){
-                        throw new Error("a book is already exist");
-                    }
-                })
-            }
-        
-            if(collectionIds){
-                collectionIds.forEach((coll)=>{
-                    if (data.wishList.collectionItems.includes(coll)){
-                        throw new Error("a collection is already exist");
-                    }
-                })
-            }
+        if (bookIds){
+            theAdd["wishList.bookItems"] = { $each: bookIds }
         }
-        res.status(200).json("added");
-    })
-    .catch((err) => {
-            next(err);
+
+        if (collectionIds){
+            theAdd["wishList.collectionItems"] = { $each: collectionIds }
+        }
+
+        user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},{
+            
+            $addToSet:theAdd
+            
         })
+        .then((data)=>{
+
+            // if(data.wishList){
+            //     if(bookIds){
+            //         bookIds.forEach((book)=>{
+            //             if (data.wishList.bookItems.includes(book)){
+            //                 throw new Error("a book is already exist");
+            //             }
+            //         })
+            //     }
+            
+            //     if(collectionIds){
+            //         collectionIds.forEach((coll)=>{
+            //             if (data.wishList.collectionItems.includes(coll)){
+            //                 throw new Error("a collection is already exist");
+            //             }
+            //         })
+            //     }
+            // }
+            if (data.matchedCount == 1 && data.modifiedCount == 1){
+                res.status(200).json("added");
+            } else {
+                throw new Error("all Items you entered are already exist");
+            }        })
+        .catch((err) => {
+                next(err);
+            })
+    } else {
+        next (new Error("you didn't entered any thig"))
+    }
 };
 
 
@@ -89,45 +99,53 @@ module.exports.deleteItems = (req,res,next) => {
 
     let theRemove = {};
 
-    if (bookIds){
-        theRemove["wishList.bookItems"] = { $in: bookIds }
-    }
-
-    if (collectionIds){
-        theRemove["wishList.collectionItems"] = { $in:collectionIds }
-    }
-
-    user.findOneAndUpdate({_id: mongoose.Types.ObjectId(req.userId)},{
-        
-        $pull:theRemove
-        
-    })
-    .then((data)=>{
-
-        if(data.wishList){
-            if (bookIds){
-                bookIds.forEach((book)=>{
-                    if (!data.wishList.bookItems.includes(book)){
-                        throw new Error("a book is not exist");
-                    }
-                })
-            }
-
-            if(collectionIds){
-                collectionIds.forEach((coll)=>{
-                    if (!data.wishList.collectionItems.includes(coll)){
-                        throw new Error("a collection is not exist");
-                    }
-                })
-            }
-
-        } else {
-            throw new Error("user has no wishList yet");
+    if(bookIds||collectionIds){
+        if (bookIds){
+            theRemove["wishList.bookItems"] = { $in: bookIds }
         }
 
-        res.status(200).json("removed");
-    })
-    .catch((err) => {
-        next(err);
-    })
+        if (collectionIds){
+            theRemove["wishList.collectionItems"] = { $in:collectionIds }
+        }
+
+        user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},{
+            
+            $pull:theRemove
+            
+        })
+        .then((data)=>{
+
+            // if(data.wishList){
+            //     if (bookIds){
+            //         bookIds.forEach((book)=>{
+            //             if (!data.wishList.bookItems.includes(book)){
+            //                 throw new Error("a book is not exist");
+            //             }
+            //         })
+            //     }
+
+            //     if(collectionIds){
+            //         collectionIds.forEach((coll)=>{
+            //             if (!data.wishList.collectionItems.includes(coll)){
+            //                 throw new Error("a collection is not exist");
+            //             }
+            //         })
+            //     }
+
+            // } else {
+            //     throw new Error("user has no wishList yet");
+            // }
+
+            if (data.matchedCount == 1 && data.modifiedCount == 1){
+                res.status(200).json("removed");
+            } else {
+                throw new Error("non of these Items exists");
+            }        
+        })
+        .catch((err) => {
+            next(err);
+        })
+    } else {
+        next (new Error("you didn't entered any thig"))
+    }
 }

@@ -112,13 +112,17 @@ module.exports.userRole = [
 
 module.exports.promotionAddEdit = [
   body("title").isString().withMessage("title must be a string").notEmpty().withMessage("promption title is required"),
-  body("description").isString().withMessage("title must be a string"),
+
+  body("description").isString().withMessage("description must be a string"),
+
   body("discountRate").isFloat({ min: 0, max: 1 }).withMessage("promption discountRate must be float")
-                      .notEmpty().withMessage("promption discountRate is required"),
+  .notEmpty().withMessage("promption discountRate is required"),
+
   body("startDate").isDate().withMessage("start date is not valid")
-                    .notEmpty().withMessage("start date is required"),
+  .notEmpty().withMessage("start date is required"),
+
   body("endDate").isDate().withMessage("end date is not valid")
-                  .notEmpty().withMessage("end date is required")
+  .notEmpty().withMessage("end date is required")
 ]
 
 module.exports.collectioAddEdit = [
@@ -142,8 +146,16 @@ module.exports.reviewAddEdit = [
 
 module.exports.bookValidations = [
   body("title").isString().withMessage("should be Letters only").notEmpty().withMessage("This Field is required"),
+  body("description").isString().withMessage("you must have a book description").notEmpty().withMessage("This Field is required"),
   body("price").isNumeric().withMessage("Book Price Must Number").notEmpty().withMessage("This Field is required"),
-  body("description").isString().withMessage("you must have a book description").notEmpty().withMessage("This Field is required")
+  body("date").isDate().withMessage("date is not valid").notEmpty().withMessage("date is required"),
+// lang
+// pages
+// publisher
+// price
+// promotion
+//category
+// writer
 ]
   
 

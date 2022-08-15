@@ -14,14 +14,18 @@ router.route("/order")
 
 router.route("/order/:orderId")    
         .get(authMW, role.userORAdmin, ordersController.getOneOrder) 
-        .delete(authMW, role.mustUser, ordersController.deleteOrder)   
+        // .delete(authMW, role.mustUser, ordersController.deleteOrder)   
         
-router.route("/order/add-book")
-        .put(authMW, role.mustUser, ordersController.addBooksToOrder)
+// router.route("/order/add-book")
+//         .put(authMW, role.mustUser, ordersController.addBooksToOrder)
 
-router.route("/order/remove-book")
-        .put(authMW, role.mustUser, ordersController.removeBooksFromOrder)
+// router.route("/order/remove-book")
+//         .put(authMW, role.mustUser, ordersController.removeBooksFromOrder)
 
-router.route("/order/change-state")
-        .put(authMW, role.mustAdmin, ordersController.changeOrderState)
+// router.route("/order/change-state")
+//         .put(authMW, role.mustAdmin, ordersController.changeOrderState)
+
+
+
+
 module.exports = router; 

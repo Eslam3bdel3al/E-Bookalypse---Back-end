@@ -14,7 +14,7 @@ const orderSchema = mongoose.Schema({
     user_id:{type:mongoose.ObjectId,ref:"users",required:true},
     order_books:{type:[mongoose.ObjectId],ref:"books",required: true},
     totalPrice: {type: Number,required: true},
-    state:{type:String,enum:["pending", "accepted", "rejected"],required:true, default: "pending"},
+    // state:{type:String,enum:["pending", "accepted", "rejected"],required:true, default: "pending"},
     date_order:{type:Date,required:true, default: Date.now},
 })
 

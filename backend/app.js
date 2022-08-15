@@ -1,24 +1,34 @@
+require("dotenv").config();
+  
   const express = require('express');
   const morgan = require('morgan');
   var rfs = require('rotating-file-stream') // version 2.x
   const path = require("path");
+  const swaggerUi = require("swagger-ui-express");
+  const swaggerJsDoc = require("swagger-jsdoc");
 
 
-  const app = express();
-  let date = new Date()
-  let logFile = `access${date.toISOString().split('T')[0]}.log`;
+const port = process.env.PORT || 8000;
+const host = process.env.HOST || 'localhost';
+
+  const options = {
+    definition: {
+      openapi: "3.0.0",
+      info: {
+        title: "Library API",
+        version: "0.1.0",
+        description: "A simple Express Library API",
+      },
+      servers: [
+        {
+          url: `'http://${host}:${port}/'`,
+        },
+      ],
+    },
+    apis: [`${__dirname}/Routes/*.js`],
+  };
   
-  const accessLogStream  = rfs.createStream((logFile),{
-    interval: '1d', // rotate daily
-    path: path.join(__dirname, 'logs')
-  });
-
-  morgan.token('userName', function (req, res) { return JSON.stringify(req.body) })
-
-
-
-  app.use(morgan(':userName [:date[clf]] :method :url :status :response-time ":user-agent"',{stream:accessLogStream}));
-
+  const specs = swaggerJsDoc(options);
 
   const loginRouters =require("./Routes/logIn_Route")
   const usersRouters = require("./Routes/users_routes");
@@ -32,9 +42,21 @@
   const wishListRouters = require("./Routes/wishLists_routes");
   const logsRouters = require("./Routes/logs_routes");
   const searchRouters = require("./Routes/search_route");
-  const collectionRouters = require("./Routes/collections_routes")
+  const collectionRouters = require("./Routes/collections_routes");
 
+  const verifyToken = require("./middlewares/verifyToken");
+
+  const app = express();
+
+  let date = new Date()
+  let logFile = `access${date.toISOString().split('T')[0]}.log`;
   
+  const accessLogStream  = rfs.createStream((logFile),{
+    interval: '1d', // rotate daily
+    path: path.join(__dirname, 'logs')
+  });
+
+ 
   app.use((req,res,next)=>{
     // * : no matter which domain is dsending the request is allowed to access our resources
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -46,11 +68,18 @@
     next();
   })
   
-  app.get('/', (req, res) => {   res.send("WELCOME " + process.env.PORT  ) })
   
   app.use(express.json())
   app.use(express.urlencoded({extended:true}))
 
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+  
+  app.use(verifyToken);
+
+  morgan.token('userId', function (req, res) { return JSON.stringify(req.userId||"visitor") })
+  app.use(morgan(':userId [:date[clf]] :method :url :status :response-time ":user-agent"',{stream:accessLogStream}));
+
+  app.get('/', (req, res) => {   res.send("WELCOME " + process.env.PORT  ) })
   app.use(loginRouters)
   app.use(usersRouters);
   app.use(booksRoutes);

@@ -1,6 +1,4 @@
 const categoryModel = require("../models/categories")
-const fs = require('fs');
-
 
 module.exports.getAllCategories = (req,res,next)=>{
     categoryModel.find({})
@@ -19,8 +17,6 @@ module.exports.addCategory = (req,res,next)=>{
     newCat.save()
             .then((data)=> res.status(201).json({data: "added"}))
             .catch((err)=>next(err));
-    // console.log(req.body)
-
 }
 
 module.exports.deleteCategory = (req,res,next)=>{
@@ -28,7 +24,9 @@ module.exports.deleteCategory = (req,res,next)=>{
     categoryModel.deleteOne({_id:req.params.catId})
         .then((data) => {
             if(data.deletedCount == 0){
-                next(new Error("category is not found"));
+                let err = new Error("category is not found");
+                err.status = 404;
+                throw err
             }else{
                 res.status(200).json(data);
             }
@@ -45,7 +43,9 @@ module.exports.updateCategory = (req,res,next)=>{
         icon : req.uploadedImage
     }).then((data)=>{
         if(data.matchedCount == 0){
-            next(new Error("category is not found"));
+            let err = new Error("category is not found");
+            err.status = 404;
+            throw err
         }else{
             res.status(200).json(data);
         }
@@ -61,7 +61,9 @@ module.exports.getCategory = (req,res,next)=>{
     categoryModel.findOne({_id:req.params.catId})
         .then((data) => {
             if(data == null){
-            next(new Error("category is not found"));
+                let err = new Error("category is not found");
+                err.status = 404;
+                throw err
             }else{
                 res.status(200).json(data);
             }

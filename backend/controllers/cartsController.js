@@ -1,6 +1,12 @@
+require("dotenv").config();
+
+const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 const mongoose = require("mongoose");
 
 const user = require("../models/users");
+
+const port = process.env.PORT || 8000;
+const host = process.env.HOST || 'localhost';
 
 // module.exports.getAllItems = (req,res,next) => {
 //     let theId;
@@ -42,13 +48,18 @@ module.exports.getCart = (req,res,next) => {
                         let eDate = new Date(book.promotion.end_date);
                         if (eDate > now && now > sDate){
                             price+= (1-book.promotion.discount_rate)*book.price
+                        }else{
+                            price+=book.price
                         }
                     }else {
                         price+=book.price
                     }
+                    
                 })
             } else {
-                throw new Error("you have no cart yet")
+                let err = new Error("you have no cart yet");
+                err.status = 404;
+                throw err
             }
             
             res.status(200).json({cart:data.cart,finalPrice:price})
@@ -78,44 +89,50 @@ module.exports.addItems = (req,res,next) => {
 
     let theAdd = {};
 
-    if (bookIds){
-        theAdd["cart.bookItems"] = { $each: bookIds }
-    }
-
-    if (collectionIds){
-        theAdd["cart.collectionItems"] = { $each: collectionIds }
-    }
-
-    
-    user.findOneAndUpdate({_id: mongoose.Types.ObjectId(req.userId)},{
-        
-        $addToSet:theAdd
-        
-    })
-    .then((data)=>{
-
-        if(data.cart){
-            if(bookIds){
-                bookIds.forEach((book)=>{
-                    if (data.cart.bookItems.includes(book)){
-                        throw new Error("a book is already exist");
-                    }
-                })
-            }
-        
-            if(collectionIds){
-                collectionIds.forEach((coll)=>{
-                    if (data.cart.collectionItems.includes(coll)){
-                        throw new Error("a collection is already exist");
-                    }
-                })
-            }
+    if(bookIds||collectionIds){
+        if (bookIds){
+            theAdd["cart.bookItems"] = { $each: bookIds }
         }
-        res.status(200).json("added");
-    })
-    .catch((err) => {
-            next(err);
+
+        if (collectionIds){
+            theAdd["cart.collectionItems"] = { $each: collectionIds }
+        }
+    
+        user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},{
+            
+            $addToSet:theAdd
+            
         })
+        .then((data)=>{
+            // if(data.cart){
+            //     if(bookIds){
+            //         bookIds.forEach((book)=>{
+            //             if (data.cart.bookItems.includes(book)){
+            //                 throw new Error("a book is already exist");
+            //             }
+            //         })
+            //     }
+            
+            //     if(collectionIds){
+            //         collectionIds.forEach((coll)=>{
+            //             if (data.cart.collectionItems.includes(coll)){
+            //                 throw new Error("a collection is already exist");
+            //             }
+            //         })
+            //     }
+            // }
+            if (data.matchedCount == 1 && data.modifiedCount == 1){
+                res.status(200).json("added");
+            } else {
+                throw new Error("all Items you entered are already exist");
+            }
+        })
+        .catch((err) => {
+                next(err);
+            })
+    } else {
+        next (new Error("you didn't entered any thig"))
+    }
 };
 
 
@@ -154,46 +171,116 @@ module.exports.deleteItems = (req,res,next) => {
 
     let theRemove = {};
 
-    if (bookIds){
-        theRemove["cart.bookItems"] = { $in: bookIds }
-    }
+    if(bookIds||collectionIds){
 
-    if (collectionIds){
-        theRemove["cart.collectionItems"] = { $in:collectionIds }
-    }
-
-
-    user.findOneAndUpdate({_id: mongoose.Types.ObjectId(req.userId)},{
-        
-        $pull:theRemove
-        
-    })
-    .then((data)=>{
-
-        if(data.cart){
-            if (bookIds){
-                bookIds.forEach((book)=>{
-                    if (!data.cart.bookItems.includes(book)){
-                        throw new Error("a book is not exist");
-                    }
-                })
-            }
-
-            if(collectionIds){
-                collectionIds.forEach((coll)=>{
-                    if (!data.cart.collectionItems.includes(coll)){
-                        throw new Error("a collection is not exist");
-                    }
-                })
-            }
-
-        } else {
-            throw new Error("user has no cart yet");
+        if (bookIds){
+            theRemove["cart.bookItems"] = { $in: bookIds }
         }
 
-        res.status(200).json("removed");
+        if (collectionIds){
+            theRemove["cart.collectionItems"] = { $in:collectionIds }
+        }
+
+
+        user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},{
+            
+            $pull:theRemove
+            
+        })
+        .then((data)=>{
+            // if(data.cart){
+            //     if (bookIds){
+            //         bookIds.forEach((book)=>{
+            //             if (!data.cart.bookItems.includes(book)){
+            //                 throw new Error("a book is not exist");
+            //             }
+            //         })
+            //     }
+
+            //     if(collectionIds){
+            //         collectionIds.forEach((coll)=>{
+            //             if (!data.cart.collectionItems.includes(coll)){
+            //                 throw new Error("a collection is not exist");
+            //             }
+            //         })
+            //     }
+
+            // } else {
+            //     throw new Error("user has no cart yet");
+            // }
+            if (data.matchedCount == 1 && data.modifiedCount == 1){
+                res.status(200).json("removed");
+            } else {
+                throw new Error("non of these Items exists");
+            }
+        })
+        .catch((err) => {
+            next(err);
+        })
+    } else {
+        next (new Error("you didn't entered any thig"))
+    }
+}
+
+module.exports.checkOut = (req,res,next)=>{
+
+    user.findOne({_id: mongoose.Types.ObjectId(req.userId)},{cart:1}).populate({path:"cart.bookItems",populate:{path:'promotion'}})
+    .populate("cart.collectionItems")
+    .then((data) => {
+
+        let items=[];
+
+        if(data.cart){
+            data.cart.collectionItems.forEach((coll)=>{
+                items.push({title:coll.title,finalPrice:coll.collectionPrice})
+            })
+        
+
+            data.cart.bookItems.forEach((book)=>{
+                if(book.promotion){
+                    let now = new Date();
+                    let sDate = new Date(book.promotion.start_date);
+                    let eDate = new Date(book.promotion.end_date);
+                    if (eDate > now && now > sDate){
+                        items.push({title:book.title,finalPrice:(1-book.promotion.discount_rate)*book.price})
+                    }else{
+                    items.push({title:book.title,finalPrice:book.price})
+                    }
+                }else {
+                items.push({title:book.title,finalPrice:book.price})
+            }
+                
+            })
+        } else {
+            let err = new Error("you have no cart yet");
+            err.status = 404;
+            throw err
+        }
+        return items
     })
-    .catch((err) => {
-        next(err);
+    .then(async (items)=>{
+        return await stripe.checkout.sessions.create({
+            payment_method_types: ["card"],
+            mode: "payment",
+            line_items:items.map((itm)=>{
+                return {
+                    price_data:{
+                        currency:"usd",
+                        product_data:{
+                            name:itm.title
+                        },
+                        "unit_amount":itm.finalPrice*100
+                    },
+                    "quantity":1
+                }
+            }),
+            success_url:`'http://${host}:${port}/successPayment'`,
+            cancel_url:`'http://${host}:${port}/cart'`
+        })
+    })
+    .then((data)=>{
+        res.status(200).json({url: data.url})
+    }).catch((err)=>{
+        next(err)
     })
 }

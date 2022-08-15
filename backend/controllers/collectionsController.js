@@ -46,7 +46,9 @@ module.exports.getOneCollection = (req,res,next) => {
     Collection.findOne({_id:req.params.collectionId})
     .then((data) => {
         if(data == null){
-            throw new Error("Collection not exists")
+            let err = new Error("Collection not exists");
+            err.status = 404;
+            throw err
         } else {
             res.status(200).json(data)
         }
@@ -67,7 +69,9 @@ module.exports.updateCollection = (req,res,next) => {
         }
     }).then((data) => {
         if(data.matchedCount == 0){
-            throw new Error("collection is not found");
+            let err = new Error("Collection is not found");
+            err.status = 404;
+            throw err
         }else{
             res.status(200).json(data);
         }
@@ -80,7 +84,9 @@ module.exports.deleteCollection = (req,res,next) => {
     Collection.deleteOne({_id:req.params.collectionId})
     .then((data) => {
         if(data.deletedCount == 0){
-            throw new Error("collection is not found");
+            let err = new Error("Collection is not found");
+            err.status = 404;
+            throw err
         }else{
             res.status(200).json({data:"deleted"});
         }

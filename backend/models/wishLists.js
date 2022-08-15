@@ -1,13 +1,11 @@
-const mongoose = require('mongoose');
-
-const book = require("./books");
-const user = require("./users")
-
-const wishListSchema = mongoose.Schema({
-   user_id:{type:mongoose.ObjectId, ref: "user", required: true},
-   book: {type:mongoose.ObjectId, ref: "book", required:true},
-   date_addition: {type:Date, required:true, default: Date.now}
-})
+// const mongoose = require('mongoose');
 
 
-module.exports = mongoose.model('wishLists', wishListSchema);
+// const wishListSchema = mongoose.Schema({
+//    user_id:{type:mongoose.ObjectId, ref: "users", required: true},
+//    book: {type:mongoose.ObjectId, ref: "books", required:true},
+//    date_addition: {type:Date, required:true, default: Date.now}
+// })
+
+
+// module.exports = mongoose.model('wishLists', wishListSchema);

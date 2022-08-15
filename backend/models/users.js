@@ -34,6 +34,7 @@ const userSchema = mongoose.Schema({
    email:{type: String, required: true, unique:true},
    phone:{type: String, required: true, unique:true, match:/^010[0-9]{8}$|011[0-9]{8}$|012[0-9]{8}$|015[0-9]{8}$/},
    pass:{type: String, required: true},
+   book_shelf:{type:[mongoose.ObjectId],default:[],ref:"books"},
    cart:{type:cartEmbedded},
    wishList:{type:wishListEmbedded},
    role: {type:String, required: true, enum:["rootAdmin", "admin", "regUser"], default: "regUser"},

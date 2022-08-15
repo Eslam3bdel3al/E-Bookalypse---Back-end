@@ -52,7 +52,6 @@ module.exports.toSearch = (req,res,next)=>{
     
     if (searchIn == "Books") {
         searchMatch["title"] = {$regex:key,$options:"i"}
-        console.log(searchMatch["title"] )
     } 
 
     if (searchIn == "writers") {
@@ -76,7 +75,6 @@ module.exports.toSearch = (req,res,next)=>{
     if (category){
         if(typeof(category) == "string"){
             filterMatch["category.title"] = category
-            console.log(filterMatch)
         } else {
             filterMatch["category.title"] = {$in:category}
         }
@@ -93,6 +91,7 @@ module.exports.toSearch = (req,res,next)=>{
     } else if (priceMax){
         filterMatch["price"] = {$lte:parseInt(priceMax)}
     }
+
 
     if(priceSort){
     
@@ -157,9 +156,9 @@ module.exports.toSearch = (req,res,next)=>{
 
 
         books.aggregate([
-            // {
-            //     $match:{"writer.name":{$regex:key,$options:"i"}}
-            // },
+            {
+                $match:searchMatch                         //{"writer.name":{$regex:key,$options:"i"}}
+            },
             {$lookup:{
                 from:"categories",
                 localField: 'category',
@@ -200,7 +199,7 @@ module.exports.toSearch = (req,res,next)=>{
                     "threesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 3]}}}},
                     "twosCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 2]}}}},
                     "onesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 1]}}}},
-                    "sales":{$size:{$filter:{"input" : "$orders","as" : "obj","cond": { "$eq" : ["$$obj.state", "accepted"]}}}}
+                    "sales":{$size:"$orders"}
                 } 
             },
             {
@@ -222,10 +221,7 @@ module.exports.toSearch = (req,res,next)=>{
                 } 
             },
             {
-                $match:  searchMatch                       //{"writer.name":{$regex:key,$options:"i"}}
-            },
-            {
-                // $match:{"category.title":{$in:["kids"]},"rate":{$gte:2}}
+                
                 $match: filterMatch
             },
             {

@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require('multer');
 
 const usersController = require("../controllers/usersController");
-const valArrays = require("../middlewares/ValArrays")
+const userVal = require("../middlewares/validation/user.val")
 const validationMw = require("../middlewares/validationMw");
 const authMW = require("../middlewares/authMw");
 const role = require("../middlewares/checkRole");
@@ -18,7 +18,7 @@ const userData = (req,res,next)=>{
 }
 
 router.route("/signUp")
-        .post(upload.single('userImage'),valArrays.userAdd, validationMw, userData,addImageToFirebase,usersController.userSignUp)
+        .post(upload.single('userImage'),userVal.userAdd, validationMw, userData,addImageToFirebase,usersController.userSignUp)
 
 
 router.route("/users")
@@ -28,23 +28,24 @@ router.route("/users")
 //         .put(authMW, role.mustAdmin, valArrays.userAdd, validationMw, usersController.updateUser)
 
 router.route("/user/:userId?")                       
-        .get(authMW,role.userORAdmin, usersController.getUserById)                                               
-        .delete(authMW, role.userORAdmin,userData,deleteImageFromFirebase, usersController.deleteUser)
+        .get(authMW,role.userORAdmin, usersController.getUserById) 
 
 router.route("/user") 
-        .put(authMW,upload.single('userImage'),valArrays.userEdit, validationMw,userData,updateImageFromFirebase, usersController.updateUser)
+        .put(authMW,upload.single('userImage'),userVal.userEdit, validationMw,userData,updateImageFromFirebase, usersController.updateUser)
+        .delete(authMW,userData,deleteImageFromFirebase, usersController.deleteUser)
+
 
 
 router.route("/user-pass")
-        .put(authMW, valArrays.userChagePass, validationMw, usersController.changePass)      //body {currentPass,newPass}
+        .put(authMW, userVal.userChagePass, validationMw, usersController.changePass)      //body {currentPass,newPass}
 
 router.route("/user-change-role")
-        .put(authMW, role.mustRootAdmin,valArrays.userRole, validationMw, usersController.updateRole)
+        .put(authMW, role.mustRootAdmin,userVal.userRole, validationMw, usersController.updateRole)
 
 router.route("/forget-pass-mail")
-      .post(valArrays.forgetSendMail, validationMw,usersController.forgetSendMail)
+      .post(userVal.forgetSendMail, validationMw,usersController.forgetSendMail)
 
 router.route("/forget-pass-change")
-        .patch(authMW,valArrays.forgetPassChange, validationMw, usersController.forgetChangePass)
+        .patch(authMW,userVal.forgetPassChange, validationMw, usersController.forgetChangePass)
 
 module.exports = router;

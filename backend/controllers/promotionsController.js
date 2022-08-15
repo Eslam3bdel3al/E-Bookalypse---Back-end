@@ -62,7 +62,9 @@ module.exports.getOnePromotion = (req,res,next) => {
     Promotion.findOne({_id:req.params.promotionId})
     .then((data) => {
         if(data == null){
-            next( new Error("Promotion not exists"))
+            let err = new Error("Promotion not exists");
+            err.status = 404;
+            throw err
         } else {
             res.status(200).json(data)
         }
@@ -84,7 +86,9 @@ module.exports.updatePromotion = (req,res,next) => {
         }
     }).then((data) => {
         if(data.matchedCount == 0){
-            throw new Error("promotion is not found");
+            let err = new Error("Promotion not exists");
+            err.status = 404;
+            throw err
         }else{
             res.status(200).json(data);
         }
@@ -97,7 +101,9 @@ module.exports.deletePromotion = (req,res,next) => {
     Promotion.deleteOne({_id:req.params.promotionId})
     .then((data) => {
         if(data.deletedCount == 0){
-            next(new Error("promotion is not found"));
+            let err = new Error("Promotion not exists");
+            err.status = 404;
+            throw err
         }else{
             res.status(200).json({data:"deleted"});
         }

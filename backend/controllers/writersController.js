@@ -1,8 +1,8 @@
 const writerModel = require("../models/writers");
 const fs = require("fs");
 
-module.exports.getAllWriters = (req,res, next)=>{
 
+module.exports.getAllWriters = (req,res, next)=>{
     let {page = 1, limit = 10} = req.query;
 
     // writerModel.find({})
@@ -21,18 +21,17 @@ module.exports.getAllWriters = (req,res, next)=>{
                     "books.publisher":0, "books.price":0, "books.writer":0, "books.promotion":0,
                     "books.date_addition":0}
         },{
-            $facet:{
-                count:[{ $count: "count" }],
-                sample: [{$skip: (parseInt(page) - 1)*parseInt(limit) },{$limit: parseInt(limit)}]   //,
-            }
+            
+            $skip: (parseInt(page) - 1)*parseInt(limit)
+        },
+        {
+            $limit: parseInt(limit)
         }
     ])
     .then((data) => {
         let returned = {
-            n_results : data[0].count[0].count,
-            n_pages : Math.ceil(data[0].count[0].count/parseInt(limit)),
             page:parseInt(page),
-            data: data[0].sample
+            data
         }
             res.status(200).json(returned)
     })
@@ -46,7 +45,9 @@ module.exports.getWriterById = (req,res, next)=>{
     writerModel.findOne({_id:req.params.writerId})
     .then((data) => {
         if(data.length == 0){
-        next(new Error("writer is not found"));
+            let err = new Error("writer is not found");
+            err.status = 404;
+            throw err
         }else{
             res.status(200).json(data);
         }
@@ -123,7 +124,9 @@ module.exports.updateWriter = (req,res,next)=>{
             }
         }).then((data) => {
             if(data.matchedCount == 0){
-                next(new Error("writer is not found"));
+                let err = new Error("writer is not found");
+                err.status = 404;
+                throw err
             }else{
                 res.status(200).json(data);
             }
@@ -138,7 +141,9 @@ module.exports.deleteWriter = (req,res,next)=>{
     writerModel.deleteOne({_id:req.params.writerId})
     .then((data) => {
         if(data.deletedCount == 0){
-            next(new Error("writer is not found"));
+            let err = new Error("writer is not found");
+            err.status = 404;
+            throw err
         }else{
             res.status(200).json(data);
         }

@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 
 const review = require("../models/reviews");
-const book = require("../models/books")
-
 
 module.exports.getAllUserReviews = (req,res,next) => {
     let theId;
@@ -14,7 +12,9 @@ module.exports.getAllUserReviews = (req,res,next) => {
     review.find({user_id: mongoose.Types.ObjectId(theId)})
         .then((data) => {
             if(data == null){
-                next(new Error("this user hasn't made any reviews yet"))
+                let err = new Error("this user hasn't made any reviews yet");
+                err.status = 404;
+                throw err
             } else {
                 res.status(200).json(data)
             }
@@ -28,7 +28,9 @@ module.exports.getAllBookReviews = (req,res,next) => {
     review.find({book_id: mongoose.Types.ObjectId(req.params.bookId)})
         .then((data) => {
             if(data == null){
-                next(new Error("this Book hasn't any reviews yet"))
+                let err = new Error("this Book hasn't any reviews yet");
+                err.status = 404;
+                throw err
             } else {
                 res.status(200).json(data)
             }
@@ -43,7 +45,9 @@ module.exports.getOneReview = (req,res,next) => {
     review.findOne({_id:mongoose.Types.ObjectId(req.params.reviewId)})
     .then((data) => {
         if(data == null){
-            next( new Error("Review dosn't exists"))
+            let err = new Error("Review dosn't exists");
+            err.status = 404;
+            throw err
         } else {
             res.status(200).json(data)
         }
@@ -78,7 +82,9 @@ module.exports.updateReview = (req,res,next) => {           //body {comment,vote
         }
     }).then((data)=>{
         if(data.matchedCount == 0){
-            throw new Error("review is not found");
+            let err = new Error("Review dosn't exists");
+            err.status = 404;
+            throw err
         }else{
             res.status(200).json(data);
         }
@@ -92,7 +98,9 @@ module.exports.deleteReview = (req,res,next) => {
     review.findOneAndDelete({_id:mongoose.Types.ObjectId(req.params.reviewId)})
     .then((data) => {
         if(data == null){
-            next(new Error("review dosn't exist"));
+            let err = new Error("Review dosn't exists");
+            err.status = 404;
+            throw err
         }else{
         res.status(200).json({data:"deleted"});
         }
