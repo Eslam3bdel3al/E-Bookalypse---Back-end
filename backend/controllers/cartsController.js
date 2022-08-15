@@ -274,8 +274,8 @@ module.exports.checkOut = (req,res,next)=>{
                     "quantity":1
                 }
             }),
-            success_url:`'https://google.com/'`,
-            cancel_url:`'http://facebook.com/'`
+            success_url:'https://www.google.com/',
+            cancel_url:'https://www.facebook.com'
         })
     })
     .then((data)=>{
