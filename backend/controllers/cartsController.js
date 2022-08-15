@@ -274,7 +274,7 @@ module.exports.checkOut = (req,res,next)=>{
                     "quantity":1
                 }
             }),
-            success_url:'https://www.google.com/',
+            success_url:'http://localhost:3000/successPayment',
             cancel_url:'https://www.facebook.com'
         })
     })
