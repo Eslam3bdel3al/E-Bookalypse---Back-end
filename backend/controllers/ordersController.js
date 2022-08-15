@@ -5,7 +5,17 @@ const mongoose = require("mongoose");
 const order = require("../models/orders");
 const user = require("../models/users");
 
-module.exports.getAllOrders = (req,res,next) => {
+module.exports.getOrdersCount = (req,res,next) => {
+    order.find({}).count()
+        .then((data) => {
+            res.status(200).json({count:data})
+        })
+        .catch((err) => {
+            next(err);
+        })
+};
+
+module.exports.getAllUserOrders = (req,res,next) => {
     let theId;
     if(req.role == "regUser"){
         theId = req.userId;
@@ -31,7 +41,7 @@ module.exports.getAllOrders = (req,res,next) => {
 module.exports.addOrder = (req,res,next) => {
    
     let object = new order ({
-        user_id: mongoose.Types.ObjectId(req.userId),
+        user_id: req.userId,
         order_books:  req.body.bookIds,
         totalPrice: req.body.totalFinalPrice
     })

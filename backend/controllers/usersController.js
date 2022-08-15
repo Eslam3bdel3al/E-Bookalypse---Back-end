@@ -45,6 +45,29 @@ module.exports.getAllusers = (req,res,next) => {
         })
 }
 
+module.exports.getAdmins = (req,res,next) => {
+    User.find({role:{$in:["rootAdmin", "admin"]}})
+    // User.aggregate([
+    //     {
+    //         $lookup:{
+    //             from:"reviews",
+    //             localField: '_id',
+    //             foreignField: 'book_id',
+    //             as: 'reviews',
+    //         }
+    //     },
+    //     {
+    //         $project:{"reviews.book_id":0,"reviews.review_date":0,"reviews.user_id":0,"reviews._id":0,}
+    //     }
+    // ])
+        .then((data) => {
+            res.status(200).json(data)
+        })
+        .catch((err) => {
+            next(err)
+        })
+}
+
 module.exports.userSignUp = (req,res,next) => {
     User.findOne({$or:[{email:req.body.email},{userName:req.body.userName},{phone:req.body.phone}]})
     .then((userDoc) => {

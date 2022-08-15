@@ -20,6 +20,9 @@ const writerPath = (req,res,next)=>
             next()
       }
 
+router.route('/writers-count')
+      .get(writersController.getWritersCount)
+
 router.route('/writers')
       .get(writersController.getAllWriters)
 

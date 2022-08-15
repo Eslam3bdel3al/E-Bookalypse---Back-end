@@ -24,6 +24,9 @@ router.route("/signUp")
 router.route("/users")
         .get(authMW, role.mustAdmin,usersController.getAllusers) 
 
+router.route("/admins")
+        .get(authMW, role.mustAdmin,usersController.getAdmins) 
+
 // router.route("/api/admin/user")
 //         .put(authMW, role.mustAdmin, valArrays.userAdd, validationMw, usersController.updateUser)
 

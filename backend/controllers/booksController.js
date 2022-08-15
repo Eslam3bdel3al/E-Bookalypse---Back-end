@@ -3,10 +3,20 @@ const mongoose = require("mongoose")
 const Books = require('../models/books');
 
 
+module.exports.getBooksCount = (req,res, next)=>{
+    Books.find({}).count()
+    .then((data) => {
+        res.status(200).json({count:data})
+    })
+    .catch((err)=>{
+        next(err)
+    })
+}
+
 module.exports.getAllBooks = async (req,res,next)=>{                              //query string page,limit
     
     //destructing query string
-    let {page = 1, limit = 6, category, rate , priceMin, priceMax , priceSort, lang = "en"} = req.query;
+    let {page = 1, limit = 6, category, rate , priceMin, priceMax , priceSort,salesSort, lang = "en"} = req.query;
 
     // to handle filtering an objects to be set in the aggregate function below
     let match = {};
@@ -51,16 +61,26 @@ module.exports.getAllBooks = async (req,res,next)=>{                            
     }
 
     if(priceSort){
+        delete sort._id;
         if (priceSort == "lth"){
             sort["price"] = 1
         } else if (priceSort == "htl"){
             sort["price"] = -1
         }
     }else{
-
         sort["_id"]=1
     }
 
+    if(salesSort){
+        delete sort._id;
+        if (salesSort == "lth"){
+            sort["sales"] = 1
+        } else if (salesSort == "htl"){
+            sort["sales"] = -1
+        }
+    }else{
+        sort["_id"]=1
+    }
    
 
     Books.aggregate([

@@ -6,8 +6,11 @@ const role = require("../middlewares/checkRole");
 
 const router = express.Router();
 
+router.route("/orders-count")
+        .get(authMW, role.mustAdmin, ordersController.getOrdersCount)
+
 router.route("/orders/:userId?")
-        .get(authMW, role.userORAdmin, ordersController.getAllOrders)
+        .get(authMW, role.userORAdmin, ordersController.getAllUserOrders)
 
 router.route("/order")      
         .post(authMW, role.mustUser, ordersController.addOrder) 

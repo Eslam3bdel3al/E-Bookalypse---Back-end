@@ -85,6 +85,9 @@ const upload = multer();
  */
 
 
+router.route('/books-count')
+   .get(booksController.getBooksCount) 
+
 router.route('/books')
       .get(booksController.getAllBooks) 
 

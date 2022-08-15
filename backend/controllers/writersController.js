@@ -1,6 +1,15 @@
 const writerModel = require("../models/writers");
 const fs = require("fs");
 
+module.exports.getWritersCount = (req,res, next)=>{
+    writerModel.find({}).count()
+    .then((data) => {
+        res.status(200).json({count:data})
+    })
+    .catch((err)=>{
+        next(err)
+    })
+}
 
 module.exports.getAllWriters = (req,res, next)=>{
     let {page = 1, limit = 10} = req.query;
