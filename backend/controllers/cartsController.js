@@ -274,8 +274,8 @@ module.exports.checkOut = (req,res,next)=>{
                     "quantity":1
                 }
             }),
-            success_url:`'http://${host}:${port}/successPayment'`,
-            cancel_url:`'http://${host}:${port}/cart'`
+            success_url:`'https://google.com/'`,
+            cancel_url:`'http://facebook.com/'`
         })
     })
     .then((data)=>{
