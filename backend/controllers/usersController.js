@@ -46,20 +46,7 @@ module.exports.getAllusers = (req,res,next) => {
 }
 
 module.exports.getAdmins = (req,res,next) => {
-    User.find({role:{$in:["rootAdmin", "admin"]}})
-    // User.aggregate([
-    //     {
-    //         $lookup:{
-    //             from:"reviews",
-    //             localField: '_id',
-    //             foreignField: 'book_id',
-    //             as: 'reviews',
-    //         }
-    //     },
-    //     {
-    //         $project:{"reviews.book_id":0,"reviews.review_date":0,"reviews.user_id":0,"reviews._id":0,}
-    //     }
-    // ])
+    User.find({role:{$in:["rootAdmin", "admin"]}})   
         .then((data) => {
             res.status(200).json(data)
         })
@@ -119,7 +106,6 @@ module.exports.getUserById = (req,res,next) => {
         theId = req.userId;
     }else{
         if(req.params.userId){
-            
             theId = req.params.userId;
         }else{
             theId=req.userId
@@ -127,14 +113,20 @@ module.exports.getUserById = (req,res,next) => {
     }
     User.findOne({_id: mongoose.Types.ObjectId(theId)})
         .then((data) => {
-            if(data == null){
-                let err = new Error("user is not found");
-                err.status = 404;
-                throw err
-            }else{
-                res.status(200).json(data);
-            }
+            res.status(200).json(data);
+        })
+        .catch((err) => {
+            next(err);
+        })
+}
 
+
+module.exports.getBookShelf = (req,res,next) => {
+   
+    User.findOne({_id: mongoose.Types.ObjectId(req.userId)},{book_shelf:1}).populate({path:"book_shelf",
+    select:["_id","title","poster","source","n_pages"]})
+        .then((data) => {
+            res.status(200).json(data.book_shelf);
         })
         .catch((err) => {
             next(err);

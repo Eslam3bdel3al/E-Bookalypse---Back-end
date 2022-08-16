@@ -11,6 +11,16 @@ module.exports.getWritersCount = (req,res, next)=>{
     })
 }
 
+module.exports.getWritersTotal = (req,res, next)=>{
+    writerModel.find({},{name:1})
+    .then((data) => {
+        res.status(200).json(data)
+    })
+    .catch((err)=>{
+        next(err)
+    })
+}
+
 module.exports.getAllWriters = (req,res, next)=>{
     let {page = 1, limit = 10} = req.query;
 

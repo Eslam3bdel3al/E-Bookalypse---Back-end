@@ -104,23 +104,7 @@ module.exports.addItems = (req,res,next) => {
             
         })
         .then((data)=>{
-            // if(data.cart){
-            //     if(bookIds){
-            //         bookIds.forEach((book)=>{
-            //             if (data.cart.bookItems.includes(book)){
-            //                 throw new Error("a book is already exist");
-            //             }
-            //         })
-            //     }
-            
-            //     if(collectionIds){
-            //         collectionIds.forEach((coll)=>{
-            //             if (data.cart.collectionItems.includes(coll)){
-            //                 throw new Error("a collection is already exist");
-            //             }
-            //         })
-            //     }
-            // }
+        
             if (data.matchedCount == 1 && data.modifiedCount == 1){
                 res.status(200).json("added");
             } else {
@@ -188,26 +172,7 @@ module.exports.deleteItems = (req,res,next) => {
             
         })
         .then((data)=>{
-            // if(data.cart){
-            //     if (bookIds){
-            //         bookIds.forEach((book)=>{
-            //             if (!data.cart.bookItems.includes(book)){
-            //                 throw new Error("a book is not exist");
-            //             }
-            //         })
-            //     }
-
-            //     if(collectionIds){
-            //         collectionIds.forEach((coll)=>{
-            //             if (!data.cart.collectionItems.includes(coll)){
-            //                 throw new Error("a collection is not exist");
-            //             }
-            //         })
-            //     }
-
-            // } else {
-            //     throw new Error("user has no cart yet");
-            // }
+       
             if (data.matchedCount == 1 && data.modifiedCount == 1){
                 res.status(200).json("removed");
             } else {

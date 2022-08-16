@@ -3,7 +3,7 @@ const express = require("express");
 const collectionsController = require("../controllers/collectionsController");
 const authMe = require("../middlewares/authMw");
 const role = require("../middlewares/checkRole");
-const valArrays = require("../middlewares/ValArrays")
+const collectionVal = require("../middlewares/validation/collection.val")
 const validationMw = require("../middlewares/validationMw");
 
 const router = express.Router();
@@ -13,11 +13,11 @@ router.route("/collections")
     
 
 router.route("/collection")
-        .post(authMe, role.mustAdmin,valArrays.collectioAddEdit,validationMw, collectionsController.addCollection)
+        .post(authMe, role.mustAdmin,collectionVal.collectioAdd,validationMw, collectionsController.addCollection)
 
 router.route("/collection/:collectionId")
-        .get(collectionsController.getOneCollection)
-        .put(authMe, role.mustAdmin,valArrays.collectioAddEdit,validationMw, collectionsController.updateCollection)
-        .delete(authMe, role.mustAdmin, collectionsController.deleteCollection)
+        .get(collectionVal.collectionParam, validationMw, collectionsController.getOneCollection)
+        .put(authMe, role.mustAdmin,collectionVal.collectionEdit,validationMw, collectionsController.updateCollection)
+        .delete(authMe, role.mustAdmin,collectionVal.collectionParam, validationMw, collectionsController.deleteCollection)
     
 module.exports = router; 

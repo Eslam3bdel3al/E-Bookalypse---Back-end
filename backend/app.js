@@ -1,9 +1,7 @@
 require("dotenv").config();
   
   const express = require('express');
-  const morgan = require('morgan');
-  var rfs = require('rotating-file-stream') // version 2.x
-  const path = require("path");
+
   const swaggerUi = require("swagger-ui-express");
   const swaggerJsDoc = require("swagger-jsdoc");
 
@@ -45,18 +43,11 @@ const host = process.env.HOST || 'localhost';
   const collectionRouters = require("./Routes/collections_routes");
 
   const verifyToken = require("./middlewares/verifyToken");
+  const logger = require("./middlewares/logger")
 
   const app = express();
 
-  let date = new Date()
-  let logFile = `access${date.toISOString().split('T')[0]}.log`;
-  
-  const accessLogStream  = rfs.createStream((logFile),{
-    interval: '1d', // rotate daily
-    path: path.join(__dirname, 'logs')
-  });
 
- 
   app.use((req,res,next)=>{
     // * : no matter which domain is dsending the request is allowed to access our resources
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -76,8 +67,7 @@ const host = process.env.HOST || 'localhost';
   
   app.use(verifyToken);
 
-  morgan.token('userId', function (req, res) { return JSON.stringify(req.userId||"visitor") })
-  app.use(morgan(':userId [:date[clf]] :method :url :status :response-time ":user-agent"',{stream:accessLogStream}));
+ app.use(logger)
 
   app.get('/', (req, res) => {   res.send("WELCOME " + process.env.PORT  ) })
   app.use(loginRouters)
@@ -99,6 +89,8 @@ const host = process.env.HOST || 'localhost';
   app.use((req,res)=>{
     res.status(404).send("NOT FOUND")
   })
+
+  
 
   //catch all errors
   app.use((err,req,res,next)=>{

@@ -1,7 +1,7 @@
 const {body,param} = require("express-validator")
 
 module.exports.userReviews = [
-    param("userId").isMongoId().withMessage("userId must be a mongo id")
+    param("userId").optional().isMongoId().withMessage("userId must be a mongo id")
 ]
 
 module.exports.bookReviews = [

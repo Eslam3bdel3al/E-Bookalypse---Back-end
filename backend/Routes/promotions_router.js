@@ -3,7 +3,7 @@ const express = require("express");
 const promotionsController = require("../controllers/promotionsController");
 const authMe = require("../middlewares/authMw");
 const role = require("../middlewares/checkRole");
-const valArrays = require("../middlewares/ValArrays")
+const pomotionVal = require("../middlewares/validation/promotion.val")
 const validationMw = require("../middlewares/validationMw");
 
 const router = express.Router();
@@ -13,11 +13,11 @@ router.route("/promotions")
     
 
 router.route("/promotion")
-        .post(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.addPromotion)
+        .post(authMe, role.mustAdmin,pomotionVal.promotionAdd,validationMw, promotionsController.addPromotion)
 
 router.route("/promotion/:promotionId")
-        .get(promotionsController.getOnePromotion)
-        .put(authMe, role.mustAdmin,valArrays.promotionAddEdit,validationMw, promotionsController.updatePromotion)
-        .delete(authMe, role.mustAdmin, promotionsController.deletePromotion)
+        .get(pomotionVal.promotionParam,validationMw, promotionsController.getOnePromotion)
+        .put(authMe, role.mustAdmin,pomotionVal.promotionEdit,validationMw, promotionsController.updatePromotion)
+        .delete(authMe, role.mustAdmin, pomotionVal.promotionParam, validationMw, promotionsController.deletePromotion)
     
 module.exports = router; 

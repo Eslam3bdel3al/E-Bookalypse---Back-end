@@ -13,7 +13,17 @@ module.exports.getBooksCount = (req,res, next)=>{
     })
 }
 
-module.exports.getAllBooks = async (req,res,next)=>{                              //query string page,limit
+module.exports.getBooksTotal = (req,res, next)=>{
+    Books.find({},{title:1})
+    .then((data) => {
+        res.status(200).json(data)
+    })
+    .catch((err)=>{
+        next(err)
+    })
+}
+
+module.exports.getAllBooks =  (req,res,next)=>{                              //query string page,limit
     
     //destructing query string
     let {page = 1, limit = 6, category, rate , priceMin, priceMax , priceSort,salesSort, lang = "en"} = req.query;

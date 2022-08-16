@@ -1,2 +1,0 @@
-{} [01/Aug/2022:18:56:09 +0000] GET /api/books 200 260.885 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
-{} [01/Aug/2022:19:03:29 +0000] GET /api/books 304 230.700 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"

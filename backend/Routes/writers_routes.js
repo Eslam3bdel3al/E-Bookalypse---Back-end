@@ -23,6 +23,9 @@ const writerPath = (req,res,next)=>
 router.route('/writers-count')
       .get(writersController.getWritersCount)
 
+router.route('/writers-total')
+      .get(writersController.getWritersTotal)
+
 router.route('/writers')
       .get(writersController.getAllWriters)
 

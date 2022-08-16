@@ -31,7 +31,10 @@ router.route("/admins")
 //         .put(authMW, role.mustAdmin, valArrays.userAdd, validationMw, usersController.updateUser)
 
 router.route("/user/:userId?")                       
-        .get(authMW,role.userORAdmin, usersController.getUserById) 
+        .get(authMW,role.userORAdmin, userVal.oneUser,validationMw, usersController.getUserById) 
+
+router.route("/book-shelf")
+        .get(authMW, usersController.getBookShelf)
 
 router.route("/user") 
         .put(authMW,upload.single('userImage'),userVal.userEdit, validationMw,userData,updateImageFromFirebase, usersController.updateUser)
