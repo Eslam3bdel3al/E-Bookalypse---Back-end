@@ -328,7 +328,7 @@ module.exports.updateBook = (req,res,next)=>{
     // console.log(req.body)
     // console.log(req.files)
     // const categories = JSON.parse(req.body.category)
-    // const writers = JSON.parse(req.body.writer)
+    const writers = JSON.parse(req.body.writer)
     console.log(req.body.promotion)
     if(typeof req.body.pages == 'string'){
         req.body.pages = 0
@@ -350,7 +350,7 @@ module.exports.updateBook = (req,res,next)=>{
                 publisher:req.body.publisher,
                 price:req.body.price,
                 category:req.body.category,
-                writer:req.body.writer,
+                writer:writer,
                 promotion:req.body.promotion
             }
         }).then((data) => {
