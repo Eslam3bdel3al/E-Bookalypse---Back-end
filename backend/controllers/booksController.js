@@ -281,8 +281,8 @@ module.exports.deleteBook = (req,res,next)=>{
 }
 
 module.exports.addBook = (req,res,next)=>{
-    // const categories = JSON.parse(req.body.category)
-    // const writers = JSON.parse(req.body.writer)
+    const categories = JSON.parse(req.body.category)
+    const writers = JSON.parse(req.body.writer)
     
     // console.log(typeof req.body.category)
     const book = new Books({
@@ -296,8 +296,8 @@ module.exports.addBook = (req,res,next)=>{
         publisher:req.body.publisher,
         price:req.body.price,
         promotion:req.body.promotion,
-        category:req.body.category,
-        writer:req.body.writer
+        category:categories,
+        writer:writers
     })
 
     book.save()
