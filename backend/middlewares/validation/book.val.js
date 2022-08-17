@@ -17,6 +17,7 @@ module.exports.bookAdd = [
 //             throw new Error("array items must be a mongo id")
 //         }
 //         return true
+        console.log(val)
         return val
     }),
     body("writer").isArray().optional().custom(val => {
