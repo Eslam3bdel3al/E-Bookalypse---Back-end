@@ -1,5 +1,5 @@
 const {body,param} = require("express-validator");
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 
 module.exports.bookAdd = [
@@ -11,19 +11,21 @@ module.exports.bookAdd = [
     body("pages").isNumeric().withMessage("pages must be a number"),
     body("publisher").isString().withMessage("publisher must be a string"),
     body("promotion").isMongoId().withMessage("promotion must be a mongo id"),
-    body("category").isArray().optional().custom(val => {
-        
-        if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
-            throw new Error("array items must be a mongo id")
-        }
-        return true
-    }),
-    body("writer").isArray().optional().custom(val => {
-        if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
-            throw new Error("array items must be a mongo id")
-        }
-        return true
-    }),
+    // body("category").isArray().optional().custom(val => {
+    //      val = JSON.parse(val)
+    //      console.log(typeof(val));
+    //     if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
+    //         throw new Error("array items must be a mongo id")
+    //     }
+    //     return true
+    // }),
+    // body("writer").isArray().optional().custom(val => {
+    //      val = JSON.parse(val)
+    //     if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
+    //         throw new Error("array items must be a mongo id")
+    //     }
+    //     return true
+    // }),
   ]
 
 
@@ -37,20 +39,20 @@ module.exports.bookAdd = [
     body("pages").isNumeric().withMessage("pages must be a number"),
     body("publisher").isString().withMessage("publisher must be a string"),
     body("promotion").isMongoId().withMessage("promotion must be a mongo id"),
-    body("category").isArray().optional()
-    .custom(val => {
-        if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
-            throw new Error("array items must be a mongo id")
-        }
-        return true
-    }),
-    body("writer").isArray().optional()
-    .custom(val => {
-        if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
-            throw new Error("array items must be a mongo id")
-        }
-        return true
-    }),
+    // body("category").isArray().optional()
+    // .custom(val => {
+    //     if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
+    //         throw new Error("array items must be a mongo id")
+    //     }
+    //     return true
+    // }),
+    // body("writer").isArray().optional()
+    // .custom(val => {
+    //     if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
+    //         throw new Error("array items must be a mongo id")
+    //     }
+    //     return true
+    // }),
   ]
 
   module.exports.bookParam = [
