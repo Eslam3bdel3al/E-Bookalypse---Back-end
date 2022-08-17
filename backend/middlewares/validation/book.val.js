@@ -1,5 +1,4 @@
 const {body,param} = require("express-validator");
-const mongoose = require("mongoose");
 
 
 module.exports.bookAdd = [
@@ -10,7 +9,8 @@ module.exports.bookAdd = [
     body("lang").isAlpha().isIn(["عربي","english"]).withMessage("lang must be 'عربي' or 'english'"),
     body("pages").isNumeric().withMessage("pages must be a number"),
     body("publisher").isString().withMessage("publisher must be a string"),
-    body("promotion").isMongoId().withMessage("promotion must be a mongo id"),
+    body("promotion").isMongoId().withMessage("promotion must be a mongo id")
+
     // body("category").isArray().optional().custom(val => {
     //      val = JSON.parse(val)
     //      console.log(typeof(val));
@@ -26,6 +26,7 @@ module.exports.bookAdd = [
     //     }
     //     return true
     // }),
+
   ]
 
 
