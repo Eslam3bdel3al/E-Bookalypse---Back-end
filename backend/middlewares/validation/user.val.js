@@ -105,7 +105,7 @@ module.exports.userChagePass = [
                 
 module.exports.userRole = [
     body("userName").isString().withMessage("user name must be a string").notEmpty().withMessage("user name is required"),
-    body("role").isAlpha().withMessage("role contain only letters").isIn(["rootAdmin", "admin", "regUser"])
+    body("role").isAlpha().withMessage("role contain only letters").isIn(["rootAdmin", "admin", "regUser"]).notEmpty().withMessage("role is required")
 ];
 
 module.exports.forgetSendMail = [
