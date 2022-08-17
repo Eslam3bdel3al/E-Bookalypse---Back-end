@@ -327,8 +327,8 @@ module.exports.addBooks = (req,res,next)=>{
 module.exports.updateBook = (req,res,next)=>{
     // console.log(req.body)
     // console.log(req.files)
-    const categories = JSON.parse(req.body.category)
-    const writers = JSON.parse(req.body.writer)
+    // const categories = JSON.parse(req.body.category)
+    // const writers = JSON.parse(req.body.writer)
     console.log(req.body.promotion)
     if(typeof req.body.pages == 'string'){
         req.body.pages = 0
@@ -349,8 +349,8 @@ module.exports.updateBook = (req,res,next)=>{
                 n_pages:req.body.pages,
                 publisher:req.body.publisher,
                 price:req.body.price,
-                category:categories,
-                writer:writers,
+                category:req.body.category,
+                writer:req.body.writer,
                 promotion:req.body.promotion
             }
         }).then((data) => {
