@@ -1,4 +1,4 @@
-const {body,param,query} = require("express-validator")
+const {body,param} = require("express-validator")
 
 module.exports.oneUser = [
     param("userId").optional().isMongoId().withMessage("userId must be a mongo id")

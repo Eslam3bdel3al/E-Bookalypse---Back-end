@@ -1,4 +1,6 @@
-const {body,param} = require("express-validator")
+const {body,param} = require("express-validator");
+const mongoose = require("mongoose")
+
 
 module.exports.bookAdd = [
     body("title").isString().withMessage("title must be a string").notEmpty().withMessage("title is required"),
@@ -9,15 +11,14 @@ module.exports.bookAdd = [
     body("pages").isNumeric().withMessage("pages must be a number"),
     body("publisher").isString().withMessage("publisher must be a string"),
     body("promotion").isMongoId().withMessage("promotion must be a mongo id"),
-    body("category").isArray().optional()
-    .custom(val => {
+    body("category").isArray().optional().custom(val => {
+        
         if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
             throw new Error("array items must be a mongo id")
         }
         return true
     }),
-    body("writer").isArray().optional()
-    .custom(val => {
+    body("writer").isArray().optional().custom(val => {
         if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
             throw new Error("array items must be a mongo id")
         }

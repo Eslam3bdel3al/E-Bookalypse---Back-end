@@ -51,6 +51,7 @@ module.exports.addOrder = (req,res,next) => {
             user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},{
                 $addToSet:{book_shelf: {$each: req.body.bookIds} }
             }).then((data)=>{
+                console.log(data);
                 res.status(201).json({data:"added"})
             }).catch((err )=>{
                 next(err);
