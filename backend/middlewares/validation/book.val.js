@@ -13,19 +13,17 @@ module.exports.bookAdd = [
     body("promotion").isMongoId().withMessage("promotion must be a mongo id"),
     body("category").isArray().optional().custom(val => {
         
-//         if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
-//             throw new Error("array items must be a mongo id")
-//         }
-//         return true
-        console.log(val)
-        return val
+        if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
+            throw new Error("array items must be a mongo id")
+        }
+        return true
+        
     }),
     body("writer").isArray().optional().custom(val => {
-//         if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
-//             throw new Error("array items must be a mongo id")
-//         }
-//         return true
-        return val
+        if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
+            throw new Error("array items must be a mongo id")
+        }
+        return true
         
     }),
   ]
