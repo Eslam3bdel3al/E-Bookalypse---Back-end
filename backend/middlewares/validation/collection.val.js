@@ -1,6 +1,5 @@
 const {body,param} = require("express-validator")
-const mongoose = require("mongoose")
-
+const mongoose = require("mongoose");
 
 module.exports.collectioAdd = [
     body("title").isString().withMessage("title must be a string").notEmpty().withMessage("collection title is required"),
