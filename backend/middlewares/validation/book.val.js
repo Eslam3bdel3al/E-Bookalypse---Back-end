@@ -39,7 +39,7 @@ module.exports.bookAdd = [
     body("lang").optional().isAlpha().isIn(["arabic","english"]).withMessage("lang must be 'arabic' or 'english'"),
     body("pages").optional().isNumeric().withMessage("pages must be a number"),
     body("publisher").optional().isString().withMessage("publisher must be a string"),
-    body("promotion").optional().isMongoId().withMessage("promotion must be a mongo id"),
+    // body("promotion").optional().isMongoId().withMessage("promotion must be a mongo id"),
     // body("category").isArray().optional()
     // .custom(val => {
     //     if(!val.every(itm => mongoose.Types.ObjectId.isValid(itm))){
