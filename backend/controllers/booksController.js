@@ -336,6 +336,8 @@ module.exports.addBooks = (req,res,next)=>{
 }
 
 module.exports.updateBook = (req,res,next)=>{
+    const categories = JSON.parse(req.body.category)
+    const writers = JSON.parse(req.body.writer)
     let secondParam = {};
     if (req.body.promotion == "remove"){
         secondParam["$set"] = {
@@ -371,8 +373,7 @@ module.exports.updateBook = (req,res,next)=>{
         }
     }
 
-    const categories = JSON.parse(req.body.category)
-    const writers = JSON.parse(req.body.writer)
+    
     Books.updateOne({_id:req.params.bookId},
         // {
         //     $set:{
