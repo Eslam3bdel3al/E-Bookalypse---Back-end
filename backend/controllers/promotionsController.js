@@ -1,5 +1,6 @@
 const Promotion = require("../models/promotions")
 
+const Books = require("../models/books")
 
 
 module.exports.getAllPromotions = (req,res,next) => {
@@ -99,12 +100,17 @@ module.exports.updatePromotion = (req,res,next) => {
 
 module.exports.deletePromotion = (req,res,next) => {
     Promotion.deleteOne({_id:req.params.promotionId})
-    .then((data) => {
+    .then(async (data) => {
         if(data.deletedCount == 0){
             let err = new Error("Promotion not exists");
             err.status = 404;
             throw err
         }else{
+
+            await Books.updateOne({collectionBooks:mongoose.Types.ObjectId(req.params.promotionId)},{
+                $pull:{promotion:mongoose.Types.ObjectId(req.params.promotionId)}
+            })
+
             res.status(200).json({data:"deleted"});
         }
     })

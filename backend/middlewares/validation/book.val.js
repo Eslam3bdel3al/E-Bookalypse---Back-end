@@ -6,7 +6,7 @@ module.exports.bookAdd = [
     body("description").isString().withMessage("you must have a book description").notEmpty().withMessage("description is required"),
     body("price").isFloat().withMessage("Book Price must be a number").notEmpty().withMessage("price is required"),
     body("date").optional().isDate().withMessage("date is not valid"),
-    body("lang").optional().optional().isAlpha().isIn(["عربي","english"]).withMessage("lang must be 'عربي' or 'english'"),
+    body("lang").optional().optional().isAlpha().isIn(["arabic","english"]).withMessage("lang must be 'arabic' or 'english'"),
     body("pages").optional().isNumeric().withMessage("pages must be a number"),
     body("publisher").optional().isString().withMessage("publisher must be a string"),
     body("promotion").optional().isMongoId().withMessage("promotion must be a mongo id")
@@ -36,7 +36,7 @@ module.exports.bookAdd = [
     body("description").isString().withMessage("you must have a book description").notEmpty().withMessage("description is required"),
     body("price").isFloat().withMessage("Book Price must be a number").notEmpty().withMessage("price is required"),
     body("date").optional().isDate().withMessage("date is not valid"),
-    body("lang").optional().isAlpha().isIn(["عربي","english"]).withMessage("lang must be 'عربي' or 'english'"),
+    body("lang").optional().isAlpha().isIn(["arabic","english"]).withMessage("lang must be 'arabic' or 'english'"),
     body("pages").optional().isNumeric().withMessage("pages must be a number"),
     body("publisher").optional().isString().withMessage("publisher must be a string"),
     body("promotion").optional().isMongoId().withMessage("promotion must be a mongo id"),

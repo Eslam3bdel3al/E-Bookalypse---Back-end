@@ -1,0 +1,6 @@
+"visitor" [18/Aug/2022:16:25:40 +0000] POST /login 200 445.744 "PostmanRuntime/7.29.2"
+"62d983b2491f4d5136bd53bc" [18/Aug/2022:16:26:07 +0000] DELETE /book/62fe6101a8d8c2eadc59a8c0 404 191.319 "PostmanRuntime/7.29.2"
+"62d983b2491f4d5136bd53bc" [18/Aug/2022:16:27:09 +0000] DELETE /book/62fe6727a8d8c2eadc59a9cf 200 441.715 "PostmanRuntime/7.29.2"
+"62d983b2491f4d5136bd53bc" [18/Aug/2022:17:00:42 +0000] DELETE /book/62fe6fc3a8d8c2eadc59abe4 200 565.266 "PostmanRuntime/7.29.2"
+"62d983b2491f4d5136bd53bc" [18/Aug/2022:17:05:42 +0000] DELETE /book/62fe712ea8d8c2eadc59ac31 200 769.594 "PostmanRuntime/7.29.2"
+"62d983b2491f4d5136bd53bc" [18/Aug/2022:17:11:24 +0000] DELETE /book/62fe7266a8d8c2eadc59acfc 200 4391.807 "PostmanRuntime/7.29.2"

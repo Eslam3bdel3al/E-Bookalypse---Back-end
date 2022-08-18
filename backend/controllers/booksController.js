@@ -1,6 +1,9 @@
 const mongoose = require("mongoose")
 
 const Books = require('../models/books');
+const Reviews = require('../models/reviews');
+const Collections = require('../models/collections');
+const Users = require('../models/users');
 
 
 module.exports.getBooksCount = (req,res, next)=>{
@@ -264,14 +267,24 @@ module.exports.getBookById = (req,res,next)=>{
 }
 
 module.exports.deleteBook = (req,res,next)=>{
-    Books.deleteOne({_id:req.params.bookId})
-        .then((data) => {
+    let {bookId} = req.params
+    Books.deleteOne({_id:mongoose.Types.ObjectId(bookId)})
+        .then(async (data) => {
             if(data.deletedCount == 0){
                 let err = new Error("book is not found");
                 err.status = 404;
                 throw err
             }else{
-                res.status(200).json(data);
+                await Collections.updateOne({collectionBooks:mongoose.Types.ObjectId(bookId)},{
+                    $pull:{collectionBooks:mongoose.Types.ObjectId(bookId)}
+                })
+                await Reviews.deleteOne({book_id:mongoose.Types.ObjectId(bookId)})
+                await Users.updateOne({$or:[{book_shelf:mongoose.Types.ObjectId(bookId)},{"cart.bookItems":mongoose.Types.ObjectId(bookId)},{"wishList.bookItems":mongoose.Types.ObjectId(bookId)}]},{
+                    $pull:{"cart.bookItems":mongoose.Types.ObjectId(bookId),
+                            "wishList.bookItems":mongoose.Types.ObjectId(bookId),
+                            book_shelf:mongoose.Types.ObjectId(bookId)}
+                })
+                res.status(200).json({data:"deleted"});
             }
         })
         .catch((err) => {
@@ -323,24 +336,62 @@ module.exports.addBooks = (req,res,next)=>{
 }
 
 module.exports.updateBook = (req,res,next)=>{
+    let secondParam = {};
+    if (req.body.promotion == "remove"){
+        secondParam["$set"] = {
+            title:req.body.title,
+            description:req.body.description,
+            poster:req.uploadedImage,
+            source:req.uploadedSrc,
+            date_release:req.body.date,
+            lang:req.body.lang,
+            n_pages:req.body.pages,
+            publisher:req.body.publisher,
+            price:req.body.price,
+            category:categories,
+            writer:writers
+        }
+        secondParam["$unset"] = {
+            promotion: 1 
+        }
+    } else {
+        secondParam["$set"] = {
+        title:req.body.title,
+        description:req.body.description,
+        poster:req.uploadedImage,
+        source:req.uploadedSrc,
+        date_release:req.body.date,
+        lang:req.body.lang,
+        n_pages:req.body.pages,
+        publisher:req.body.publisher,
+        price:req.body.price,
+        category:categories,
+        writer:writers,
+        promotion:req.body.promotion
+        }
+    }
+
     const categories = JSON.parse(req.body.category)
     const writers = JSON.parse(req.body.writer)
-    Books.updateOne({_id:req.params.bookId},{
-            $set:{
-                title:req.body.title,
-                description:req.body.description,
-                poster:req.uploadedImage,
-                source:req.uploadedSrc,
-                date_release:req.body.date,
-                lang:req.body.lang,
-                n_pages:req.body.pages,
-                publisher:req.body.publisher,
-                price:req.body.price,
-                category:categories,
-                writer:writers,
-                promotion:req.body.promotion
-            }
-        }).then((data) => {
+    Books.updateOne({_id:req.params.bookId},
+        // {
+        //     $set:{
+        //         title:req.body.title,
+        //         description:req.body.description,
+        //         poster:req.uploadedImage,
+        //         source:req.uploadedSrc,
+        //         date_release:req.body.date,
+        //         lang:req.body.lang,
+        //         n_pages:req.body.pages,
+        //         publisher:req.body.publisher,
+        //         price:req.body.price,
+        //         category:categories,
+        //         writer:writers,
+        //         promotion:req.body.promotion
+        //     }
+        // }
+        secondParam
+        ).then((data) => {
             if(data.matchedCount == 0){
                 let err = new Error("book is not found");
                 err.status = 404;
@@ -352,6 +403,8 @@ module.exports.updateBook = (req,res,next)=>{
             next(err);
         })
 }
+
+
 
 //used to update all posters 
 module.exports.updatePoster = (req,res,next)=>{

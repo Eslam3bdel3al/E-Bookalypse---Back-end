@@ -21,6 +21,8 @@ const transporter = nodemailer.createTransport(sgTransport({
 }));
 
 const User = require("../models/users");
+const Reviews = require('../models/reviews');
+const Orders = require('../models/orders');
 
 module.exports.getAllusers = (req,res,next) => {
     // User.find({})
@@ -224,12 +226,15 @@ module.exports.forgetChangePass = (req,res,next) => {
 module.exports.deleteUser = (req,res,next) => {
    
     User.deleteOne({_id:mongoose.Types.ObjectId(req.userId)})
-        .then((data) => {
+        .then(async (data) => {
             if(data.deletedCount == 0){
                 let err = new Error("user is not found");
                 err.status = 404;
                 throw err
             }else{
+
+                await Reviews.deleteOne({user_id:mongoose.Types.ObjectId(req.userId)});
+                await Orders.deleteOne({user_id:mongoose.Types.ObjectId(req.userId)});
                 res.status(200).json(data);
             }
         })
