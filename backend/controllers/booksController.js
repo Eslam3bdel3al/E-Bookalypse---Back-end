@@ -29,7 +29,7 @@ module.exports.getBooksTotal = (req,res, next)=>{
 module.exports.getAllBooks =  (req,res,next)=>{                              //query string page,limit
     
     //destructing query string
-    let {page = 1, limit = 6, category, rate , priceMin, priceMax , priceSort,salesSort, lang = "en"} = req.query;
+    let {page = 1, limit = 6, category, rate , priceMin, priceMax , priceSort,salesSort,writer} = req.query;
 
     // to handle filtering an objects to be set in the aggregate function below
     let match = {};
@@ -55,6 +55,10 @@ module.exports.getAllBooks =  (req,res,next)=>{                              //q
         match["rate"] = {$gte:parseInt(rate)}
     }
 
+    if (writer){
+        match["writer.name"] = writer;
+    }
+
     if(priceMin && priceMax){
         match["price"] = {$gte:parseInt(priceMin),$lte:parseInt(priceMax)}
     } else if (priceMin) {
@@ -63,15 +67,7 @@ module.exports.getAllBooks =  (req,res,next)=>{                              //q
         match["price"] = {$lte:parseInt(priceMax)}
     }
 
-    if (lang){
-        if (lang == "en")
-        {
-            match["lang"] = "english"
-        } else if (lang == "ar")
-        {
-            match["lang"] = "عربي"
-        }
-    }
+  
 
     if(priceSort){
         delete sort._id;

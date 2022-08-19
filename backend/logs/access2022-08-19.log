@@ -13,3 +13,7 @@
 "visitor" [19/Aug/2022:23:02:18 +0000] GET /books?lang=ar 200 664.437 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
 "visitor" [19/Aug/2022:23:02:23 +0000] GET /books 304 187.435 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
 "visitor" [19/Aug/2022:23:02:29 +0000] GET /books-count 200 129.162 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+"visitor" [19/Aug/2022:23:47:58 +0000] GET / 304 14.421 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+"visitor" [19/Aug/2022:23:48:03 +0000] GET /%D9%84%D8%A7%D8%AE%D8%AE%D9%86%D8%B3 404 7.715 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+"visitor" [19/Aug/2022:23:48:09 +0000] GET /books 304 205.852 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+"visitor" [19/Aug/2022:23:50:57 +0000] GET /books?writer=Marin%20Darmonkow 200 177.716 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
