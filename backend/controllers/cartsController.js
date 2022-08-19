@@ -62,7 +62,7 @@ module.exports.getCart = (req,res,next) => {
                 throw err
             }
             
-            res.status(200).json({cart:data.cart,finalPrice:price})
+            res.status(200).json({cart:data.cart,finalPrice:price.toFixed(2)})
         })
         .catch((err) => {
             next(err);
@@ -166,7 +166,7 @@ module.exports.addItems =  (req,res,next) => {
                     if(bookId){            
                         theAdd["cart.bookItems"] =  bookId
                     }
-                    
+
                     if(collectionObject){
                         theAdd["cart.collectionItems"] = collectionObject.id
                     }
@@ -313,7 +313,7 @@ module.exports.checkOut = (req,res,next)=>{
                 }
             }),
             success_url:'http://localhost:3000/successPayment',
-            cancel_url:'https://www.facebook.com'
+            cancel_url:'http://localhost:3000/cart'
         })
     })
     .then((data)=>{

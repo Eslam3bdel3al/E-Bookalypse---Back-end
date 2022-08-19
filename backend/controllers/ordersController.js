@@ -79,19 +79,7 @@ module.exports.getOneOrder = (req,res,next) => {
     })
 }
 
-// module.exports.deleteOrder = (req,res,next) => {
-//     order.findOneAndDelete({_id:mongoose.Types.ObjectId(req.params.orderId)})
-//     .then((data) => {
-//         if(data == null){
-//             throw new Error("there is no such order for that user");
-//         } else {
-//         res.status(200).json({data:"deleted"});
-//         }
-//     })
-//     .catch((err) => {
-//         next(err)
-//     })  
-// }
+
 
 
 // module.exports.addBooksToOrder = (req,res,next) => {                        //the body {orderId,bookIds array,booksFialPrice}

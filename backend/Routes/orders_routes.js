@@ -19,7 +19,8 @@ router.route("/order")
 
 router.route("/order/:orderId")    
         .get(authMW, role.userORAdmin,orderVal.orderById,validationMw, ordersController.getOneOrder) 
-        // .delete(authMW, role.mustUser, ordersController.deleteOrder)   
+
+   
         
 // router.route("/order/add-book")
 //         .put(authMW, role.mustUser, ordersController.addBooksToOrder)
