@@ -18,3 +18,23 @@ module.exports.wcAddRemove = [
         return true
     })
 ]
+
+
+module.exports.cartAdd = [
+    body("bookId").optional().isMongoId().withMessage("userId must be a mongo id"),
+    body("collectionObject").optional().custom((val) => {
+        if(!val.id){
+            throw new Error("id in collectionObject is required")
+        }
+        if(!mongoose.Types.ObjectId.isValid(val.id)){
+            throw new Error("id in collectionObject must be mongo id")
+        }
+        if(!val.collectionBooks){
+            throw new Error("collectionBooks in collectionObject is required")
+        }
+        if(!val.collectionBooks.every(itm => mongoose.Types.ObjectId.isValid(itm))){
+            throw new Error("collectionBooks array items must be a mongo id")
+        }
+        return true
+    })
+]

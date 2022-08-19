@@ -84,41 +84,109 @@ module.exports.getCart = (req,res,next) => {
 //         })
 // };
 
-module.exports.addItems = (req,res,next) => {                       
-    const {bookIds,collectionIds} = req.body;
+// module.exports.addItems = (req,res,next) => {      5588855855                 
+//     const {bookIds,collectionIds} = req.body;
+
+//     let theAdd = {};
+
+//     if(bookIds||collectionIds){
+//         if (bookIds){
+//             theAdd["cart.bookItems"] = { $each: bookIds }
+//         }
+
+//         if (collectionIds){
+//             theAdd["cart.collectionItems"] = { $each: collectionIds }
+//         }
+    
+//         user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},{
+            
+//             $addToSet:theAdd
+            
+//         })
+//         .then((data)=>{
+        
+//             if (data.matchedCount == 1 && data.modifiedCount == 1){
+//                 res.status(200).json("added");
+//             } else {
+//                 throw new Error("all Items you entered are already exist");
+//             }
+//         })
+//         .catch((err) => {
+//                 next(err);
+//             })
+//     } else {
+//         next (new Error("you didn't entered any thig"))
+//     }
+// };
+
+
+module.exports.addItems =  (req,res,next) => {                       
+    const {bookId,collectionObject} = req.body;
 
     let theAdd = {};
 
-    if(bookIds||collectionIds){
-        if (bookIds){
-            theAdd["cart.bookItems"] = { $each: bookIds }
-        }
-
-        if (collectionIds){
-            theAdd["cart.collectionItems"] = { $each: collectionIds }
-        }
-    
-        user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},{
-            
-            $addToSet:theAdd
-            
-        })
-        .then((data)=>{
+    if(bookId||collectionObject){
         
-            if (data.matchedCount == 1 && data.modifiedCount == 1){
-                res.status(200).json("added");
-            } else {
-                throw new Error("all Items you entered are already exist");
-            }
-        })
-        .catch((err) => {
+        user.findOne({_id: mongoose.Types.ObjectId(req.userId)},{cart:1}).populate("cart.collectionItems")
+            .then((data) => {
+
+                if(data.cart){
+
+                    if(bookId){
+                        if(data.cart.bookItems.includes(bookId)){
+                            throw new Error("the book is already exist")
+                        }
+
+                        data.cart.collectionItems.forEach((coll)=>{
+                            if(coll.collectionBooks.includes(bookId)){
+                                throw new Error("the book is already exist")
+                            }
+                        })
+                        
+                        theAdd["cart.bookItems"] =  bookId
+                    }
+                    
+                    if(collectionObject){
+                       collectionObject.collectionBooks.forEach((theBook)=>{
+                            if(data.cart.bookItems.includes(theBook)){
+                                throw new Error("a book in the collection is already exist")
+                            }
+
+                            data.cart.collectionItems.forEach((coll)=>{
+                                if(coll.collectionBooks.includes(theBook)){
+                                    throw new Error("a book in the collection is already exist")
+                                }
+                            })
+                       })
+
+                       theAdd["cart.collectionItems"] = collectionObject.id
+                    }
+                     
+                } else {
+                    let err = new Error("you have no cart yet");
+                    err.status = 404;
+                    throw err
+                }
+            
+            }).then(async (data)=>{
+               
+                let theResponse = await user.updateOne({_id: mongoose.Types.ObjectId(req.userId)},{
+                    $addToSet:theAdd
+                })
+            
+                if (theResponse.matchedCount == 1 && theResponse.modifiedCount == 1){
+                    res.status(200).json("added");
+                } else {
+                    throw new Error("all Items you entered are already exist");
+                }
+            })
+            .catch((err) => {
                 next(err);
             })
-    } else {
+    }else {
         next (new Error("you didn't entered any thig"))
     }
 };
-
 
 // module.exports.getOneItem = (req,res,next) => {
 //     cart.findOne({_id:mongoose.Types.ObjectId(req.params.cartItemId)}).populate("books")
