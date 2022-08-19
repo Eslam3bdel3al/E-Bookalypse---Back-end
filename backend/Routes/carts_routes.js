@@ -12,7 +12,7 @@ router.route("/cart")
         .get(authMw,role.mustUser, cartsController.getCart) 
 
  router.route("/cart-addition") 
-        .put(authMw, role.mustUser, cartsController.addItems)
+        .put(authMw, role.mustUser,cartVal.cartAdd, validationMw, cartsController.addItems)
         
 router.route("/cart-removal") 
         .put(authMw, role.mustUser,cartVal.wcAddRemove, validationMw, cartsController.deleteItems)  
