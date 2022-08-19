@@ -280,8 +280,8 @@ module.exports.forgetSendMail = (req,res,next) => {
         {expiresIn:"1h"});
         return {token,userId:data._id};
     })
-    .then((token) => {
-        let base_url= `http://${host}:${port}/`
+    .then(({token,userId}) => {
+        let base_url= "http://localhost:3000/"
         transporter.sendMail({
             to: req.body.email,
             from: "abdelalleslam@gmail.com",
