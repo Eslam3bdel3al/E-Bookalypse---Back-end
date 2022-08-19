@@ -163,9 +163,14 @@ module.exports.addItems =  (req,res,next) => {
                     }
                      
                 } else {
-                    let err = new Error("you have no cart yet");
-                    err.status = 404;
-                    throw err
+                    if(bookId){            
+                        theAdd["cart.bookItems"] =  bookId
+                    }
+                    
+                    if(collectionObject){
+                        theAdd["cart.collectionItems"] = collectionObject.id
+                    }
+
                 }
             
             }).then(async (data)=>{
