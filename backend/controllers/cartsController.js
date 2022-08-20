@@ -312,8 +312,8 @@ module.exports.checkOut = (req,res,next)=>{
                     "quantity":1
                 }
             }),
-            success_url:'http://localhost:3000/successPayment',
-            cancel_url:'http://localhost:3000/cart'
+            success_url:'https://ebookalypse.herokuapp.com/successPayment',
+            cancel_url:'https://ebookalypse.herokuapp.com/cart'
         })
     })
     .then((data)=>{
