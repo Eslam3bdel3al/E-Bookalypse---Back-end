@@ -16,11 +16,11 @@ router.route("/book-reviews/:bookId")              //get all reviews of the book
     
 router.route("/review/:reviewId")
     .get(reviewVal.getDelete,validationMw, reviewsController.getOneReview)
-    .put(authMw, role.mustUser,reviewVal.reviewAdd,validationMw, reviewsController.updateReview) 
+    .put(authMw, role.mustUser,reviewVal.reviewEdit,validationMw, reviewsController.updateReview) 
     .delete(authMw, role.userORAdmin, reviewsController.deleteReview)
 
 router.route("/review")  
-         .post(authMw, role.mustUser,reviewVal.reviewEdit,validationMw, reviewsController.addReview)
+         .post(authMw, role.mustUser,reviewVal.reviewAdd,validationMw, reviewsController.addReview)
         
 
 module.exports = router; 

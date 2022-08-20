@@ -220,6 +220,7 @@ module.exports.getBookById = (req,res,next)=>{
             $project:{
                 "title":1,"description":1,"poster":1,"date_release":1,"lang":1,"n_pages":1,"publisher":1,"price":1,
                 "category.title":1,"category._id":1,"writer.name":1,"writer._id":1,"promotion":1,"date_addition":1,"reviews":1,
+                
                 "ratesCount": { $size:"$reviews"},
                 "fivesCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 5]}}}},
                 "foursCount":{$size:{$filter:{"input" : "$reviews","as" : "obj","cond": { "$eq" : ["$$obj.vote", 4]}}}},
@@ -233,7 +234,8 @@ module.exports.getBookById = (req,res,next)=>{
             //second projection to get calc rate
             $project:{
                 "title":1,"description":1,"poster":1,"date_release":1,"lang":1,"n_pages":1,"publisher":1,"price":1,
-                "category.title":1,"category._id":1,"writer.name":1,"writer._id":1,"promotion":1,"date_addition":1,"reviews":1,"sales":1,
+                "category.title":1,"category._id":1,"writer.name":1,"writer._id":1,"promotion":1,"date_addition":1,"reviews":1,
+                "sales":1,
                 "ratesCount":1,
                 "rate": {
                         $cond:    //can't devide by zero so check if ratesCount not equal zero
