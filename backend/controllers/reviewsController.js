@@ -25,7 +25,7 @@ module.exports.getAllUserReviews = (req,res,next) => {
 };
 
 module.exports.getAllBookReviews = (req,res,next) => {
-    review.find({book_id: mongoose.Types.ObjectId(req.params.bookId)})
+    review.find({book_id: mongoose.Types.ObjectId(req.params.bookId)}).populate({path:"user_id",select:["_id","userName","image"]})
         .then((data) => {
             if(data == null){
                 let err = new Error("this Book hasn't any reviews yet");
