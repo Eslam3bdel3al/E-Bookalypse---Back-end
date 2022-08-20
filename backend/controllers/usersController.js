@@ -94,7 +94,7 @@ module.exports.userSignUp = (req,res,next) => {
             from: "abdelalleslam@gmail.com",
             subject: "signed up successfully!",
             html:"<h1>Welcome to our book store</h1>"
-        }).catch((err)=> {console.log(err)})
+        })
     })
     .catch((err)=>{ 
         console.log(err);
@@ -281,7 +281,7 @@ module.exports.forgetSendMail = (req,res,next) => {
         return {token,userId:data._id};
     })
     .then(({token,userId}) => {
-        let base_url= "http://localhost:3000/"
+        let base_url= "https://ebookalypse.herokuapp.com/"
         transporter.sendMail({
             to: req.body.email,
             from: "abdelalleslam@gmail.com",

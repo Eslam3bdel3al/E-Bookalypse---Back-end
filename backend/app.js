@@ -41,6 +41,8 @@ const host = process.env.HOST || 'localhost';
   const logsRouters = require("./Routes/logs_routes");
   const searchRouters = require("./Routes/search_route");
   const collectionRouters = require("./Routes/collections_routes");
+  const contactUsRouters = require("./Routes/contactus_routes");
+  const publishWithRouters = require("./Routes/publishWith_routes");
 
   const verifyToken = require("./middlewares/verifyToken");
   const logger = require("./middlewares/logger")
@@ -80,9 +82,11 @@ const host = process.env.HOST || 'localhost';
   app.use(reviewsRouters);
   app.use(cartsRouters);
   app.use(wishListRouters);
-  app.use(logsRouters)
-  app.use(searchRouters)
-  app.use(collectionRouters)
+  app.use(logsRouters);
+  app.use(searchRouters);
+  app.use(collectionRouters);
+  app.use(contactUsRouters);
+  app.use(publishWithRouters);
 
 
   //not found response 

@@ -33,7 +33,7 @@ module.exports.getwishList = (req,res,next) => {
             throw new Error("you have no wishList yet")
         }
         
-        res.status(200).json({wishList:data.wishList,finalPrice:price})
+        res.status(200).json({wishList:data.wishList,finalPrice:price.toFixed(2)})
     })
     .catch((err) => {
         next(err);
