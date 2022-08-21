@@ -35,6 +35,7 @@ router.route('/writer')
 router.route('/writer/:writerId')
       .get(writerVal.writerParam,validationMw, writersController.getWriterById)
       .put(authMw, role.mustAdmin,upload.single("writerimage"),writerVal.writerUpdate,validationMw,writerPath,updateImageFromFirebase,writersController.updateWriter)
-      .delete(authMw, role.mustAdmin, writerVal.writerParam, validationMw, writerPath, deleteImageFromFirebase, writersController.deleteWriter)
+      // .delete(authMw, role.mustAdmin, writerVal.writerParam, validationMw, writerPath, deleteImageFromFirebase, writersController.deleteWriter)
+      .delete(authMw, role.mustAdmin, writerVal.writerParam, validationMw, writersController.deleteWriter)
 
 module.exports = router; 
