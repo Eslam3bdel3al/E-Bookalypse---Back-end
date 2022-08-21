@@ -21,68 +21,6 @@ const upload = multer();
   }
 
 
-  /**
-  * @swagger
-  * tags:
-  *   name: Books
-  *   description: The books managing API
-  */
-
-  /**
- * @swagger
- * components:
- *   schemas:
- *     Book:
- *       type: object
- *       properties:
- *         id:
- *           type: string
- *           description: The auto-generated id of the book
- *         title:
- *           type: string
- *         poster:
- *           type: string
- *         writer:
- *           type: array
- */
-
-  /**
- * @swagger
- * /books:
- *   get:
- *     summary: Returns all the books
- *     tags: [Books]
- *     responses:
- *       200:
- *         description: The list of the books
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Book'
- *         500:
- *           description: The list of the books              
- */
-
-  /**
- * @swagger
- * /book/{id}:
- *   get:
- *     summary: Returns book
- *     tags: [Books]
- *     responses:
- *       200:
- *         description: The list of the books
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Book'
- *         500:
- *           description: The list of the books              
- */
 
 
 router.route('/books-count')

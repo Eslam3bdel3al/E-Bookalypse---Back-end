@@ -1,31 +1,5 @@
 const mongoose = require('mongoose');
 
-const category = require("../models/categories");
-const writer = require("../models/writers");
-const promotion = require("../models/promotions")
-
-const writerEmbedded = mongoose.Schema({
-    id: {
-        type: mongoose.ObjectId,
-        required: true
-    },
-    name: {
-        type: String,
-        required: true
-    }
-})
-
-const categoryEmbedded = mongoose.Schema({
-    id: {
-        type: mongoose.ObjectId,
-        required: true
-    },
-    title: {
-        type: String,
-        required: true
-    }
-})
-
 const bookSchema = mongoose.Schema({
     title: {
         type: String,
@@ -45,7 +19,7 @@ const bookSchema = mongoose.Schema({
     },
     date_release: {
         type: Date
-    }, // markModified in controller
+    }, 
     lang: {
         type: String
     },
@@ -75,18 +49,7 @@ const bookSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "promotions"
     },
-    // reviews: 
-    //     {
-    //         type: [mongoose.Types.ObjectId],
-    //         ref: "reviews"
-    //     }
-    // ,
-    // orders: 
-    //     {
-    //         type: [mongoose.Types.ObjectId],
-    //         ref: "orders"
-    //     }
-    // ,
+   
     date_addition: {
         type: Date,
         required: true,

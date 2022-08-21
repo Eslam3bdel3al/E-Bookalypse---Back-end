@@ -2,31 +2,10 @@ require("dotenv").config();
   
   const express = require('express');
 
-  const swaggerUi = require("swagger-ui-express");
-  const swaggerJsDoc = require("swagger-jsdoc");
-
 
 const port = process.env.PORT || 8000;
 const host = process.env.HOST || 'localhost';
 
-  const options = {
-    definition: {
-      openapi: "3.0.0",
-      info: {
-        title: "Library API",
-        version: "0.1.0",
-        description: "A simple Express Library API",
-      },
-      servers: [
-        {
-          url: `'http://${host}:${port}/'`,
-        },
-      ],
-    },
-    apis: [`${__dirname}/Routes/*.js`],
-  };
-  
-  const specs = swaggerJsDoc(options);
 
   const loginRouters =require("./Routes/logIn_Route")
   const usersRouters = require("./Routes/users_routes");
@@ -65,7 +44,6 @@ const host = process.env.HOST || 'localhost';
   app.use(express.json())
   app.use(express.urlencoded({extended:true}))
 
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
   
   app.use(verifyToken);
 

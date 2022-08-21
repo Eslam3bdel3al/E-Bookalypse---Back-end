@@ -87,7 +87,7 @@ module.exports.userSignUp = (req,res,next) => {
         })
     })
     .then((data) => {
-        res.status(201).json({data: "added"})
+        res.status(201).json("signed up successfully")
 
         transporter.sendMail({
             to: req.body.email,
@@ -97,7 +97,6 @@ module.exports.userSignUp = (req,res,next) => {
         })
     })
     .catch((err)=>{ 
-        console.log(err);
         next(err)})
 }
 
