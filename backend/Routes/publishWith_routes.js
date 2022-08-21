@@ -6,7 +6,7 @@ const validationMw = require("../middlewares/validationMw");
 
 const router = express.Router();
 
-router.route("/contact-us")
+router.route("/publish-us")
     .post(publishVal.publishVal,validationMw,publishWithController.publishWithUs)    
 
 module.exports = router; 

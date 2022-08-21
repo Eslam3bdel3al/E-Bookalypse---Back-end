@@ -1,0 +1,4 @@
+"visitor" [21/Aug/2022:13:22:39 +0000] GET / 200 20.646 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+"visitor" [21/Aug/2022:13:22:40 +0000] GET /favicon.ico 404 7.599 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+"visitor" [21/Aug/2022:13:22:54 +0000] GET /bppks-total 404 12.462 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
+"visitor" [21/Aug/2022:13:23:05 +0000] GET /books-total 200 403.632 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
